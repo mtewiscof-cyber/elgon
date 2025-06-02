@@ -19,8 +19,8 @@ const CustomerMessagesPage = () => {
   const user = useQuery(api.users.getUserByUserId);
   const isUserLoaded = user !== undefined;
 
-  // Fetch all users to find admins
-  const allUsers = useQuery(api.users.listUsers);
+  // Fetch all growers and admins for messaging
+  const growersAndAdmins = useQuery(api.users.listGrowersAndAdmins);
 
   // Redirect if user data is loaded and user is not authenticated or not a customer
   useEffect(() => {
@@ -64,9 +64,9 @@ const CustomerMessagesPage = () => {
 
   const handleContactAdmin = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!user || !newAdminMessage.trim() || !allUsers) return;
+    if (!user || !newAdminMessage.trim() || !growersAndAdmins) return;
 
-    const admin = allUsers.find(u => u.role === 'admin');
+    const admin = growersAndAdmins.find(u => u.role === 'admin');
     if (!admin) {
       alert('No administrator found. Please try again later.');
       return;

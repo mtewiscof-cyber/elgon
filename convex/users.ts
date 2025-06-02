@@ -199,4 +199,33 @@ export const listAdmins = query({
     // Return only users with admin role
     return await ctx.db.query("users").filter(q => q.eq(q.field("role"), "admin")).collect();
   },
+});
+
+// List all growers (accessible to any authenticated user)
+export const listGrowers = query({
+  handler: async (ctx) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error("Not authenticated");
+    }
+    // Return only users with grower role
+    return await ctx.db.query("users").filter(q => q.eq(q.field("role"), "grower")).collect();
+  },
+});
+
+// List all growers and admins (accessible to any authenticated user)
+export const listGrowersAndAdmins = query({
+  handler: async (ctx) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error("Not authenticated");
+    }
+    // Return users with role 'grower' or 'admin'
+    return await ctx.db.query("users").filter(q =>
+      q.or(
+        q.eq(q.field("role"), "grower"),
+        q.eq(q.field("role"), "admin")
+      )
+    ).collect();
+  },
 }); 

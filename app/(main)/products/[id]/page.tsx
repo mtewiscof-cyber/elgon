@@ -382,244 +382,225 @@ export default function ProductDetailPage() {
   
   // We know product exists at this point
   return (
-    <div className="container section">
-      <div className="product-detail">
-        <Link href="/products" className="btn btn-text mb-4">
-          &larr; Back to Products
-        </Link>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-lg">
-          {/* Product Image */}
-          <div className="product-image">
-            {product.imageUrl ? (
-              <img 
-                src={product.imageUrl} 
-                alt={product.name}
-                className="rounded-lg shadow-md"
-                style={{ 
-                  width: '100%', 
-                  height: 'auto', 
-                  maxHeight: '500px',
-                  objectFit: 'cover'
-                }}
-              />
-            ) : (
-              <div 
-                className="rounded-lg bg-primary"
-                style={{ 
-                  width: '100%', 
-                  height: '400px',
-                  backgroundColor: 'var(--primary)'
-                }}
-              ></div>
-            )}
-          </div>
-          
-          {/* Product Info */}
-          <div className="product-info">
-            <h1 className="text-3xl font-bold mb-2">{product.name}</h1>
-            
-            <p className="text-gray-700 mb-4">Origin: {product.origin}</p>
-            
-            {grower && (
-              <p className="text-gray-600 mb-4">
-                From: <span className="font-medium">{grower.name}</span>
-                {grower.farmName && ` - ${grower.farmName}`}
-              </p>
-            )}
-            
-            <div className="price text-2xl font-bold mb-6">
-              ${product.price.toFixed(2)} <span className="text-sm font-normal text-gray-600">/ {product.weight}</span>
+    <div className="container section product-detail-page">
+      <Link href="/products" className="btn btn-text mb-4" style={{ fontWeight: 500, color: 'var(--secondary)' }}>
+        &larr; Back to Products
+      </Link>
+      <div
+        className="product-detail-hero"
+        style={{
+          display: 'flex',
+          flexDirection: 'row',
+          gap: '2.5rem',
+          alignItems: 'flex-start',
+          background: 'var(--light-bg)',
+          borderRadius: 'var(--border-radius)',
+          boxShadow: 'var(--shadow-md)',
+          padding: '2rem',
+          marginBottom: '2rem',
+          flexWrap: 'wrap',
+        }}
+      >
+        {/* Product Image */}
+        <div
+          className="product-image"
+          style={{
+            flex: '1 1 320px',
+            minWidth: 0,
+            maxWidth: 480,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            background: 'linear-gradient(135deg, #f1d3b2 60%, #fff8ef 100%)',
+            borderRadius: 'var(--border-radius)',
+            boxShadow: 'var(--shadow-lg)',
+            padding: '1.5rem',
+            margin: '0 auto',
+          }}
+        >
+          {product.imageUrl ? (
+            <img
+              src={product.imageUrl}
+              alt={product.name}
+              className="rounded-lg shadow-md"
+              style={{
+                width: '100%',
+                maxWidth: 340,
+                height: 'auto',
+                objectFit: 'cover',
+                borderRadius: 'var(--border-radius)',
+                boxShadow: 'var(--shadow-md)',
+                background: '#fff',
+              }}
+            />
+          ) : (
+            <div
+              style={{
+                width: 220,
+                height: 220,
+                background: 'var(--accent)',
+                borderRadius: '50%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontSize: 64,
+                color: 'var(--primary)',
+                boxShadow: 'var(--shadow-md)',
+              }}
+            >
+              ☕
             </div>
-            
-            <div className="mb-6">
-              <h3 className="text-lg font-semibold mb-2">Description</h3>
-              <p>{product.description}</p>
-            </div>
-            
-            {/* Tasting Notes */}
-            {product.tastingNotes && product.tastingNotes.length > 0 && (
-              <div className="mb-6">
-                <h3 className="text-lg font-semibold mb-2">Tasting Notes</h3>
-                <div className="flex flex-wrap gap-2">
-                  {product.tastingNotes.map((note, i) => (
-                    <span key={i} className="badge badge-accent px-3 py-1">
-                      {note}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            )}
-            
-            {/* Certifications */}
-            {product.certifications && product.certifications.length > 0 && (
-              <div className="mb-6">
-                <h3 className="text-lg font-semibold mb-2">Certifications</h3>
-                <div className="flex flex-wrap gap-2">
-                  {product.certifications.map((cert, i) => (
-                    <span key={i} className="badge badge-neutral px-3 py-1">
-                      {cert}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            )}
-            
-            {/* Stock */}
-            <div className="mb-6">
-              <p className="font-medium">
-                {product.stock > 0 ? (
-                  <span className="text-green-600">In Stock ({product.stock} available)</span>
-                ) : (
-                  <span className="text-red-600">Out of Stock</span>
-                )}
-              </p>
-            </div>
-            
-            {/* Action Buttons */}
-            <div className="space-y-3">
-              {/* Order Button */}
-              {canOrder ? (
-                <button 
-                  onClick={() => setShowOrderForm(true)}
-                  className="btn btn-primary w-full py-3"
-                  disabled={product.stock <= 0}
-                >
-                  {product.stock > 0 ? 'Order Now' : 'Out of Stock'}
-                </button>
-              ) : (
-                <div className="w-full">
-                  {!clerkUser ? (
-                    <Link href="/sign-in" className="btn btn-primary w-full py-3 text-center block">
-                      Sign In to Order
-                    </Link>
-                  ) : user?.role !== 'customer' ? (
-                    <div className="text-center p-3 bg-gray-100 rounded-lg">
-                      <p className="text-gray-600">Customer account required to place orders</p>
-                      <Link href="/onboarding" className="text-blue-600 hover:underline">
-                        Complete your profile
-                      </Link>
-                    </div>
-                  ) : (
-                    <button 
-                      className="btn btn-primary w-full py-3 opacity-50 cursor-not-allowed"
-                      disabled
-                    >
-                      Loading...
-                    </button>
-                  )}
-                </div>
-              )}
-              
-              {/* Message Grower Button */}
-              {canMessage ? (
-                <button 
-                  onClick={() => setShowMessageForm(true)}
-                  className="btn btn-secondary w-full py-3"
-                >
-                  Message Grower
-                </button>
-              ) : grower?.userId && (
-                <div className="w-full">
-                  {!clerkUser ? (
-                    <Link href="/sign-in" className="btn btn-secondary w-full py-3 text-center block">
-                      Sign In to Message Grower
-                    </Link>
-                  ) : (
-                    <div className="text-center p-3 bg-gray-100 rounded-lg">
-                      <p className="text-gray-600">Sign in to message the grower</p>
-                    </div>
-                  )}
-                </div>
-              )}
-              
-              {!grower?.userId && (
-                <p className="text-sm text-gray-500 text-center">
-                  Grower contact not available
-                </p>
-              )}
-            </div>
-          </div>
+          )}
         </div>
-        
-        {/* Additional Product Information */}
-        <div className="mt-12">
-          <h2 className="text-2xl font-bold mb-6">About This Coffee</h2>
-          
-          {grower && (
-            <div className="bg-white rounded-lg shadow-md p-6 mb-8">
-              <h3 className="text-xl font-semibold mb-4">About the Grower</h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <h4 className="font-semibold mb-2">{grower.name}</h4>
-                  {grower.farmName && <p className="text-gray-600 mb-2">Farm: {grower.farmName}</p>}
-                  <p className="text-gray-600 mb-2">Location: {grower.location}</p>
-                  {grower.elevation && <p className="text-gray-600 mb-2">Elevation: {grower.elevation}m</p>}
-                </div>
-                <div>
-                  {grower.coffeeVarieties && grower.coffeeVarieties.length > 0 && (
-                    <div className="mb-3">
-                      <h5 className="font-medium mb-1">Coffee Varieties:</h5>
-                      <p className="text-gray-600">{grower.coffeeVarieties.join(', ')}</p>
-                    </div>
-                  )}
-                  {grower.processingMethods && grower.processingMethods.length > 0 && (
-                    <div className="mb-3">
-                      <h5 className="font-medium mb-1">Processing Methods:</h5>
-                      <p className="text-gray-600">{grower.processingMethods.join(', ')}</p>
-                    </div>
-                  )}
-                </div>
-              </div>
-              {grower.story && (
-                <div className="mt-4 pt-4 border-t">
-                  <h5 className="font-medium mb-2">Grower's Story:</h5>
-                  <p className="text-gray-700">{grower.story}</p>
-                </div>
+        {/* Product Info */}
+        <div
+          className="product-info"
+          style={{
+            flex: '2 1 340px',
+            minWidth: 0,
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '1.2rem',
+            justifyContent: 'center',
+          }}
+        >
+          <h1 style={{ fontSize: '2rem', fontWeight: 700, color: 'var(--primary)', marginBottom: 8 }}>{product.name}</h1>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.7rem', alignItems: 'center', marginBottom: 8 }}>
+            <span
+              style={{
+                background: 'var(--accent)',
+                color: 'var(--primary)',
+                borderRadius: 16,
+                padding: '0.3rem 1rem',
+                fontWeight: 600,
+                fontSize: '1.1rem',
+              }}
+            >
+              ${product.price.toFixed(2)} / {product.weight}
+            </span>
+            <span
+              style={{
+                background: product.stock > 0 ? 'var(--light-bg)' : '#ffeaea',
+                color: product.stock > 0 ? 'var(--secondary)' : '#c00',
+                borderRadius: 16,
+                padding: '0.3rem 1rem',
+                fontWeight: 500,
+                fontSize: '1rem',
+              }}
+            >
+              {product.stock > 0 ? `${product.stock} in stock` : 'Out of stock'}
+            </span>
+          </div>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.7rem', alignItems: 'center', marginBottom: 8 }}>
+            <span style={{ background: 'var(--secondary)', color: 'white', borderRadius: 16, padding: '0.3rem 1rem', fontWeight: 500, fontSize: '1rem' }}>
+              {product.origin}
+            </span>
+            {grower && (
+              <span style={{ background: 'var(--primary)', color: 'white', borderRadius: 16, padding: '0.3rem 1rem', fontWeight: 500, fontSize: '1rem' }}>
+                {grower.name}
+              </span>
+            )}
+          </div>
+          {product.tastingNotes && product.tastingNotes.length > 0 && (
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', marginBottom: 8 }}>
+              {product.tastingNotes.slice(0, 4).map((note, i) => (
+                <span key={i} style={{ background: 'var(--accent)', color: 'var(--primary)', borderRadius: 12, padding: '0.2rem 0.8rem', fontSize: '0.95rem', fontWeight: 500 }}>{note}</span>
+              ))}
+              {product.tastingNotes.length > 4 && (
+                <span style={{ background: 'var(--light-bg)', color: 'var(--primary)', borderRadius: 12, padding: '0.2rem 0.8rem', fontSize: '0.95rem', fontWeight: 500 }}>+{product.tastingNotes.length - 4} more</span>
               )}
             </div>
           )}
-          
-          <div className="bg-white rounded-lg shadow-md p-6 mb-8">
-            <h3 className="text-xl font-semibold mb-4">Brewing Recommendations</h3>
-            <p>
-              For the best flavor experience, we recommend brewing this coffee using a pour-over method with water at 200°F (93°C). 
-              Use 15g of coffee to 250ml of water for a balanced cup. Adjust to taste.
-            </p>
-          </div>
-          
-          <div className="bg-white rounded-lg shadow-md p-6">
-            <h3 className="text-xl font-semibold mb-4">From Farm to Cup</h3>
-            <p>
-              This coffee is grown by women farmers in the Mt. Elgon region of Uganda at elevations between 1,700 and 2,000 meters above sea level. 
-              The rich volcanic soil and favorable climate of Mt. Elgon create ideal growing conditions for exceptional coffee.
-            </p>
-            <p className="mt-4">
-              Our farmers use sustainable farming practices and are committed to environmental stewardship. 
-              By purchasing this coffee, you are directly supporting the livelihoods of women farmers and their families.
-            </p>
+          <p style={{ fontSize: '1.1rem', color: 'var(--foreground)', marginBottom: 8, lineHeight: 1.6 }}>{product.description}</p>
+          {/* Action Buttons */}
+          <div className="cta-actions" style={{ display: 'flex', flexWrap: 'wrap', gap: '0.7rem', marginTop: 12, alignItems: 'stretch' }}>
+            {canOrder ? (
+              <button
+                onClick={() => setShowOrderForm(true)}
+                className="btn btn-primary cta-btn"
+                style={{ minWidth: 130, fontWeight: 600, fontSize: '0.98rem', borderRadius: 16, padding: '0.7rem 1.2rem', height: 48 }}
+                disabled={product.stock <= 0}
+              >
+                {product.stock > 0 ? 'Order Now' : 'Out of Stock'}
+              </button>
+            ) : (
+              <div style={{ width: 130, height: 48, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                {!clerkUser ? (
+                  <Link href="/sign-in" className="btn btn-primary cta-btn" style={{ width: '100%', fontWeight: 600, fontSize: '0.98rem', borderRadius: 16, padding: '0.7rem 1.2rem', height: 40, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    Sign In to Order
+                  </Link>
+                ) : user?.role !== 'customer' ? (
+                  <div className="text-center p-2 bg-gray-100 rounded-lg" style={{ fontSize: '0.97rem', height: 40, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+                    <span className="text-gray-600" style={{ fontSize: '0.97rem' }}>Customer account required to place orders</span>
+                    <Link href="/onboarding/customer" className="text-blue-600 hover:underline" style={{ fontSize: '0.97rem' }}>
+                      Complete your profile
+                    </Link>
+                  </div>
+                ) : (
+                  <button
+                    className="btn btn-primary cta-btn opacity-50 cursor-not-allowed"
+                    style={{ width: '100%', fontWeight: 600, fontSize: '0.98rem', borderRadius: 16, padding: '0.7rem 1.2rem', height: 40 }}
+                    disabled
+                  >
+                    Loading...
+                  </button>
+                )}
+              </div>
+            )}
+            {canMessage && (
+              <button
+                onClick={() => setShowMessageForm(true)}
+                className="btn btn-secondary cta-btn"
+                style={{ minWidth: 130, fontWeight: 600, fontSize: '0.98rem', borderRadius: 16, padding: '0.7rem 1.2rem', height: 48 }}
+              >
+                Message Grower
+              </button>
+            )}
           </div>
         </div>
       </div>
-
-      {/* Order Form Modal */}
+      {/* Modals */}
       {showOrderForm && (
-        <OrderForm
-          product={product}
-          onClose={() => setShowOrderForm(false)}
-          onOrderSuccess={handleOrderSuccess}
-        />
+        <OrderForm product={product} onClose={() => setShowOrderForm(false)} onOrderSuccess={handleOrderSuccess} />
       )}
-
-      {/* Message Form Modal */}
       {showMessageForm && grower && (
-        <MessageForm
-          product={product}
-          grower={grower}
-          onClose={() => setShowMessageForm(false)}
-          onMessageSuccess={handleMessageSuccess}
-        />
+        <MessageForm product={product} grower={grower} onClose={() => setShowMessageForm(false)} onMessageSuccess={handleMessageSuccess} />
       )}
+      {/* Responsive styles for mobile */}
+      <style jsx global>{`
+        @media (max-width: 900px) {
+          .product-detail-hero {
+            padding: 1.2rem !important;
+            gap: 1.2rem !important;
+          }
+        }
+        @media (max-width: 768px) {
+          .product-detail-hero {
+            flex-direction: column !important;
+            padding: 1rem !important;
+            gap: 1rem !important;
+          }
+          .product-image {
+            padding: 0.5rem !important;
+            max-width: 100% !important;
+          }
+          .product-info {
+            gap: 0.7rem !important;
+          }
+          .cta-actions {
+            flex-direction: column !important;
+            gap: 0.7rem !important;
+          }
+          .cta-btn {
+            width: 100% !important;
+            min-width: 0 !important;
+            max-width: 100% !important;
+            height: 44px !important;
+            font-size: 1rem !important;
+            padding: 0.7rem 1.2rem !important;
+          }
+        }
+      `}</style>
     </div>
   );
 } 
