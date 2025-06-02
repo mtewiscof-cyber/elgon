@@ -4,9 +4,14 @@ import Link from 'next/link';
 import { SignInButton, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 import Image from 'next/image';
 import { useState } from 'react';
+import { useUser } from "@clerk/nextjs";
+import { useQuery } from "convex/react";
+import { api } from "../convex/_generated/api";
 
 const Navigation = () => {
   const [menuOpen, setMenuOpen] = useState(false);
+  const { user: clerkUser, isLoaded: clerkLoaded } = useUser();
+  const user = useQuery(api.users.getUserByUserId, clerkUser ? {} : "skip");
 
   const toggleMenu = () => {
     setMenuOpen(!menuOpen);
@@ -72,6 +77,33 @@ const Navigation = () => {
         <li><Link href="/about" style={{ color: 'var(--primary)', textDecoration: 'none', display: 'flex', alignItems: 'center' }}><span style={{marginLeft: '0.25rem'}}>About & Impact</span></Link></li>
         <li><Link href="/products" style={{ color: 'var(--primary)', textDecoration: 'none', display: 'flex', alignItems: 'center' }}><span style={{marginLeft: '0.25rem'}}>Products & Education</span></Link></li>
         <li><Link href="/blog" style={{ color: 'var(--primary)', textDecoration: 'none', display: 'flex', alignItems: 'center' }}><span style={{marginLeft: '0.25rem'}}>Blog & Contact</span></Link></li>
+        {clerkLoaded && clerkUser && user && ["customer", "grower", "admin"].includes(user.role) && (
+          <li>
+            <Link
+              href={
+                user.role === "customer"
+                  ? "/dashboard/customer"
+                  : user.role === "grower"
+                  ? "/dashboard/grower"
+                  : "/dashboard/admin"
+              }
+              style={{
+                color: 'var(--secondary)',
+                textDecoration: 'none',
+                display: 'flex',
+                alignItems: 'center',
+                fontWeight: 600,
+                background: 'var(--accent)',
+                borderRadius: '9999px',
+                padding: '0.5rem 1.5rem',
+                marginLeft: '0.5rem',
+                boxShadow: 'var(--shadow-sm)'
+              }}
+            >
+              Dashboard
+            </Link>
+          </li>
+        )}
       </ul>
       <div style={{ flexShrink: 0 }} className={menuOpen ? 'menu-open' : 'menu-closed'}>
         <SignedIn>

@@ -5,8 +5,12 @@ import { api } from "../../convex/_generated/api";
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useUser } from "@clerk/nextjs";
 
 export default function Home() {
+  const { user: clerkUser, isLoaded: clerkLoaded } = useUser();
+  // Fetch user document from Convex
+  const user = useQuery(api.users.getUserByUserId, clerkUser ? {} : "skip");
   // Fetch products from Convex
   const products = useQuery(api.products.listProducts) || [];
   const [isLoading, setIsLoading] = useState(true);
@@ -23,6 +27,39 @@ export default function Home() {
 
   return (
     <main className="page-content">
+      {/* Onboarding Banner */}
+      {clerkLoaded && clerkUser && user && user.role !== "customer" && user.role !== "grower" && user.role !== "admin" && (
+        <div
+          className="container"
+          style={{
+            margin: "var(--spacing-md) auto",
+            padding: "var(--spacing-md)",
+            background: "var(--accent)",
+            borderRadius: "var(--border-radius)",
+            boxShadow: "var(--shadow-md)",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            gap: "1rem",
+            textAlign: "center",
+            maxWidth: 600,
+          }}
+        >
+          <h3 style={{ color: "var(--primary)", margin: 0 }}>Welcome! Complete your profile to get started</h3>
+          <p style={{ color: "var(--foreground)", margin: 0 }}>
+            Please choose how you want to join our community:
+          </p>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: "1rem", width: "100%", justifyContent: "center" }}>
+            <Link href="/onboarding/customer" className="btn btn-primary" style={{ flex: 1, minWidth: 140 }}>
+              Onboard as Customer
+            </Link>
+            <Link href="/onboarding/grower" className="btn btn-secondary" style={{ flex: 1, minWidth: 140 }}>
+              Onboard as Grower
+            </Link>
+          </div>
+        </div>
+      )}
+
       {/* Hero Section */}
       <section className="section" style={{ 
         backgroundImage: 'linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url("/Secondary Logo.png")', 

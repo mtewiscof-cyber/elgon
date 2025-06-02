@@ -7,6 +7,13 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { Id } from '@/convex/_generated/dataModel';
 
+// Add type for coffeePreferences
+type CoffeePreferences = {
+  roastLevel?: string;
+  origin?: string[];
+  flavorProfiles?: string[];
+};
+
 const CustomerProfilePage = () => {
   const { user: clerkUser, isLoaded: clerkLoaded } = useUser();
   const router = useRouter();
@@ -37,8 +44,9 @@ const CustomerProfilePage = () => {
     isCompany: false,
     companyName: '',
     companyRole: '',
+    companyPhoneNumber: '',
     companyAddress: { street: '', city: '', state: '', zip: '', country: '' },
-    coffeePreferences: { roastLevel: '', origin: [], flavorProfiles: [] },
+    coffeePreferences: {} as CoffeePreferences,
   });
 
   // Populate form data when user and customer data are loaded
@@ -57,8 +65,9 @@ const CustomerProfilePage = () => {
         isCompany: customer.isCompany || false,
         companyName: customer.companyName || '',
         companyRole: customer.companyRole || '',
+        companyPhoneNumber: customer.companyPhoneNumber || '',
         companyAddress: customer.companyAddress || { street: '', city: '', state: '', zip: '', country: '' },
-        coffeePreferences: customer.coffeePreferences || { roastLevel: '', origin: [], flavorProfiles: [] },
+        coffeePreferences: customer.coffeePreferences || {},
       });
     }
   }, [user, customer]);
@@ -102,10 +111,12 @@ const CustomerProfilePage = () => {
   };
 
    const handleCustomerInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value, type, checked } = e.target;
+    const { name, value } = e.target;
+    // For checkboxes, use checked property
+    const checked = (e.target as HTMLInputElement).type === 'checkbox' ? (e.target as HTMLInputElement).checked : undefined;
     setCustomerData(prev => ({
       ...prev,
-      [name]: type === 'checkbox' ? checked : value
+      [name]: checked !== undefined ? checked : value
     }));
   };
 
@@ -340,7 +351,7 @@ const CustomerProfilePage = () => {
                     <div className="md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-md">
                         <div>
                            <label htmlFor="roastLevel" className="block text-sm font-medium text-gray-700">Preferred Roast Level</label>
-                            <select id="roastLevel" name="roastLevel" value={customerData.coffeePreferences.roastLevel} onChange={handleCoffeePreferencesChange} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm">
+                            <select id="roastLevel" name="roastLevel" value={customerData.coffeePreferences?.roastLevel ?? ''} onChange={handleCoffeePreferencesChange} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm">
                                <option value="">Select...</option>
                                <option value="light">Light</option>
                                <option value="medium">Medium</option>
@@ -349,11 +360,11 @@ const CustomerProfilePage = () => {
                         </div>
                          <div>
                            <label htmlFor="origin" className="block text-sm font-medium text-gray-700">Preferred Origins (comma-separated)</label>
-                            <input type="text" id="origin" name="origin" value={customerData.coffeePreferences.origin?.join(', ') || ''} onChange={(e) => handleCoffeePreferencesArrayChange('origin', e.target.value)} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm" />
+                            <input type="text" id="origin" name="origin" value={customerData.coffeePreferences?.origin?.join(', ') ?? ''} onChange={(e) => handleCoffeePreferencesArrayChange('origin', e.target.value)} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm" />
                          </div>
                           <div className="md:col-span-2">
                            <label htmlFor="flavorProfiles" className="block text-sm font-medium text-gray-700">Preferred Flavor Profiles (comma-separated)</label>
-                            <input type="text" id="flavorProfiles" name="flavorProfiles" value={customerData.coffeePreferences.flavorProfiles?.join(', ') || ''} onChange={(e) => handleCoffeePreferencesArrayChange('flavorProfiles', e.target.value)} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm" />
+                            <input type="text" id="flavorProfiles" name="flavorProfiles" value={customerData.coffeePreferences?.flavorProfiles?.join(', ') ?? ''} onChange={(e) => handleCoffeePreferencesArrayChange('flavorProfiles', e.target.value)} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm" />
                          </div>
                     </div>
 
@@ -384,8 +395,9 @@ const CustomerProfilePage = () => {
                       isCompany: customer.isCompany || false,
                       companyName: customer.companyName || '',
                       companyRole: customer.companyRole || '',
+                      companyPhoneNumber: customer.companyPhoneNumber || '',
                       companyAddress: customer.companyAddress || { street: '', city: '', state: '', zip: '', country: '' },
-                      coffeePreferences: customer.coffeePreferences || { roastLevel: '', origin: [], flavorProfiles: [] },
+                      coffeePreferences: customer.coffeePreferences || {},
                    });
                  }
             }} className="btn btn-secondary mr-4">Cancel</button>

@@ -187,4 +187,16 @@ export const changeUserRole = mutation({
     // If authorized, patch the user's role
     await db.patch(id, { role });
   },
+});
+
+// List all admins (accessible to any authenticated user)
+export const listAdmins = query({
+  handler: async (ctx) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error("Not authenticated");
+    }
+    // Return only users with admin role
+    return await ctx.db.query("users").filter(q => q.eq(q.field("role"), "admin")).collect();
+  },
 }); 

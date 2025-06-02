@@ -19,8 +19,8 @@ const GrowerMessagesPage = () => {
   const user = useQuery(api.users.getUserByUserId);
   const isUserLoaded = user !== undefined;
 
-  // Fetch all users to find admins
-  const allUsers = useQuery(api.users.listUsers);
+  // Fetch all admins to find administrator(s)
+  const admins = useQuery(api.users.listAdmins);
 
   // Redirect if user data is loaded and user is not authenticated or not a grower
   useEffect(() => {
@@ -64,9 +64,9 @@ const GrowerMessagesPage = () => {
 
   const handleContactAdmin = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!user || !newAdminMessage.trim() || !allUsers) return;
+    if (!user || !newAdminMessage.trim() || !admins || admins.length === 0) return;
 
-    const admin = allUsers.find(u => u.role === 'admin');
+    const admin = admins[0]; // Use the first admin found
     if (!admin) {
       alert('No administrator found. Please try again later.');
       return;
@@ -111,7 +111,7 @@ const GrowerMessagesPage = () => {
   }
 
   // Find admin for contact option
-  const admin = allUsers?.find(u => u.role === 'admin');
+  const admin = admins && admins.length > 0 ? admins[0] : null;
 
   return (
     <div className="min-h-screen bg-gray-50">
