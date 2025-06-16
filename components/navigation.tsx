@@ -46,14 +46,14 @@ const Navigation = () => {
             <Image
               src="/Main Logo.png"
               alt="Mt.Elgon Women Logo Icon"
-              width={110}
-              height={110}
+              width={90}
+              height={90}
               style={{ objectFit: 'contain', marginRight: '0.5rem', transition: 'width 0.2s, height 0.2s' }}
               className="nav-logo"
             />
           </Link>
         </div>
-        {/* Hamburger menu for mobile */}
+        {/* Hamburger menu for mobile - inside nav, right-aligned */}
         <button
           onClick={toggleMenu}
           style={{
@@ -63,6 +63,7 @@ const Navigation = () => {
             fontSize: '2rem',
             cursor: 'pointer',
             display: 'none',
+            marginLeft: 'auto',
           }}
           className="mobile-menu-button"
           aria-label={menuOpen ? 'Close menu' : 'Open menu'}
@@ -231,25 +232,38 @@ const Navigation = () => {
         <style jsx global>{`
           @media (max-width: 900px) {
             .premium-nav {
-              padding: 0.7rem 0.5rem !important;
+              padding: 0.7rem 0.7rem 0.7rem 0.7rem !important;
             }
           }
           @media (max-width: 768px) {
             .premium-nav {
-              flex-direction: column !important;
-              align-items: stretch !important;
-              gap: 0.5rem !important;
-              min-height: 56px !important;
+              flex-direction: row !important;
+              align-items: center !important;
+              justify-content: center !important;
+              gap: 0 !important;
+              min-height: 48px !important;
+              margin-top: 0.7rem !important;
+              padding: 0.3rem 0.5rem !important;
+              border-radius: 24px !important;
+              box-shadow: 0 2px 12px 0 rgba(0,0,0,0.10) !important;
+              background: rgba(255,255,255,0.92) !important;
+              max-width: 98vw !important;
             }
             .nav-logo {
-              width: 70px !important;
-              height: 70px !important;
+              width: 80px !important;
+              height: 80px !important;
+              min-width: 80px !important;
+              min-height: 80px !important;
+              margin: 0 auto !important;
+              display: block !important;
             }
             .mobile-menu-button {
               display: block !important;
-              position: absolute;
-              right: 1.2rem;
-              top: 1.2rem;
+              position: absolute !important;
+              right: 1.2rem !important;
+              top: 50%;
+              transform: translateY(-50%);
+              margin-left: 0 !important;
               z-index: 1100;
             }
             .menu-closed {
@@ -260,14 +274,21 @@ const Navigation = () => {
               flex-direction: column !important;
               gap: 0.7rem !important;
               background: rgba(255, 248, 239, 0.98);
-              position: absolute;
-              top: 64px;
+              position: fixed !important;
+              top: 70px !important;
               left: 0;
               right: 0;
               padding: 1.2rem 0.5rem 1rem 0.5rem;
-              border-radius: 0 0 12px 12px;
+              border-radius: 0 0 18px 18px;
               box-shadow: var(--shadow-md);
               z-index: 1050;
+            }
+            /* Center nav content and logo */
+            .premium-nav > div:first-child {
+              flex: 1 1 0%;
+              display: flex;
+              justify-content: center;
+              align-items: center;
             }
           }
         `}</style>
