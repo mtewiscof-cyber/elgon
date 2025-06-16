@@ -70,6 +70,28 @@ export const ourFileRouter = {
         url: file.url 
       };
     }),
+
+  // Blog image upload route
+  imageBlogFile: f({
+    image: {
+      maxFileSize: "4MB",
+      maxFileCount: 1,
+    },
+  })
+    .middleware(async ({ req }) => {
+      try {
+        // Simple demo auth, replace with real user/session check if needed
+        return { userId: "blog-author-123" };
+      } catch (error) {
+        console.error("Auth error:", error);
+        throw new UploadThingError("Authentication failed");
+      }
+    })
+    .onUploadComplete(async ({ metadata, file }) => {
+      console.log("Blog image uploaded by user:", metadata.userId);
+      console.log("Blog image URL:", file.url);
+      return { url: file.url };
+    }),
 } satisfies FileRouter;
 
 export type OurFileRouter = typeof ourFileRouter;

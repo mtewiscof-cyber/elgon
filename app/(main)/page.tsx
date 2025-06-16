@@ -27,7 +27,7 @@ export default function Home() {
 
   return (
     <>
-    <main className="page-content" style={{ marginTop: 0, paddingTop: 0, position: 'relative' }}>
+    <main  style={{ marginTop: 0, paddingTop: 0, position: 'relative' }}>
       {/* Hero Section */}
       <section
         className="section hero-section flex items-center justify-center relative"
@@ -92,6 +92,7 @@ export default function Home() {
               fontSize: '2.5rem',
               letterSpacing: '-0.033em',
               marginBottom: '0.5rem',
+              marginTop: '4.5rem',              
           }}
         >
             Empowering Women, Brewing Change

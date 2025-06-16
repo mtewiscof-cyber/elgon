@@ -59,270 +59,129 @@ const ProductsPage = () => {
     });
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 to-amber-50">
+    <div className="min-h-screen bg-[#fcfaf8]">
       {/* Hero Section */}
-      <div className="bg-gradient-to-r from-orange-600 to-amber-600 text-white">
-        <div className="container mx-auto px-4 py-16 lg:py-24">
-          <div className="max-w-4xl mx-auto text-center">
-            <h1 className="text-4xl lg:text-6xl font-bold mb-6 leading-tight">
-              Exceptional Coffee from Mt. Elgon
-            </h1>
-            <p className="text-xl lg:text-2xl mb-8 opacity-90 leading-relaxed">
-              Discover premium specialty coffee grown by women farmers on the volcanic slopes of Uganda's Mt. Elgon
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-              <Link href="#products" className="btn bg-white text-orange-600 hover:bg-orange-50 px-8 py-4 text-lg font-semibold transition-all duration-300 transform hover:scale-105">
-                Shop Our Coffee
-              </Link>
-              <Link href="#wholesale" className="btn border-2 border-white text-white hover:bg-white hover:text-orange-600 px-8 py-4 text-lg font-semibold transition-all duration-300">
-                Wholesale Inquiry
-              </Link>
-            </div>
-        </div>
-        </div>
-      </div>
+      <section className="w-full bg-cover bg-center bg-no-repeat flex flex-col items-center justify-center text-center px-2 py-10 md:py-20" style={{backgroundImage: "linear-gradient(rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.4) 100%), url('/coffee1.jpg')"}}>
+        <h1 className="text-white text-3xl sm:text-4xl md:text-5xl font-black leading-tight tracking-[-0.033em] mb-4 mt-10">Exceptional Coffee from Mt. Elgon</h1>
+      </section>
 
       {/* Products Section */}
-      <section id="products" className="py-16 lg:py-24">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl lg:text-5xl font-bold text-gray-800 mb-4">Our Coffee Collection</h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Each coffee tells a story of the dedicated women farmers who cultivate it with care and passion
-            </p>
-          </div>
-
-          {/* Search and Filter Controls */}
-          <div className="bg-white rounded-2xl shadow-lg p-6 mb-12">
-            <div className="flex flex-col lg:flex-row gap-4 items-center">
+      <section id="products" className="max-w-5xl mx-auto w-full px-2 sm:px-4 py-8 md:py-12">
+        <h2 className="text-[#1c140d] text-xl sm:text-2xl font-bold leading-tight tracking-[-0.015em] mb-2">Our Products</h2>
+        {/* Controls */}
+        <div className="flex flex-col md:flex-row gap-3 md:gap-6 mb-6">
               {/* Search */}
-              <div className="flex-1 w-full lg:w-auto">
-                <div className="relative">
-                  <svg className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                  </svg>
+          <div className="flex-1">
+            <label className="w-full">
+              <div className="flex items-center rounded-xl bg-[#f4ede7] h-11 w-full">
+                <span className="pl-4 text-[#9c6f49]"><svg width="22" height="22" fill="currentColor" viewBox="0 0 256 256"><path d="M229.66,218.34l-50.07-50.06a88.11,88.11,0,1,0-11.31,11.31l50.06,50.07a8,8,0,0,0,11.32-11.32ZM40,112a72,72,0,1,1,72,72A72.08,72.08,0,0,1,40,112Z"></path></svg></span>
                   <input
                     type="text"
-                    placeholder="Search coffees..."
+                  placeholder="Search for products"
+                  className="form-input flex-1 bg-transparent border-none focus:ring-0 focus:outline-none px-3 text-[#1c140d] placeholder:text-[#9c6f49] text-base"
                     value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all duration-300"
+                  onChange={e => setSearchTerm(e.target.value)}
                   />
-                </div>
               </div>
-
-              {/* Filter */}
-              <div className="flex flex-col sm:flex-row gap-4 w-full lg:w-auto">
+            </label>
+          </div>
+          {/* Sort & Filter */}
+          <div className="flex gap-2 flex-wrap">
+            <select
+              value={sortBy}
+              onChange={e => setSortBy(e.target.value)}
+              className="rounded-xl bg-[#f4ede7] text-[#1c140d] h-11 px-4 text-sm font-medium border-none focus:ring-2 focus:ring-[#f38124]"
+            >
+              <option value="name">Sort: Name</option>
+              <option value="price-low">Sort: Price Low</option>
+              <option value="price-high">Sort: Price High</option>
+            </select>
                 <select
                   value={filterBy}
-                  onChange={(e) => setFilterBy(e.target.value)}
-                  className="px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent bg-white"
+              onChange={e => setFilterBy(e.target.value)}
+              className="rounded-xl bg-[#f4ede7] text-[#1c140d] h-11 px-4 text-sm font-medium border-none focus:ring-2 focus:ring-[#f38124]"
                 >
                   <option value="all">All Products</option>
                   <option value="in-stock">In Stock</option>
                   <option value="out-of-stock">Out of Stock</option>
                 </select>
-
-                <select
-                  value={sortBy}
-                  onChange={(e) => setSortBy(e.target.value)}
-                  className="px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent bg-white"
-                >
-                  <option value="name">Sort by Name</option>
-                  <option value="price-low">Price: Low to High</option>
-                  <option value="price-high">Price: High to Low</option>
-                </select>
-              </div>
-            </div>
           </div>
-
-          {/* Products Grid */}
+        </div>
+        {/* Product Grid */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
           {filteredProducts.length === 0 ? (
-            <div className="text-center py-16">
+            <div className="col-span-full text-center py-16">
               <div className="text-6xl mb-4">☕</div>
-              <h3 className="text-2xl font-bold text-gray-800 mb-2">No coffees found</h3>
-              <p className="text-gray-600">Try adjusting your search or filter criteria</p>
+              <h3 className="text-2xl font-bold text-[#1c140d] mb-2">No coffees found</h3>
+              <p className="text-[#9c6f49]">Try adjusting your search or filter criteria</p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-              {filteredProducts.map(product => {
+            filteredProducts.map(product => {
                 const grower = product.growerId ? growersMap.get(product.growerId) : null;
-                
                 return (
-                  <Link href={`/products/${product._id}`} key={product._id}>
-                    <div className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transform hover:scale-105 transition-all duration-300 group">
-                      {/* Product Image */}
-                      <div className="relative h-64 bg-gradient-to-br from-orange-100 to-amber-100 overflow-hidden">
-                        {product.imageUrl ? (
-                          <Image
-                            src={product.imageUrl}
-                            alt={product.name}
-                            fill
-                            className="object-cover group-hover:scale-110 transition-transform duration-300"
-                          />
-                        ) : (
-                          <div className="flex items-center justify-center h-full">
-                            <div className="text-6xl text-orange-300">☕</div>
-                          </div>
-                        )}
-                        
-                        {/* Stock Badge */}
-                        <div className="absolute top-4 right-4">
-                          <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
-                            product.stock > 0 
-                              ? 'bg-green-100 text-green-800' 
-                              : 'bg-red-100 text-red-800'
-                          }`}>
-                            {product.stock > 0 ? `${product.stock} in stock` : 'Out of stock'}
-                          </span>
-        </div>
-      </div>
-
-                      {/* Product Info */}
-                      <div className="p-6">
-                        <div className="mb-4">
-                          <h3 className="text-xl font-bold text-gray-800 mb-2 group-hover:text-orange-600 transition-colors duration-300">
-                            {product.name}
-                          </h3>
-                          <p className="text-gray-600 text-sm leading-relaxed line-clamp-3">
-                            {product.description}
-                          </p>
-                        </div>
-
-                        {/* Origin & Grower */}
-                        <div className="mb-4 space-y-2">
-                          <div className="flex items-center text-sm text-gray-500">
-                            <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                            </svg>
-                            {product.origin}
-                          </div>
-                          {grower && (
-                            <div className="flex items-center text-sm text-gray-500">
-                              <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                              </svg>
-                              {grower.name}
-                            </div>
-                          )}
-                        </div>
-
-                        {/* Tasting Notes */}
-                        {product.tastingNotes && product.tastingNotes.length > 0 && (
-                          <div className="mb-4">
-                            <div className="flex flex-wrap gap-1">
-                              {product.tastingNotes.slice(0, 3).map((note, index) => (
-                                <span key={index} className="px-2 py-1 bg-orange-100 text-orange-700 text-xs rounded-full">
-                                  {note}
-                                </span>
-                              ))}
-                              {product.tastingNotes.length > 3 && (
-                                <span className="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded-full">
-                                  +{product.tastingNotes.length - 3} more
-                                </span>
-                              )}
-                            </div>
-                          </div>
-                        )}
-
-                        {/* Price and Weight */}
-                        <div className="flex items-center justify-between">
+                <div key={product._id} className="flex flex-col gap-2 bg-white rounded-xl shadow-sm p-2 pb-3">
+                  <div
+                    className="w-full bg-center bg-no-repeat aspect-square bg-cover rounded-lg"
+                    style={{ backgroundImage: product.imageUrl ? `url('${product.imageUrl}')` : `url('/coffee1.jpg')` }}
+                  ></div>
                           <div>
-                            <span className="text-2xl font-bold text-gray-800">${product.price.toFixed(2)}</span>
-                            <span className="text-gray-500 text-sm ml-2">/ {product.weight}</span>
+                    <p className="text-[#1c140d] text-base font-semibold leading-tight truncate">{product.name}</p>
+                    <p className="text-[#9c6f49] text-xs font-normal leading-normal line-clamp-2">{product.description}</p>
                           </div>
-                          <div className="text-orange-600 group-hover:text-orange-700 transition-colors duration-300">
-                            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                            </svg>
-                          </div>
-                        </div>
+                  <div className="flex items-center justify-between mt-1">
+                    <span className={`px-2 py-0.5 rounded-full text-xs font-semibold ${product.stock > 0 ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>{product.stock > 0 ? `${product.stock} in stock` : 'Out of stock'}</span>
+                    <span className="text-[#1c140d] text-sm font-bold">${product.price.toFixed(2)}</span>
                       </div>
                     </div>
-                  </Link>
                 );
-              })}
-            </div>
+            })
           )}
         </div>
       </section>
 
       {/* Wholesale Section */}
-      <section id="wholesale" className="py-16 lg:py-24 bg-white">
-        <div className="container mx-auto px-4">
-          <div className="max-w-6xl mx-auto">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-              <div>
-                <h2 className="text-3xl lg:text-5xl font-bold text-gray-800 mb-6">
-                  Wholesale Partnership
-                </h2>
-                <p className="text-xl text-gray-600 mb-8 leading-relaxed">
-                  Join our mission to support women farmers while serving exceptional coffee to your customers.
-                </p>
-                
-                <div className="space-y-6 mb-8">
-                  {[
-                    { icon: "💰", title: "Competitive Pricing", desc: "Volume discounts and flexible payment terms" },
-                    { icon: "📦", title: "Flexible Orders", desc: "Minimum order quantities that work for your business" },
-                    { icon: "🤝", title: "Direct Relationships", desc: "Connect directly with our women farmers" },
-                    { icon: "🎯", title: "Marketing Support", desc: "Point-of-sale materials and coffee education" }
-                  ].map((benefit, index) => (
-                    <div key={index} className="flex items-start space-x-4">
-                      <div className="text-2xl">{benefit.icon}</div>
-                      <div>
-                        <h3 className="font-semibold text-gray-800 mb-1">{benefit.title}</h3>
-                        <p className="text-gray-600">{benefit.desc}</p>
+      <section id="wholesale" className="max-w-2xl mx-auto w-full px-2 sm:px-4 py-8 md:py-12">
+        <h2 className="text-[#1c140d] text-xl sm:text-2xl font-bold leading-tight tracking-[-0.015em] mb-2">Wholesale Partnerships</h2>
+        <p className="text-[#1c140d] text-base font-normal mb-4">Partner with us to bring the exceptional taste of Mt. Elgon coffee to your customers. We offer competitive pricing, dedicated support, and a commitment to quality. Contact us today to learn more about wholesale opportunities.</p>
+        <div className="flex flex-col gap-3">
+          <div className="flex items-center gap-3 bg-[#fcfaf8] rounded-lg p-3">
+            <span className="bg-[#f4ede7] rounded-lg p-2"><svg width="22" height="22" fill="currentColor" viewBox="0 0 256 256"><path d="M152,120H136V56h8a32,32,0,0,1,32,32,8,8,0,0,0,16,0,48.05,48.05,0,0,0-48-48h-8V24a8,8,0,0,0-16,0V40h-8a48,48,0,0,0,0,96h8v64H104a32,32,0,0,1-32-32,8,8,0,0,0-16,0,48.05,48.05,0,0,0,48,48h16v16a8,8,0,0,0,16,0V216h16a48,48,0,0,0,0-96Zm-40,0a32,32,0,0,1,0-64h8v64Zm40,80H136V136h16a32,32,0,0,1,0,64Z"></path></svg></span>
+            <span className="text-[#1c140d] text-base font-normal flex-1 truncate">Competitive Pricing</span>
                       </div>
-                    </div>
-                  ))}
-                </div>
-
-                <Link href="/contact" className="btn bg-orange-600 text-white hover:bg-orange-700 px-8 py-4 text-lg font-semibold transition-all duration-300 transform hover:scale-105">
-                  Get Wholesale Info
-                </Link>
-              </div>
-              
-              <div className="relative h-96 lg:h-full min-h-[400px] rounded-2xl overflow-hidden shadow-2xl">
-                <div className="absolute inset-0 bg-gradient-to-br from-orange-600/20 to-amber-600/20"></div>
-                <Image 
-                  src="/api/placeholder/600/400"
-                  alt="Wholesale Coffee Beans"
-                  fill
-                  className="object-cover"
-                />
-              </div>
-            </div>
+          <div className="flex items-center gap-3 bg-[#fcfaf8] rounded-lg p-3">
+            <span className="bg-[#f4ede7] rounded-lg p-2"><svg width="22" height="22" fill="currentColor" viewBox="0 0 256 256"><path d="M201.89,54.66A103.43,103.43,0,0,0,128.79,24H128A104,104,0,0,0,24,128v56a24,24,0,0,0,24,24H64a24,24,0,0,0,24-24V144a24,24,0,0,0-24-24H40.36A88.12,88.12,0,0,1,190.54,65.93,87.39,87.39,0,0,1,215.65,120H192a24,24,0,0,0-24,24v40a24,24,0,0,0,24,24h24a24,24,0,0,1-24,24H136a8,8,0,0,0,0,16h56a40,40,0,0,0,40-40V128A103.41,103.41,0,0,0,201.89,54.66ZM64,136a8,8,0,0,1,8,8v40a8,8,0,0,1-8,8H48a8,8,0,0,1-8-8V136Zm128,56a8,8,0,0,1-8-8V144a8,8,0,0,1,8-8h24v56Z"></path></svg></span>
+            <span className="text-[#1c140d] text-base font-normal flex-1 truncate">Dedicated Support</span>
           </div>
+          <div className="flex items-center gap-3 bg-[#fcfaf8] rounded-lg p-3">
+            <span className="bg-[#f4ede7] rounded-lg p-2"><svg width="22" height="22" fill="currentColor" viewBox="0 0 256 256"><path d="M208,40H48A16,16,0,0,0,32,56v58.78c0,89.61,75.82,119.34,91,124.39a15.53,15.53,0,0,0,10,0c15.2-5.05,91-34.78,91-124.39V56A16,16,0,0,0,208,40Zm0,74.79c0,78.42-66.35,104.62-80,109.18-13.53-4.51-80-30.69-80-109.18V56H208ZM82.34,141.66a8,8,0,0,1,11.32-11.32L112,148.68l50.34-50.34a8,8,0,0,1,11.32,11.32l-56,56a8,8,0,0,1-11.32,0Z"></path></svg></span>
+            <span className="text-[#1c140d] text-base font-normal flex-1 truncate">Quality Assurance</span>
+          </div>
+        </div>
+        <div className="flex py-3 justify-start">
+          <a href="/contact" className="flex min-w-[84px] items-center justify-center rounded-xl h-10 px-4 bg-[#f38124] text-[#1c140d] text-sm font-bold">Contact Us</a>
           </div>
       </section>
 
       {/* Subscription Section */}
-      <section className="py-16 lg:py-24 bg-gradient-to-r from-orange-600 to-amber-600 text-white">
-        <div className="container mx-auto px-4 text-center">
-          <h2 className="text-3xl lg:text-5xl font-bold mb-6">Never Run Out of Great Coffee</h2>
-          <p className="text-xl opacity-90 mb-12 max-w-3xl mx-auto">
-            Subscribe to regular deliveries and enjoy exclusive benefits
-          </p>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
-            {[
-              { icon: "💰", title: "10% Savings", desc: "Save on every order" },
-              { icon: "🚚", title: "Free Shipping", desc: "Complimentary delivery" },
-              { icon: "📅", title: "Flexible Schedule", desc: "Choose your frequency" },
-              { icon: "⚙️", title: "Easy Management", desc: "Pause or cancel anytime" }
-            ].map((benefit, index) => (
-              <div key={index} className="text-center">
-                <div className="text-4xl mb-4">{benefit.icon}</div>
-                <h3 className="text-xl font-bold mb-2">{benefit.title}</h3>
-                <p className="opacity-80">{benefit.desc}</p>
+      <section id="subscribe" className="max-w-2xl mx-auto w-full px-2 sm:px-4 py-8 md:py-12">
+        <h2 className="text-[#1c140d] text-xl sm:text-2xl font-bold leading-tight tracking-[-0.015em] mb-2">Subscribe & Save</h2>
+        <p className="text-[#1c140d] text-base font-normal mb-4">Never run out of your favorite coffee again! Subscribe to our coffee delivery service and enjoy regular shipments of freshly roasted beans, delivered right to your door. Plus, subscribers receive exclusive discounts and early access to new products.</p>
+        <div className="flex flex-col gap-3">
+          <div className="flex items-center gap-3 bg-[#fcfaf8] rounded-lg p-3">
+            <span className="bg-[#f4ede7] rounded-lg p-2"><svg width="22" height="22" fill="currentColor" viewBox="0 0 256 256"><path d="M247.42,117l-14-35A15.93,15.93,0,0,0,218.58,72H184V64a8,8,0,0,0-8-8H24A16,16,0,0,0,8,72V184a16,16,0,0,0,16,16H41a32,32,0,0,0,62,0h50a32,32,0,0,0,62,0h17a16,16,0,0,0,16-16V120A7.94,7.94,0,0,0,247.42,117ZM184,88h34.58l9.6,24H184ZM24,72H168v64H24ZM72,208a16,16,0,1,1,16-16A16,16,0,0,1,72,208Zm81-24H103a32,32,0,0,0-62,0H24V152H168v12.31A32.11,32.11,0,0,0,153,184Zm31,24a16,16,0,1,1,16-16A16,16,0,0,1,184,208Zm48-24H215a32.06,32.06,0,0,0-31-24V128h48Z"></path></svg></span>
+            <span className="text-[#1c140d] text-base font-normal flex-1 truncate">Regular Deliveries</span>
           </div>
-            ))}
+          <div className="flex items-center gap-3 bg-[#fcfaf8] rounded-lg p-3">
+            <span className="bg-[#f4ede7] rounded-lg p-2"><svg width="22" height="22" fill="currentColor" viewBox="0 0 256 256"><path d="M205.66,61.64l-144,144a8,8,0,0,1-11.32-11.32l144-144a8,8,0,0,1,11.32,11.31ZM50.54,101.44a36,36,0,0,1,50.92-50.91h0a36,36,0,0,1-50.92,50.91ZM56,76A20,20,0,1,0,90.14,61.84h0A20,20,0,0,0,56,76ZM216,180a36,36,0,1,1-10.54-25.46h0A35.76,35.76,0,0,1,216,180Zm-16,0a20,20,0,1,0-5.86,14.14A19.87,19.87,0,0,0,200,180Z"></path></svg></span>
+            <span className="text-[#1c140d] text-base font-normal flex-1 truncate">Exclusive Discounts</span>
           </div>
-
-          <Link href="/subscription" className="btn bg-white text-orange-600 hover:bg-orange-50 px-8 py-4 text-lg font-semibold transition-all duration-300 transform hover:scale-105">
-            Start Your Subscription
-          </Link>
+          <div className="flex items-center gap-3 bg-[#fcfaf8] rounded-lg p-3">
+            <span className="bg-[#f4ede7] rounded-lg p-2"><svg width="22" height="22" fill="currentColor" viewBox="0 0 256 256"><path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm0,192a88,88,0,1,1,88-88A88.1,88.1,0,0,1,128,216Zm64-88a8,8,0,0,1-8,8H128a8,8,0,0,1-8-8V72a8,8,0,0,1,16,0v48h48A8,8,0,0,1,192,128Z"></path></svg></span>
+            <span className="text-[#1c140d] text-base font-normal flex-1 truncate">Early Access</span>
+          </div>
+        </div>
+        <div className="flex py-3 justify-start">
+          <a href="/dashboard/customer/subscriptions" className="flex min-w-[84px] items-center justify-center rounded-xl h-10 px-4 bg-[#f38124] text-[#1c140d] text-sm font-bold">Subscribe Now</a>
         </div>
       </section>
     </div>
