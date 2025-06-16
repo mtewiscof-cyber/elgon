@@ -28,8 +28,8 @@ export const markMessageAsRead = mutation({
     
     const user = await ctx.db
       .query("users")
-      .withIndex("by_token", (q) =>
-        q.eq("tokenIdentifier", identity.tokenIdentifier)
+      .withIndex("by_clerkId", (q) =>
+        q.eq("clerkId", identity.subject)
       )
       .unique();
     if (!user) {
@@ -69,8 +69,8 @@ export const listMessagesWithUserDetails = query({
     
     const user = await ctx.db
       .query("users")
-      .withIndex("by_token", (q) =>
-        q.eq("tokenIdentifier", identity.tokenIdentifier)
+      .withIndex("by_clerkId", (q) =>
+        q.eq("clerkId", identity.subject)
       )
       .unique();
     if (!user) {
@@ -108,8 +108,8 @@ export const listMessagesForUser = query({
     // Find the user in the 'users' table to get their Convex user ID
     const user = await ctx.db
       .query("users")
-      .withIndex("by_token", (q) =>
-        q.eq("tokenIdentifier", identity.tokenIdentifier)
+      .withIndex("by_clerkId", (q) =>
+        q.eq("clerkId", identity.subject)
       )
       .unique();
     if (!user) {
@@ -139,8 +139,8 @@ export const getConversationBetweenUsers = query({
     
     const user = await ctx.db
       .query("users")
-      .withIndex("by_token", (q) =>
-        q.eq("tokenIdentifier", identity.tokenIdentifier)
+      .withIndex("by_clerkId", (q) =>
+        q.eq("clerkId", identity.subject)
       )
       .unique();
     if (!user) {
@@ -186,8 +186,8 @@ export const getUserConversations = query({
     
     const user = await ctx.db
       .query("users")
-      .withIndex("by_token", (q) =>
-        q.eq("tokenIdentifier", identity.tokenIdentifier)
+      .withIndex("by_clerkId", (q) =>
+        q.eq("clerkId", identity.subject)
       )
       .unique();
     if (!user) {
@@ -261,8 +261,8 @@ export const listMessagesWithUserDetailsForUser = query({
     // Find the user in the 'users' table to get their Convex user ID
     const user = await ctx.db
       .query("users")
-      .withIndex("by_token", (q) =>
-        q.eq("tokenIdentifier", identity.tokenIdentifier)
+        .withIndex("by_clerkId", (q) =>
+        q.eq("clerkId", identity.subject)
       )
       .unique();
     if (!user) {

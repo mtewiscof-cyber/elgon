@@ -3,11 +3,12 @@ import { v } from "convex/values";
 
 export default defineSchema({
   users: defineTable({
-    tokenIdentifier: v.string(),
+    clerkId: v.string(),
     email: v.string(),
     role: v.optional(v.string()), // e.g., "customer", "grower", "admin"
     firstName: v.optional(v.string()),
     lastName: v.optional(v.string()),
+    imageUrl: v.optional(v.string()),
     address: v.optional(v.object({
       street: v.string(),
       city: v.string(),
@@ -17,7 +18,7 @@ export default defineSchema({
     })),
     phoneNumber: v.optional(v.string()),
   })
-  .index("by_token", ["tokenIdentifier"]),
+  .index("by_clerkId", ["clerkId"]),
 
   products: defineTable({
     name: v.string(),

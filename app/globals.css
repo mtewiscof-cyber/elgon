@@ -5,14 +5,14 @@
 @tailwind utilities;
 
 :root {
-  --background: #F1D3B2;
+  --background: #f4f1ed;
   --foreground: #171717;
   --primary: #5c3a21;
   --secondary: #c46336;
-  --accent: #e5b768;
+  --accent: #f4f1ed;
   
   /* Additional theme variables */
-  --light-bg: #FFF8EF;
+  --light-bg: #edf9ea;
   --card-bg: #FFFFFF;
   --border-radius: 8px;
   --spacing-sm: 0.5rem;

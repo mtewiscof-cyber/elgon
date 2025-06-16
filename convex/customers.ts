@@ -31,8 +31,8 @@ export const createCustomer = mutation({
     // Find the user document to get their _id
     const user = await ctx.db
       .query("users")
-      .withIndex("by_token", (q) =>
-        q.eq("tokenIdentifier", identity.tokenIdentifier)
+      .withIndex("by_clerkId", (q) =>
+        q.eq("clerkId", identity.subject)
       )
       .unique();
 

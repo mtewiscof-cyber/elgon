@@ -80,8 +80,8 @@ export const updateOrderStatus = mutation({
     // Find the user in the 'users' table to check their role
     const user = await ctx.db
       .query("users")
-      .withIndex("by_token", (q) =>
-        q.eq("tokenIdentifier", identity.tokenIdentifier)
+      .withIndex("by_clerkId", (q) =>
+        q.eq("clerkId", identity.subject)
       )
       .unique();
 
@@ -127,8 +127,8 @@ export const listOrdersByUserId = query({
     // Find the user in the 'users' table to get their Convex user ID
     const user = await ctx.db
       .query("users")
-      .withIndex("by_token", (q) =>
-        q.eq("tokenIdentifier", identity.tokenIdentifier)
+      .withIndex("by_clerkId", (q) =>
+        q.eq("clerkId", identity.subject)
       )
       .unique();
     if (!user) {

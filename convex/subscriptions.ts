@@ -30,8 +30,8 @@ export const createSubscription = mutation({
     // Find the user to check authorization
     const user = await ctx.db
       .query("users")
-      .withIndex("by_token", (q) =>
-        q.eq("tokenIdentifier", identity.tokenIdentifier)
+      .withIndex("by_clerkId", (q) =>
+        q.eq("clerkId", identity.subject)
       )
       .unique();
 
@@ -81,8 +81,8 @@ export const updateSubscription = mutation({
 
     const user = await ctx.db
       .query("users")
-      .withIndex("by_token", (q) =>
-        q.eq("tokenIdentifier", identity.tokenIdentifier)
+      .withIndex("by_clerkId", (q) =>
+        q.eq("clerkId", identity.subject)
       )
       .unique();
 
@@ -124,8 +124,8 @@ export const cancelSubscription = mutation({
 
     const user = await ctx.db
       .query("users")
-      .withIndex("by_token", (q) =>
-        q.eq("tokenIdentifier", identity.tokenIdentifier)
+      .withIndex("by_clerkId", (q) =>
+        q.eq("clerkId", identity.subject)
       )
       .unique();
 
@@ -169,8 +169,8 @@ export const pauseSubscription = mutation({
 
     const user = await ctx.db
       .query("users")
-      .withIndex("by_token", (q) =>
-        q.eq("tokenIdentifier", identity.tokenIdentifier)
+      .withIndex("by_clerkId", (q) =>
+        q.eq("clerkId", identity.subject)
       )
       .unique();
 
@@ -211,8 +211,8 @@ export const resumeSubscription = mutation({
 
     const user = await ctx.db
       .query("users")
-      .withIndex("by_token", (q) =>
-        q.eq("tokenIdentifier", identity.tokenIdentifier)
+      .withIndex("by_clerkId", (q) =>
+        q.eq("clerkId", identity.subject)
       )
       .unique();
 

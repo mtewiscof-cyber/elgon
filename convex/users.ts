@@ -13,8 +13,8 @@ export const createOrGetUser = mutation({
     // Check if the user already exists
     const user = await ctx.db
       .query("users")
-      .withIndex("by_token", (q) =>
-        q.eq("tokenIdentifier", identity.tokenIdentifier)
+      .withIndex("by_clerkId", (q) =>
+        q.eq("clerkId", identity.subject)
       )
       .unique();
 
@@ -25,8 +25,12 @@ export const createOrGetUser = mutation({
 
     // If the user doesn't exist, create a new one
     const userId = await ctx.db.insert("users", {
-      tokenIdentifier: identity.tokenIdentifier,
+      clerkId: identity.subject,
       email: identity.email!,
+      firstName: identity.givenName ?? undefined,
+      lastName: identity.familyName ?? undefined,
+      imageUrl: typeof identity.pictureUrl === "string" ? identity.pictureUrl : undefined,      
+      role: 'customer',
     });
 
     return userId;
@@ -44,8 +48,8 @@ export const getUserByUserId = query({
     // Find the user by their tokenIdentifier (which includes the Clerk user ID)
     const user = await ctx.db
       .query("users")
-      .withIndex("by_token", (q) =>
-        q.eq("tokenIdentifier", identity.tokenIdentifier)
+      .withIndex("by_clerkId", (q) =>
+        q.eq("clerkId", identity.subject)
       )
       .unique();
 
@@ -64,7 +68,7 @@ export const listUsers = query({
 
     const currentUser = await ctx.db
       .query("users")
-      .filter((q) => q.eq(q.field("tokenIdentifier"), identity.tokenIdentifier))
+      .filter((q) => q.eq(q.field("clerkId"), identity.subject))
       .first();
 
     if (!currentUser || currentUser.role !== 'admin') {
@@ -97,7 +101,7 @@ export const updateUser = mutation({
     const identity = await auth.getUserIdentity();
     const user = await db
       .query("users")
-      .filter((q) => q.eq(q.field("tokenIdentifier"), identity?.tokenIdentifier))
+      .filter((q) => q.eq(q.field("clerkId"), identity?.subject))
       .first();
 
     if (!identity || !user || user._id !== args.id) {
@@ -119,7 +123,7 @@ export const deleteUser = mutation({
     const identity = await auth.getUserIdentity();
     const user = await db
       .query("users")
-      .filter((q) => q.eq(q.field("tokenIdentifier"), identity?.tokenIdentifier))
+      .filter((q) => q.eq(q.field("clerkId"), identity?.subject))
       .first();
 
     // Basic check: User must be authenticated and trying to delete their own profile
@@ -147,7 +151,7 @@ export const changeUserRole = mutation({
     // Get the user who is making the request
     const currentUser = await db
       .query("users")
-      .filter((q) => q.eq(q.field("tokenIdentifier"), identity.tokenIdentifier))
+        .filter((q) => q.eq(q.field("clerkId"), identity.subject))
       .first();
 
     if (!currentUser) {

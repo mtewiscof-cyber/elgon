@@ -382,164 +382,86 @@ export default function ProductDetailPage() {
   
   // We know product exists at this point
   return (
-    <div className="container section product-detail-page">
-      <Link href="/products" className="btn btn-text mb-4" style={{ fontWeight: 500, color: 'var(--secondary)' }}>
-        &larr; Back to Products
-      </Link>
-      <div
-        className="product-detail-hero"
-        style={{
-          display: 'flex',
-          flexDirection: 'row',
-          gap: '2.5rem',
-          alignItems: 'flex-start',
-          background: 'var(--light-bg)',
-          borderRadius: 'var(--border-radius)',
-          boxShadow: 'var(--shadow-md)',
-          padding: '2rem',
-          marginBottom: '2rem',
-          flexWrap: 'wrap',
-        }}
-      >
+    <div className="container section product-detail-page" style={{ maxWidth: 960, margin: '0 auto' }}>
+      {/* Breadcrumbs */}
+      <div className="flex flex-wrap gap-2 p-4">
+        <Link href="/products" className="text-[var(--secondary)] text-base font-medium leading-normal hover:underline">Shop</Link>
+        <span className="text-[var(--secondary)] text-base font-medium leading-normal">/</span>
+        <span className="text-[var(--primary)] text-base font-medium leading-normal">{product.name}</span>
+      </div>
+      {/* Product Title, Subtitle, and Image */}
+      <div className="flex flex-wrap justify-between gap-3 p-4">
+        <div className="flex min-w-72 flex-col gap-3">
+          <h1 className="text-[var(--primary)] text-[32px] font-bold leading-tight">{product.name}</h1>
+          <p className="text-[var(--secondary)] text-sm font-normal leading-normal">{product.description}</p>
+        </div>
+      </div>
+      <div className="flex w-full grow bg-white p-4 rounded-lg shadow-md mb-6 flex-col md:flex-row gap-6">
         {/* Product Image */}
-        <div
-          className="product-image"
-          style={{
-            flex: '1 1 320px',
-            minWidth: 0,
-            maxWidth: 480,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            background: 'linear-gradient(135deg, #f1d3b2 60%, #fff8ef 100%)',
-            borderRadius: 'var(--border-radius)',
-            boxShadow: 'var(--shadow-lg)',
-            padding: '1.5rem',
-            margin: '0 auto',
-          }}
-        >
+        <div className="w-full md:w-1/2 flex items-center justify-center">
           {product.imageUrl ? (
             <img
               src={product.imageUrl}
               alt={product.name}
-              className="rounded-lg shadow-md"
-              style={{
-                width: '100%',
-                maxWidth: 340,
-                height: 'auto',
-                objectFit: 'cover',
-                borderRadius: 'var(--border-radius)',
-                boxShadow: 'var(--shadow-md)',
-                background: '#fff',
-              }}
+              className="rounded-lg shadow-md w-full max-w-md object-cover aspect-[3/2]"
+              style={{ background: '#fff' }}
             />
           ) : (
-            <div
-              style={{
-                width: 220,
-                height: 220,
-                background: 'var(--accent)',
-                borderRadius: '50%',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                fontSize: 64,
-                color: 'var(--primary)',
-                boxShadow: 'var(--shadow-md)',
-              }}
-            >
+            <div className="flex items-center justify-center rounded-lg bg-[var(--accent)] w-full max-w-md aspect-[3/2] text-6xl text-[var(--primary)]">
               ☕
             </div>
           )}
         </div>
-        {/* Product Info */}
-        <div
-          className="product-info"
-          style={{
-            flex: '2 1 340px',
-            minWidth: 0,
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '1.2rem',
-            justifyContent: 'center',
-          }}
-        >
-          <h1 style={{ fontSize: '2rem', fontWeight: 700, color: 'var(--primary)', marginBottom: 8 }}>{product.name}</h1>
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.7rem', alignItems: 'center', marginBottom: 8 }}>
-            <span
-              style={{
-                background: 'var(--accent)',
-                color: 'var(--primary)',
-                borderRadius: 16,
-                padding: '0.3rem 1rem',
-                fontWeight: 600,
-                fontSize: '1.1rem',
-              }}
-            >
-              ${product.price.toFixed(2)} / {product.weight}
-            </span>
-            <span
-              style={{
-                background: product.stock > 0 ? 'var(--light-bg)' : '#ffeaea',
-                color: product.stock > 0 ? 'var(--secondary)' : '#c00',
-                borderRadius: 16,
-                padding: '0.3rem 1rem',
-                fontWeight: 500,
-                fontSize: '1rem',
-              }}
-            >
-              {product.stock > 0 ? `${product.stock} in stock` : 'Out of stock'}
-            </span>
-          </div>
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.7rem', alignItems: 'center', marginBottom: 8 }}>
-            <span style={{ background: 'var(--secondary)', color: 'white', borderRadius: 16, padding: '0.3rem 1rem', fontWeight: 500, fontSize: '1rem' }}>
-              {product.origin}
-            </span>
-            {grower && (
-              <span style={{ background: 'var(--primary)', color: 'white', borderRadius: 16, padding: '0.3rem 1rem', fontWeight: 500, fontSize: '1rem' }}>
-                {grower.name}
-              </span>
-            )}
+        {/* Product Details and Actions */}
+        <div className="flex flex-col gap-4 w-full md:w-1/2 justify-center">
+          <div className="flex flex-wrap gap-3 items-center">
+            <span className="bg-[var(--accent)] text-[var(--primary)] rounded-lg px-4 py-2 font-bold text-lg">${product.price.toFixed(2)} / {product.weight}</span>
+            <span className={`rounded-lg px-4 py-2 font-medium text-base ${product.stock > 0 ? 'bg-[var(--light-bg)] text-[var(--secondary)]' : 'bg-red-100 text-red-700'}`}>{product.stock > 0 ? `${product.stock} in stock` : 'Out of stock'}</span>
+            <span className="bg-[var(--secondary)] text-white rounded-lg px-4 py-2 font-medium text-base">{product.origin}</span>
+            {grower && <span className="bg-[var(--primary)] text-white rounded-lg px-4 py-2 font-medium text-base">{grower.name}</span>}
           </div>
           {product.tastingNotes && product.tastingNotes.length > 0 && (
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', marginBottom: 8 }}>
-              {product.tastingNotes.slice(0, 4).map((note, i) => (
-                <span key={i} style={{ background: 'var(--accent)', color: 'var(--primary)', borderRadius: 12, padding: '0.2rem 0.8rem', fontSize: '0.95rem', fontWeight: 500 }}>{note}</span>
+            <div className="flex flex-wrap gap-2">
+              {product.tastingNotes.map((note, i) => (
+                <span key={i} className="bg-[var(--accent)] text-[var(--primary)] rounded px-3 py-1 text-sm font-medium">{note}</span>
               ))}
-              {product.tastingNotes.length > 4 && (
-                <span style={{ background: 'var(--light-bg)', color: 'var(--primary)', borderRadius: 12, padding: '0.2rem 0.8rem', fontSize: '0.95rem', fontWeight: 500 }}>+{product.tastingNotes.length - 4} more</span>
-              )}
             </div>
           )}
-          <p style={{ fontSize: '1.1rem', color: 'var(--foreground)', marginBottom: 8, lineHeight: 1.6 }}>{product.description}</p>
-          {/* Action Buttons */}
-          <div className="cta-actions" style={{ display: 'flex', flexWrap: 'wrap', gap: '0.7rem', marginTop: 12, alignItems: 'stretch' }}>
+          <div className="flex items-end gap-4 mt-2">
+            <label className="flex flex-col min-w-32 flex-1">
+              <span className="text-[var(--primary)] text-sm font-medium mb-1">Quantity</span>
+              <select
+                className="form-input w-full min-w-0 flex-1 rounded-lg border border-[var(--accent)] bg-white text-[var(--primary)] h-12 p-3 text-base font-normal"
+                value={1}
+                disabled
+              >
+                <option value={1}>1</option>
+              </select>
+            </label>
             {canOrder ? (
               <button
                 onClick={() => setShowOrderForm(true)}
-                className="btn btn-primary cta-btn"
-                style={{ minWidth: 130, fontWeight: 600, fontSize: '0.98rem', borderRadius: 16, padding: '0.7rem 1.2rem', height: 48 }}
+                className="flex min-w-[120px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-[var(--secondary)] text-white text-base font-bold leading-normal tracking-[0.015em] hover:bg-[var(--primary)] transition"
                 disabled={product.stock <= 0}
               >
                 {product.stock > 0 ? 'Order Now' : 'Out of Stock'}
               </button>
             ) : (
-              <div style={{ width: 130, height: 48, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <div style={{ width: 130, height: 40, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 {!clerkUser ? (
-                  <Link href="/sign-in" className="btn btn-primary cta-btn" style={{ width: '100%', fontWeight: 600, fontSize: '0.98rem', borderRadius: 16, padding: '0.7rem 1.2rem', height: 40, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <Link href="/sign-in" className="flex min-w-[120px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-[var(--primary)] text-white text-base font-bold leading-normal tracking-[0.015em] hover:bg-[var(--secondary)] transition">
                     Sign In to Order
                   </Link>
                 ) : user?.role !== 'customer' ? (
-                  <div className="text-center p-2 bg-gray-100 rounded-lg" style={{ fontSize: '0.97rem', height: 40, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-                    <span className="text-gray-600" style={{ fontSize: '0.97rem' }}>Customer account required to place orders</span>
-                    <Link href="/onboarding/customer" className="text-blue-600 hover:underline" style={{ fontSize: '0.97rem' }}>
+                  <div className="text-center p-2 bg-gray-100 rounded-lg text-sm">
+                    <span className="text-gray-600">Customer account required to place orders</span>
+                    <Link href="/onboarding/customer" className="text-blue-600 hover:underline ml-2">
                       Complete your profile
                     </Link>
                   </div>
                 ) : (
                   <button
-                    className="btn btn-primary cta-btn opacity-50 cursor-not-allowed"
-                    style={{ width: '100%', fontWeight: 600, fontSize: '0.98rem', borderRadius: 16, padding: '0.7rem 1.2rem', height: 40 }}
+                    className="flex min-w-[120px] max-w-[480px] cursor-not-allowed items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-gray-300 text-white text-base font-bold leading-normal tracking-[0.015em]"
                     disabled
                   >
                     Loading...
@@ -550,14 +472,38 @@ export default function ProductDetailPage() {
             {canMessage && (
               <button
                 onClick={() => setShowMessageForm(true)}
-                className="btn btn-secondary cta-btn"
-                style={{ minWidth: 130, fontWeight: 600, fontSize: '0.98rem', borderRadius: 16, padding: '0.7rem 1.2rem', height: 48 }}
+                className="flex min-w-[120px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-[var(--accent)] text-[var(--primary)] text-base font-bold leading-normal tracking-[0.015em] hover:bg-[var(--secondary)] hover:text-white transition"
               >
                 Message Grower
               </button>
             )}
           </div>
         </div>
+      </div>
+      {/* About this coffee */}
+      <h2 className="text-[var(--primary)] text-[22px] font-bold leading-tight tracking-[-0.015em] px-4 pb-3 pt-5">About this coffee</h2>
+      <p className="text-[var(--primary)] text-base font-normal leading-normal pb-3 pt-1 px-4">{product.description}</p>
+      {/* Product Details Grid */}
+      <h2 className="text-[var(--primary)] text-[22px] font-bold leading-tight tracking-[-0.015em] px-4 pb-3 pt-5">Product Details</h2>
+      <div className="p-4 grid grid-cols-[20%_1fr] gap-x-6">
+        <div className="col-span-2 grid grid-cols-subgrid border-t border-t-[var(--accent)] py-5">
+          <p className="text-[var(--secondary)] text-sm font-normal leading-normal">Origin</p>
+          <p className="text-[var(--primary)] text-sm font-normal leading-normal">{product.origin}</p>
+        </div>
+        <div className="col-span-2 grid grid-cols-subgrid border-t border-t-[var(--accent)] py-5">
+          <p className="text-[var(--secondary)] text-sm font-normal leading-normal">Weight</p>
+          <p className="text-[var(--primary)] text-sm font-normal leading-normal">{product.weight}</p>
+        </div>
+        <div className="col-span-2 grid grid-cols-subgrid border-t border-t-[var(--accent)] py-5">
+          <p className="text-[var(--secondary)] text-sm font-normal leading-normal">Price</p>
+          <p className="text-[var(--primary)] text-sm font-normal leading-normal">${product.price.toFixed(2)}</p>
+        </div>
+        {product.tastingNotes && product.tastingNotes.length > 0 && (
+          <div className="col-span-2 grid grid-cols-subgrid border-t border-t-[var(--accent)] py-5">
+            <p className="text-[var(--secondary)] text-sm font-normal leading-normal">Tasting Notes</p>
+            <p className="text-[var(--primary)] text-sm font-normal leading-normal">{product.tastingNotes.join(', ')}</p>
+          </div>
+        )}
       </div>
       {/* Modals */}
       {showOrderForm && (
