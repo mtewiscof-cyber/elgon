@@ -34,7 +34,7 @@ const Navigation = () => {
           maxWidth: 1200,
           borderRadius: '9999px',
           boxShadow: '0 4px 24px 0 rgba(0,0,0,0.08)',
-          minHeight: 64,
+          minHeight: 44,
           pointerEvents: 'auto',
         }}
       >
@@ -122,7 +122,7 @@ const Navigation = () => {
           </li>
           <li>
             <Link
-              href="/blogs"
+              href="/blog"
               style={{
                 color: 'var(--primary)',
                 textDecoration: 'none',
@@ -239,30 +239,30 @@ const Navigation = () => {
             .premium-nav {
               flex-direction: row !important;
               align-items: center !important;
-              justify-content: center !important;
+              justify-content: space-between !important;
               gap: 0 !important;
-              min-height: 48px !important;
-              margin-top: 0.7rem !important;
-              padding: 0.3rem 0.5rem !important;
-              border-radius: 24px !important;
+              min-height: 44px !important;
+              margin-top: 0.5rem !important;
+              padding: 0.15rem 0.7rem !important;
+              border-radius: 18px !important;
               box-shadow: 0 2px 12px 0 rgba(0,0,0,0.10) !important;
               background: rgba(255,255,255,0.92) !important;
               max-width: 98vw !important;
             }
             .nav-logo {
-              width: 80px !important;
-              height: 80px !important;
-              min-width: 80px !important;
-              min-height: 80px !important;
-              margin: 0 auto !important;
+              width: 96px !important;
+              height: 96px !important;
+              min-width: 96px !important;
+              min-height: 96px !important;
+              margin: 0 !important;
               display: block !important;
             }
             .mobile-menu-button {
               display: block !important;
-              position: absolute !important;
-              right: 1.2rem !important;
-              top: 50%;
-              transform: translateY(-50%);
+              position: static !important;
+              right: 0 !important;
+              top: auto !important;
+              transform: none !important;
               margin-left: 0 !important;
               z-index: 1100;
             }
@@ -275,7 +275,7 @@ const Navigation = () => {
               gap: 0.7rem !important;
               background: rgba(255, 248, 239, 0.98);
               position: fixed !important;
-              top: 70px !important;
+              top: 60px !important;
               left: 0;
               right: 0;
               padding: 1.2rem 0.5rem 1rem 0.5rem;
@@ -283,11 +283,11 @@ const Navigation = () => {
               box-shadow: var(--shadow-md);
               z-index: 1050;
             }
-            /* Center nav content and logo */
+            /* Remove centering of logo on mobile */
             .premium-nav > div:first-child {
-              flex: 1 1 0%;
+              flex: 0 0 auto !important;
               display: flex;
-              justify-content: center;
+              justify-content: flex-start;
               align-items: center;
             }
           }

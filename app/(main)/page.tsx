@@ -32,7 +32,7 @@ export default function Home() {
       <section
         className="section hero-section flex items-center justify-center relative"
         style={{
-          minHeight: '580px',
+          minHeight: '600px',
           backgroundImage:
             'linear-gradient(rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.4) 100%), url("/coffee1.jpg")',
           backgroundSize: 'cover',
@@ -102,13 +102,13 @@ export default function Home() {
               fontSize: '1.15rem',
               marginBottom: '1.5rem',
               fontWeight: 400,
-          }}
-        >
+            }}
+          >
             Our cooperative is dedicated to supporting women coffee farmers through fair trade practices and sustainable agriculture. We believe in quality coffee that makes a difference.
           </h2>
           <div className="flex flex-wrap gap-3 justify-center">
-          <Link
-            href="/products"
+            <Link
+              href="/products"
               className="btn hero-btn"
               style={{
                 minWidth: 120,
@@ -125,11 +125,11 @@ export default function Home() {
                 alignItems: 'center',
                 justifyContent: 'center',
               }}
-          >
+            >
               <span className="truncate">Discover Our Coffee</span>
-          </Link>
-          <Link
-            href="/about"
+            </Link>
+            <Link
+              href="/about"
               className="btn hero-btn"
               style={{
                 minWidth: 120,
@@ -146,16 +146,16 @@ export default function Home() {
                 alignItems: 'center',
                 justifyContent: 'center',
               }}
-          >
+            >
               <span className="truncate">Our Impact</span>
-          </Link>
+            </Link>
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
 
-    {/* About Us Section */}
-    <section className="section container about-section" style={{ padding: 'var(--spacing-lg) 0' }}>
-      <div
+      {/* About Us Section */}
+      <section className="section container about-section" style={{ padding: 'var(--spacing-lg) 0' }}>
+        <div
           className="flex flex-col gap-6 md:flex-row md:gap-8 items-center justify-between px-4 py-10"
         >
           {/* Left: Image */}
@@ -189,28 +189,28 @@ export default function Home() {
               <span className="truncate">Learn More</span>
             </Link>
           </div>
-      </div>
-    </section>
+        </div>
+      </section>
 
-    {/* Featured Products Section */}
-    <section className="section featured-section" style={{ backgroundColor: 'var(--light-bg)', padding: 'var(--spacing-lg) 0' }}>
-      <div className="container">
-        <h2 style={{ textAlign: 'center', marginBottom: 'var(--spacing-xl)', fontSize: '1.4rem' }}>
-          Discover Our Coffee
-        </h2>
+      {/* Featured Products Section */}
+      <section className="section featured-section" style={{ backgroundColor: 'var(--light-bg)', padding: 'var(--spacing-lg) 0' }}>
+        <div className="container">
+          <h2 style={{ textAlign: 'center', marginBottom: 'var(--spacing-xl)', fontSize: '1.4rem' }}>
+            Discover Our Coffee
+          </h2>
 
-        {isLoading ? (
-          <div className="flex justify-center items-center" style={{ minHeight: '200px' }}>
-            <div className="loading-spinner"></div>
-          </div>
-        ) : featuredProducts.length > 0 ? (
+          {isLoading ? (
+            <div className="flex justify-center items-center" style={{ minHeight: '200px' }}>
+              <div className="loading-spinner"></div>
+            </div>
+          ) : featuredProducts.length > 0 ? (
             <div className="flex flex-col gap-6">
               {featuredProducts.map((product, idx) => {
                 // Choose fallback image if product.imageUrl is missing
                 let fallbackImg = idx % 2 === 0 ? '/coffee1.jpg' : '/coffee3.jpg';
                 return (
-              <div
-                key={product._id}
+                <div
+                  key={product._id}
                     className="flex items-stretch justify-between gap-4 rounded-xl bg-white shadow-md p-4 flex-col md:flex-row"
                     style={{ minHeight: 180 }}
               >
@@ -220,7 +220,7 @@ export default function Home() {
                         <p className="text-[var(--primary)] text-base font-bold leading-tight">{product.name}</p>
                         <p className="text-[var(--secondary)] text-sm font-normal leading-normal">
                           {product.origin}
-                          {product.tastingNotes && product.tastingNotes.length > 0 && (
+                    {product.tastingNotes && product.tastingNotes.length > 0 && (
                             <span className="ml-2 text-xs font-medium">• {product.tastingNotes.slice(0, 2).join(', ')}{product.tastingNotes.length > 2 ? `, +${product.tastingNotes.length - 2}` : ''}</span>
                           )}
                         </p>
@@ -257,14 +257,14 @@ export default function Home() {
                   </div>
                 );
               })}
-          </div>
-        ) : (
-          <div className="text-center">
-            <p>No products available at the moment. Check back soon!</p>
-          </div>
-        )}
+            </div>
+          ) : (
+            <div className="text-center">
+              <p>No products available at the moment. Check back soon!</p>
+            </div>
+          )}
 
-        {products.length > 3 && (
+          {products.length > 3 && (
             <div className="flex justify-center mt-8">
               <Link
                 href="/products"
@@ -272,14 +272,14 @@ export default function Home() {
                 style={{ fontWeight: 700 }}
               >
                 <span className="truncate">View All Coffee Products</span>
-            </Link>
-          </div>
-        )}
-      </div>
-    </section>
+              </Link>
+            </div>
+          )}
+        </div>
+      </section>
 
-    {/* Impact Section */}
-    <section className="section container impact-section" style={{ padding: 'var(--spacing-lg) 0' }}>
+      {/* Impact Section */}
+      <section className="section container impact-section" style={{ padding: 'var(--spacing-lg) 0' }}>
       <div className="flex flex-col items-center">
         <div className="flex flex-col md:flex-row gap-6 w-full justify-center">
           {/* Card 1 */}
@@ -297,87 +297,90 @@ export default function Home() {
             <span className="text-[var(--primary)] text-base font-medium mb-2">Increase in Farmer Income</span>
             <span className="text-[var(--primary)] text-2xl font-bold">25%</span>
           </div>
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
 
-    {/* Call to Action */}
-    <section
-      className="section cta-section"
-      style={{
-        backgroundColor: 'var(--primary)',
-        color: 'white',
-        textAlign: 'center',
-        padding: 'var(--spacing-xl) 0',
-        marginBottom: '0',
-        borderRadius: 'var(--border-radius)',
-        boxShadow: 'var(--shadow-md)',
-      }}
-    >
-      <div className="container">
-        <h2 style={{ color: 'white', fontSize: '1.4rem', marginBottom: 12 }}>
-          Join Our Coffee Journey
-        </h2>
-        <p
-          style={{
-            maxWidth: '600px',
-            margin: '0 auto var(--spacing-lg)',
-            color: 'white',
-            fontSize: '1rem',
-          }}
-        >
-          Support women coffee farmers and enjoy exceptional specialty coffee from the slopes of Mt. Elgon.
-        </p>
-        <Link
-          href="/products"
-          className="btn btn-accent"
-          style={{ minWidth: 180, fontWeight: 600, fontSize: '1rem' }}
-        >
-          Shop Now
-        </Link>
-      </div>
-    </section>
+      {/* Call to Action */}
+      <section
+        className="section cta-section"
+        style={{
+          backgroundColor: 'var(--primary)',
+          color: 'white',
+          textAlign: 'center',
+          padding: 'var(--spacing-xl) 0',
+          marginBottom: '0',
+          borderRadius: 'var(--border-radius)',
+          boxShadow: 'var(--shadow-md)',
+        }}
+      >
+        <div className="container">
+          <h2 style={{ color: 'white', fontSize: '1.4rem', marginBottom: 12 }}>
+            Join Our Coffee Journey
+          </h2>
+          <p
+            style={{
+              maxWidth: '600px',
+              margin: '0 auto var(--spacing-lg)',
+              color: 'white',
+              fontSize: '1rem',
+            }}
+          >
+            Support women coffee farmers and enjoy exceptional specialty coffee from the slopes of Mt. Elgon.
+          </p>
+          <Link
+            href="/products"
+            className="btn btn-accent"
+            style={{ minWidth: 180, fontWeight: 600, fontSize: '1rem' }}
+          >
+            Shop Now
+          </Link>
+        </div>
+      </section>
 
-    {/* Responsive styles for mobile */}
-    <style jsx global>{`
-      @media (max-width: 768px) {
-        .hero-section {
+      {/* Responsive styles for mobile */}
+      <style jsx global>{`
+        @media (max-width: 768px) {
+          .hero-section {
           padding-top: 0 !important;
           margin-top: 0 !important;
           margin-left: 0 !important;
           margin-right: 0 !important;
-        }
-        .hero-content h1 {
-          font-size: 1.4rem !important;
-        }
-        .hero-btns .hero-btn {
-          width: 100% !important;
-          min-width: 0 !important;
-          margin-bottom: 0.5rem !important;
-        }
-        .about-section .about-content {
-          flex-direction: column !important;
-          gap: 1.5rem !important;
-        }
-        .about-section img {
-          max-width: 100% !important;
-        }
-        .featured-section .featured-grid {
-          grid-template-columns: 1fr !important;
-          gap: 1.2rem !important;
-        }
+          }
+          .hero-content h1 {
+            font-size: 1.4rem !important;
+          }
+          .hero-btns .hero-btn {
+            width: 100% !important;
+            min-width: 0 !important;
+            margin-bottom: 0.5rem !important;
+          }
+          .about-section .about-content {
+            flex-direction: column !important;
+            gap: 1.5rem !important;
+          }
+          .about-section img {
+            max-width: 100% !important;
+          }
+          .featured-section .featured-grid {
+            grid-template-columns: 1fr !important;
+            gap: 1.2rem !important;
+          }
         .impact-section .flex-row {
           flex-direction: column !important;
-          gap: 1.2rem !important;
+            gap: 1.2rem !important;
+          }
+          .cta-section {
+            padding: var(--spacing-lg) 0 !important;
+          }
+          .page-content {
+            padding-top: 60px !important;
+          }
         }
-        .cta-section {
-          padding: var(--spacing-lg) 0 !important;
-        }
-      }
-    `}</style>
-  </main>
+      `}</style>
+    </main>
   </>
-);
+  );
 }
 
 // Removed AuthenticatedContent as its logic is simplified into the main Home component
