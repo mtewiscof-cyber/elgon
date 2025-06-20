@@ -1,62 +1,81 @@
+'use client';
+
 import Image from 'next/image';
 import Link from 'next/link';
+import { useQuery } from 'convex/react';
+import { api } from '@/convex/_generated/api';
+import { useState } from 'react';
 
-const blogImages = [
-  '/coffee1.jpg',
-  '/coffee2.jpg',
-  '/coffee3.jpg',
-  '/coffee4.jpg',
-];
+type ContentType = 'all' | 'blogs' | 'news';
 
 const BlogPage = () => {
-  const blogPosts = [
-    {
-      id: 1,
-      title: "The Journey of Mt. Elgon Coffee: From Farm to Cup",
-      excerpt: "Follow the journey of our specialty coffee beans from the fertile slopes of Mt. Elgon through harvesting, processing, and roasting.",
-      date: "May 15, 2023",
-      author: "Sarah Namono",
-      category: "Coffee Production",
-      image: blogImages[0],
-    },
-    {
-      id: 2,
-      title: "Women's Economic Empowerment Through Specialty Coffee",
-      excerpt: "How our cooperative model is creating sustainable economic opportunities for women coffee farmers across the Mt. Elgon region.",
-      date: "April 28, 2023",
-      author: "Grace Atuhaire",
-      category: "Social Impact",
-      image: blogImages[1],
-    },
-    {
-      id: 3,
-      title: "Sustainable Farming Practices at High Altitudes",
-      excerpt: "Discover the unique challenges and benefits of growing coffee at the high elevations of Mt. Elgon, and how our farmers address them sustainably.",
-      date: "April 10, 2023",
-      author: "Elizabeth Wanyama",
-      category: "Sustainable Farming",
-      image: blogImages[2],
-    },
-    {
-      id: 4,
-      title: "The Distinct Flavor Profile of Mt. Elgon Coffee",
-      excerpt: "What makes Mt. Elgon coffee unique? Explore the flavor characteristics that set our beans apart in the specialty coffee world.",
-      date: "March 22, 2023",
-      author: "Mary Chemutai",
-      category: "Coffee Education",
-      image: blogImages[3],
-    },
-  ];
+  const [selectedTab, setSelectedTab] = useState<ContentType>('all');
+  
+  // Fetch blog posts and news from database
+  const blogPosts = useQuery(api.blogPosts.listBlogPosts);
+  const news = useQuery(api.news.listNews);
 
-  const featuredPost = {
-    id: 5,
-    title: "Annual Impact Report: How Coffee Sales Changed Lives in 2023",
-    excerpt: "Our 2023 Impact Report shows how your coffee purchases have directly improved the lives of women farmers and their communities through economic empowerment, education, and healthcare initiatives.",
-    date: "June 2, 2023",
-    author: "Janet Nabutuwa, CEO",
-    category: "Impact Report",
+  // Combine and transform data for display
+  const transformedBlogPosts = blogPosts?.map(post => ({
+    id: post._id,
+    title: post.title,
+    excerpt: post.excerpt,
+    date: new Date(post.date).toLocaleDateString('en-US', { 
+      year: 'numeric', 
+      month: 'long', 
+      day: 'numeric' 
+    }),
+    author: post.author,
+    category: post.category,
+    image: post.imageUrl || '/coffee1.jpg',
+    type: 'blog' as const,
+    timestamp: post.date,
+  })) || [];
+
+  const transformedNews = news?.map(item => ({
+    id: item._id,
+    title: item.title,
+    excerpt: item.excerpt || item.content.substring(0, 150) + '...',
+    date: new Date(item.publishedAt).toLocaleDateString('en-US', { 
+      year: 'numeric', 
+      month: 'long', 
+      day: 'numeric' 
+    }),
+    author: item.author || 'Mt. Elgon Team',
+    category: 'News',
+    image: item.imageUrl || '/coffee2.jpg',
+    type: 'news' as const,
+    timestamp: item.publishedAt,
+  })) || [];
+
+  // Combine all content
+  const allContent = [...transformedBlogPosts, ...transformedNews]
+    .sort((a, b) => b.timestamp - a.timestamp);
+
+  // Filter content based on selected tab
+  const filteredContent = selectedTab === 'all' 
+    ? allContent 
+    : selectedTab === 'blogs' 
+    ? transformedBlogPosts 
+    : transformedNews;
+
+  // Get featured post (most recent)
+  const featuredPost = allContent[0] || {
+    id: 'default',
+    title: "Welcome to Mt. Elgon Women's Coffee Blog",
+    excerpt: "Stay updated with the latest stories, news, and insights from our coffee community. We share the journey of our farmers, sustainability practices, and the impact of your support.",
+    date: new Date().toLocaleDateString('en-US', { 
+      year: 'numeric', 
+      month: 'long', 
+      day: 'numeric' 
+    }),
+    author: "Mt. Elgon Team",
+    category: "Welcome",
     image: '/coffee2.jpg',
+    type: 'blog' as const,
   };
+
+  const isLoading = blogPosts === undefined || news === undefined;
 
   return (
     <div className="min-h-screen bg-white font-[Newsreader, Noto Sans, sans-serif]">
@@ -73,43 +92,98 @@ const BlogPage = () => {
       {/* Featured Post Section */}
       <section className="max-w-4xl mx-auto w-full px-2 sm:px-4 py-8 md:py-12">
         <h2 className="text-[#171312] text-[22px] font-bold leading-tight tracking-[-0.015em] px-2 pb-3 pt-2">Featured Post</h2>
-        <div className="flex flex-col xl:flex-row gap-6 bg-[var(--light-bg)] rounded-xl overflow-hidden shadow-md">
-          <div className="relative w-full xl:w-1/2 min-h-[220px] h-64 xl:h-auto">
-            <Image src={featuredPost.image} alt={featuredPost.title} fill className="object-cover" />
+        {isLoading ? (
+          <div className="flex justify-center items-center py-12">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[var(--primary)]"></div>
+            <span className="ml-2">Loading featured content...</span>
           </div>
-          <div className="flex flex-col justify-center gap-2 p-6 xl:w-1/2">
-            <span className="text-[var(--secondary)] font-bold text-sm">{featuredPost.category}</span>
-            <h3 className="text-[#171312] text-lg md:text-2xl font-bold leading-tight tracking-[-0.015em]">{featuredPost.title}</h3>
-            <p className="text-[#826e68] text-base font-normal leading-normal">{featuredPost.excerpt}</p>
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mt-2">
-              <span className="text-[#826e68] text-sm">{featuredPost.date} | By {featuredPost.author}</span>
-              <Link href={`/blog/${featuredPost.id}`} className="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-8 px-4 bg-[#f1d7cf] text-[#171312] text-sm font-medium leading-normal">Read More</Link>
+        ) : (
+          <div className="flex flex-col xl:flex-row gap-6 bg-[var(--light-bg)] rounded-xl overflow-hidden shadow-md">
+            <div className="relative w-full xl:w-1/2 min-h-[220px] h-64 xl:h-auto">
+              <Image src={featuredPost.image} alt={featuredPost.title} fill className="object-cover" />
+            </div>
+            <div className="flex flex-col justify-center gap-2 p-6 xl:w-1/2">
+              <span className="text-[var(--secondary)] font-bold text-sm">
+                {featuredPost.category}
+                {featuredPost.type === 'news' && (
+                  <span className="ml-2 px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full">NEWS</span>
+                )}
+              </span>
+              <h3 className="text-[#171312] text-lg md:text-2xl font-bold leading-tight tracking-[-0.015em]">{featuredPost.title}</h3>
+              <p className="text-[#826e68] text-base font-normal leading-normal">{featuredPost.excerpt}</p>
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mt-2">
+                <span className="text-[#826e68] text-sm">{featuredPost.date} | By {featuredPost.author}</span>
+                <Link href={`/${featuredPost.type}/${featuredPost.id}`} className="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-8 px-4 bg-[#f1d7cf] text-[#171312] text-sm font-medium leading-normal">Read More</Link>
+              </div>
             </div>
           </div>
+        )}
+      </section>
+
+      {/* Content Filter Tabs */}
+      <section className="max-w-5xl mx-auto w-full px-2 sm:px-4 py-2">
+        <div className="flex flex-wrap gap-2 justify-center">
+          {[
+            { key: 'all' as ContentType, label: 'All Content', count: allContent.length },
+            { key: 'blogs' as ContentType, label: 'Blog Posts', count: transformedBlogPosts.length },
+            { key: 'news' as ContentType, label: 'News', count: transformedNews.length },
+          ].map(({ key, label, count }) => (
+            <button
+              key={key}
+              onClick={() => setSelectedTab(key)}
+              className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+                selectedTab === key
+                  ? 'bg-[var(--primary)] text-white'
+                  : 'bg-[#f4f2f1] text-[#171312] hover:bg-[#e8e4e1]'
+              }`}
+            >
+              {label} ({count})
+            </button>
+          ))}
         </div>
       </section>
 
       {/* Latest Stories Grid */}
       <section id="latest" className="max-w-5xl mx-auto w-full px-2 sm:px-4 py-8 md:py-12">
-        <h2 className="text-[#171312] text-[22px] font-bold leading-tight tracking-[-0.015em] px-2 pb-3 pt-2">Latest Stories</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-          {blogPosts.map((post, idx) => (
-            <div key={post.id} className="flex flex-col gap-3 bg-[var(--light-bg)] rounded-xl overflow-hidden shadow-sm">
-              <div className="relative w-full aspect-video">
-                <Image src={post.image} alt={post.title} fill className="object-cover" />
-              </div>
-              <div className="flex flex-col gap-1 p-4">
-                <span className="text-[var(--secondary)] font-bold text-xs">{post.category}</span>
-                <h3 className="text-[#171312] text-base font-semibold leading-tight">{post.title}</h3>
-                <p className="text-[#826e68] text-sm font-normal leading-normal line-clamp-3">{post.excerpt}</p>
-                <div className="flex items-center justify-between mt-2">
-                  <span className="text-[#826e68] text-xs">{post.date}</span>
-                  <Link href={`/blog/${post.id}`} className="flex min-w-[64px] max-w-[180px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-8 px-3 bg-[#f1d7cf] text-[#171312] text-xs font-medium leading-normal">Read More</Link>
+        <h2 className="text-[#171312] text-[22px] font-bold leading-tight tracking-[-0.015em] px-2 pb-3 pt-2">
+          {selectedTab === 'all' ? 'Latest Stories' : 
+           selectedTab === 'blogs' ? 'Blog Posts' : 'Latest News'}
+        </h2>
+        {isLoading ? (
+          <div className="flex justify-center items-center py-12">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[var(--primary)]"></div>
+            <span className="ml-2">Loading content...</span>
+          </div>
+        ) : filteredContent.length === 0 ? (
+          <div className="text-center py-12 text-gray-500">
+            <p className="text-lg mb-2">No {selectedTab === 'all' ? 'content' : selectedTab} found.</p>
+            <p className="text-sm">Check back soon for new updates!</p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+            {filteredContent.map((post) => (
+              <div key={post.id} className="flex flex-col gap-3 bg-[var(--light-bg)] rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+                <div className="relative w-full aspect-video">
+                  <Image src={post.image} alt={post.title} fill className="object-cover" />
+                  {post.type === 'news' && (
+                    <div className="absolute top-2 right-2 px-2 py-1 bg-blue-600 text-white text-xs rounded-full">
+                      NEWS
+                    </div>
+                  )}
+                </div>
+                <div className="flex flex-col gap-1 p-4">
+                  <span className="text-[var(--secondary)] font-bold text-xs">{post.category}</span>
+                  <h3 className="text-[#171312] text-base font-semibold leading-tight line-clamp-2">{post.title}</h3>
+                  <p className="text-[#826e68] text-sm font-normal leading-normal line-clamp-3">{post.excerpt}</p>
+                  <div className="flex items-center justify-between mt-2">
+                    <span className="text-[#826e68] text-xs">{post.date}</span>
+                    <Link href={`/${post.type}/${post.id}`} className="flex min-w-[64px] max-w-[180px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-8 px-3 bg-[#f1d7cf] text-[#171312] text-xs font-medium leading-normal hover:bg-[#e8d4cb] transition-colors">Read More</Link>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
       </section>
 
       {/* Categories Section */}
