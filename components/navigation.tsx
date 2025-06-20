@@ -84,7 +84,7 @@ const Navigation = () => {
             minWidth: '200px',
             transition: 'max-height 0.3s ease-in-out, opacity 0.3s ease-in-out',
           }}
-          className={menuOpen ? 'menu-open' : 'menu-closed'}
+          className={`nav-links ${menuOpen ? 'menu-open' : 'menu-closed'}`}
         >
           <li>
             <Link
@@ -182,9 +182,57 @@ const Navigation = () => {
               </Link>
             </li>
           )}
+          {/* User actions moved inside nav-links for mobile */}
+          <li className="user-actions-mobile">
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexDirection: 'column' }}>
+              <SignedIn>
+                <UserButton afterSignOutUrl="/" />
+              </SignedIn>
+              <SignedOut>
+                <SignInButton mode="modal">
+                  <button
+                    style={{
+                      background: 'var(--accent)',
+                      color: 'var(--primary)',
+                      padding: '0.5rem 1.5rem',
+                      borderRadius: '9999px',
+                      border: 'none',
+                      cursor: 'pointer',
+                      fontWeight: 'bold',
+                      fontSize: '1rem',
+                      boxShadow: 'var(--shadow-sm)',
+                      transition: 'background 0.2s',
+                      width: '100%',
+                    }}
+                  >
+                    Sign In
+                  </button>
+                </SignInButton>
+              </SignedOut>
+              <Link
+                href="/products"
+                style={{
+                  color: 'var(--primary)',
+                  textDecoration: 'none',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontWeight: 600,
+                  background: 'var(--accent)',
+                  borderRadius: '9999px',
+                  padding: '0.5rem 1.5rem',
+                  boxShadow: 'var(--shadow-sm)',
+                  transition: 'background 0.2s',
+                  width: '100%',
+                }}
+              >
+                Shop Now
+              </Link>
+            </div>
+          </li>
         </ul>
-        {/* User actions and Shop Now button */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexShrink: 0 }} className={menuOpen ? 'menu-open' : 'menu-closed'}>
+        {/* User actions for desktop */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexShrink: 0 }} className="user-actions-desktop">
           <SignedIn>
             <UserButton afterSignOutUrl="/" />
           </SignedIn>
@@ -241,19 +289,19 @@ const Navigation = () => {
               align-items: center !important;
               justify-content: space-between !important;
               gap: 0 !important;
-              min-height: 44px !important;
+              min-height: 56px !important;
               margin-top: 0.5rem !important;
-              padding: 0.15rem 0.7rem !important;
-              border-radius: 18px !important;
+              padding: 0.5rem 1rem !important;
+              border-radius: 16px !important;
               box-shadow: 0 2px 12px 0 rgba(0,0,0,0.10) !important;
-              background: rgba(255,255,255,0.92) !important;
-              max-width: 98vw !important;
+              background: rgba(255,255,255,0.95) !important;
+              max-width: 96vw !important;
             }
             .nav-logo {
-              width: 96px !important;
-              height: 96px !important;
-              min-width: 96px !important;
-              min-height: 96px !important;
+              width: 48px !important;
+              height: 48px !important;
+              min-width: 48px !important;
+              min-height: 48px !important;
               margin: 0 !important;
               display: block !important;
             }
@@ -265,23 +313,55 @@ const Navigation = () => {
               transform: none !important;
               margin-left: 0 !important;
               z-index: 1100;
+              font-size: 1.5rem !important;
+              padding: 0.5rem !important;
             }
-            .menu-closed {
+            .user-actions-desktop {
               display: none !important;
             }
-            .menu-open {
+            .user-actions-mobile {
+              display: block !important;
+              margin-top: 1rem;
+              padding-top: 1rem;
+              border-top: 1px solid rgba(0,0,0,0.1);
+              width: 100%;
+            }
+            .nav-links.menu-closed {
+              display: none !important;
+            }
+            .nav-links.menu-open {
               display: flex !important;
               flex-direction: column !important;
-              gap: 0.7rem !important;
+              gap: 0.8rem !important;
               background: rgba(255, 248, 239, 0.98);
               position: fixed !important;
-              top: 60px !important;
-              left: 0;
-              right: 0;
-              padding: 1.2rem 0.5rem 1rem 0.5rem;
-              border-radius: 0 0 18px 18px;
-              box-shadow: var(--shadow-md);
+              top: 76px !important;
+              left: 2vw;
+              right: 2vw;
+              padding: 1.5rem 1rem 1.2rem 1rem;
+              border-radius: 16px;
+              box-shadow: 0 8px 32px 0 rgba(0,0,0,0.12);
               z-index: 1050;
+              max-height: calc(100vh - 90px);
+              overflow-y: auto;
+              backdrop-filter: blur(8px);
+            }
+            .nav-links.menu-open li a {
+              padding: 0.75rem 1rem !important;
+              border-radius: 8px !important;
+              font-size: 1rem !important;
+              text-align: center;
+              background: rgba(255,255,255,0.7);
+              margin-bottom: 0.2rem;
+            }
+            .nav-links.menu-open .user-actions-mobile div {
+              gap: 0.8rem !important;
+            }
+            .nav-links.menu-open .user-actions-mobile button,
+            .nav-links.menu-open .user-actions-mobile a {
+              padding: 0.75rem 1.5rem !important;
+              font-size: 1rem !important;
+              margin: 0 !important;
             }
             /* Remove centering of logo on mobile */
             .premium-nav > div:first-child {
@@ -289,6 +369,38 @@ const Navigation = () => {
               display: flex;
               justify-content: flex-start;
               align-items: center;
+            }
+          }
+          @media (min-width: 769px) {
+            .user-actions-mobile {
+              display: none !important;
+            }
+            .user-actions-desktop {
+              display: flex !important;
+            }
+          }
+          @media (max-width: 480px) {
+            .premium-nav {
+              margin-top: 0.25rem !important;
+              padding: 0.4rem 0.8rem !important;
+              min-height: 52px !important;
+              max-width: 98vw !important;
+            }
+            .nav-logo {
+              width: 44px !important;
+              height: 44px !important;
+              min-width: 44px !important;
+              min-height: 44px !important;
+            }
+            .mobile-menu-button {
+              font-size: 1.4rem !important;
+              padding: 0.4rem !important;
+            }
+            .nav-links.menu-open {
+              top: 70px !important;
+              left: 1vw;
+              right: 1vw;
+              padding: 1.2rem 0.8rem 1rem 0.8rem;
             }
           }
         `}</style>

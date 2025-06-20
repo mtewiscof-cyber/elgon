@@ -30,18 +30,14 @@ export const metadata: Metadata = {
   manifest: '/site.webmanifest'
 };
 
-export default function RootLayout({
+export default function DashboardLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        {children}
-      </body>
-    </html>
+    <>
+      {children}
+    </>
   );
 }
