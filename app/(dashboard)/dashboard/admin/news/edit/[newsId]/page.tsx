@@ -11,12 +11,13 @@ import { MdCloudUpload, MdImage, MdDelete } from 'react-icons/md';
 import { Id } from '@/convex/_generated/dataModel';
 
 interface EditNewsPageProps {
-  params: {
+  params: Promise<{
     newsId: string;
-  };
+  }>;
 }
 
-const EditNewsPage = ({ params }: EditNewsPageProps) => {
+const EditNewsPage = async ({ params }: EditNewsPageProps) => {
+  const { newsId } = await params;
   const router = useRouter();
   const { user: clerkUser, isLoaded: clerkLoaded } = useUser();
   const user = useQuery(api.users.getUserByUserId);
@@ -27,7 +28,7 @@ const EditNewsPage = ({ params }: EditNewsPageProps) => {
 
   // Fetch the existing news article
   const newsArticle = useQuery(api.news.getNews, { 
-    newsId: params.newsId as Id<'news'> 
+    newsId: newsId as Id<'news'> 
   });
 
   const [formData, setFormData] = useState({
@@ -131,7 +132,7 @@ const EditNewsPage = ({ params }: EditNewsPageProps) => {
       }
 
       await updateNews({
-        newsId: params.newsId as Id<'news'>,
+        newsId: newsId as Id<'news'>,
         title: formData.title.trim(),
         content: formData.content.trim(),
         author: formData.author.trim() || 'Admin',

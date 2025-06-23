@@ -10,13 +10,15 @@ import { useUploadThing } from '@/utils/uploadthing';
 import { MdCloudUpload, MdImage, MdDelete } from 'react-icons/md';
 import { Id } from '@/convex/_generated/dataModel';
 
+
 interface EditBlogPostPageProps {
-  params: {
+  params: Promise<{
     blogPostId: string;
-  };
+  }>;
 }
 
-const EditBlogPostPage = ({ params }: EditBlogPostPageProps) => {
+const EditBlogPostPage = async ({ params }: EditBlogPostPageProps) => {
+  const { blogPostId } = await params;
   const router = useRouter();
   const { user: clerkUser, isLoaded: clerkLoaded } = useUser();
   const user = useQuery(api.users.getUserByUserId);
@@ -27,7 +29,7 @@ const EditBlogPostPage = ({ params }: EditBlogPostPageProps) => {
 
   // Fetch the existing blog post
   const blogPost = useQuery(api.blogPosts.getBlogPost, { 
-    blogPostId: params.blogPostId as Id<'blogPosts'> 
+    blogPostId: blogPostId as Id<'blogPosts'> 
   });
 
   const [formData, setFormData] = useState({
@@ -133,7 +135,7 @@ const EditBlogPostPage = ({ params }: EditBlogPostPageProps) => {
       }
 
       await updateBlogPost({
-        blogPostId: params.blogPostId as Id<'blogPosts'>,
+        blogPostId: blogPostId as Id<'blogPosts'>,
         title: formData.title.trim(),
         excerpt: formData.excerpt.trim(),
         content: formData.content.trim(),
