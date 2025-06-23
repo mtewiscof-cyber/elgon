@@ -12,9 +12,10 @@ import Link from 'next/link';
 interface SubscriptionFormProps {
   onClose: () => void;
   onSuccess: () => void;
+  customerId: Id<"customers">;
 }
 
-function SubscriptionForm({ onClose, onSuccess }: SubscriptionFormProps) {
+function SubscriptionForm({ onClose, onSuccess, customerId }: SubscriptionFormProps) {
   const [selectedProduct, setSelectedProduct] = useState<Id<"products"> | null>(null);
   const [frequency, setFrequency] = useState('monthly');
   const [shippingAddress, setShippingAddress] = useState({
@@ -28,23 +29,44 @@ function SubscriptionForm({ onClose, onSuccess }: SubscriptionFormProps) {
     country: 'Uganda'
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState('');
   
   const user = useQuery(api.users.getUserByUserId);
-  const customer = useQuery(
-    api.customers.getCustomerByUserId,
-    user?._id ? { userId: user._id } : 'skip'
-  );
   const products = useQuery(api.products.listProducts);
   const createSubscription = useMutation(api.subscriptions.createSubscription);
 
+  // Pre-fill user data
+  useEffect(() => {
+    if (user) {
+      setShippingAddress(prev => ({
+        ...prev,
+        name: `${user.firstName || ''} ${user.lastName || ''}`.trim(),
+        email: user.email || '',
+        phone: user.phoneNumber || '',
+        ...(user.address && {
+          address: user.address.street || '',
+          city: user.address.city || '',
+          state: user.address.state || '',
+          zipCode: user.address.zip || '',
+          country: user.address.country || 'Uganda'
+        })
+      }));
+    }
+  }, [user]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!customer || !selectedProduct) return;
+    if (!selectedProduct) {
+      setError('Please select a product');
+      return;
+    }
 
     setIsSubmitting(true);
+    setError('');
+    
     try {
       await createSubscription({
-        customerId: customer._id,
+        customerId,
         productId: selectedProduct,
         frequency,
         startDate: Date.now(),
@@ -56,7 +78,7 @@ function SubscriptionForm({ onClose, onSuccess }: SubscriptionFormProps) {
       onClose();
     } catch (error) {
       console.error("Failed to create subscription:", error);
-      alert("Failed to create subscription. Please try again.");
+      setError("Failed to create subscription. Please check your information and try again.");
     } finally {
       setIsSubmitting(false);
     }
@@ -72,6 +94,8 @@ function SubscriptionForm({ onClose, onSuccess }: SubscriptionFormProps) {
       </div>
     );
   }
+
+  const availableProducts = products?.filter(p => p.stock > 0) || [];
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
@@ -89,45 +113,62 @@ function SubscriptionForm({ onClose, onSuccess }: SubscriptionFormProps) {
             </button>
           </div>
 
+          {error && (
+            <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg">
+              <p className="text-red-600 text-sm">{error}</p>
+            </div>
+          )}
+
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Product Selection */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-3">Select Coffee Product</label>
-              <div className="grid grid-cols-1 gap-3 max-h-40 overflow-y-auto">
-                {products?.filter(p => p.stock > 0).map((product) => (
-                  <div
-                    key={product._id}
-                    onClick={() => setSelectedProduct(product._id)}
-                    className={`p-4 border rounded-lg cursor-pointer transition-all ${
-                      selectedProduct === product._id 
-                        ? 'border-blue-500 bg-blue-50 ring-2 ring-blue-200' 
-                        : 'border-gray-200 hover:border-gray-300'
-                    }`}
-                  >
-                    <div className="flex justify-between items-start">
-                      <div>
-                        <h4 className="font-semibold text-gray-900">{product.name}</h4>
-                        <p className="text-sm text-gray-600">{product.origin}</p>
-                        <p className="text-sm text-gray-500 mt-1">{product.description}</p>
-                      </div>
-                      <div className="text-right">
-                        <p className="font-bold text-gray-900">${product.price.toFixed(2)}</p>
-                        <p className="text-xs text-gray-500">{product.weight}</p>
+              <label className="block text-sm font-medium text-gray-700 mb-3">
+                Select Coffee Product <span className="text-red-500">*</span>
+              </label>
+              {availableProducts.length === 0 ? (
+                <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+                  <p className="text-yellow-800">No products are currently available for subscription. Please check back later.</p>
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 gap-3 max-h-40 overflow-y-auto">
+                  {availableProducts.map((product) => (
+                    <div
+                      key={product._id}
+                      onClick={() => setSelectedProduct(product._id)}
+                      className={`p-4 border rounded-lg cursor-pointer transition-all ${
+                        selectedProduct === product._id 
+                          ? 'border-blue-500 bg-blue-50 ring-2 ring-blue-200' 
+                          : 'border-gray-200 hover:border-gray-300'
+                      }`}
+                    >
+                      <div className="flex justify-between items-start">
+                        <div>
+                          <h4 className="font-semibold text-gray-900">{product.name}</h4>
+                          <p className="text-sm text-gray-600">{product.origin}</p>
+                          <p className="text-sm text-gray-500 mt-1 line-clamp-2">{product.description}</p>
+                          <p className="text-xs text-green-600 mt-1">{product.stock} in stock</p>
+                        </div>
+                        <div className="text-right">
+                          <p className="font-bold text-gray-900">${product.price.toFixed(2)}</p>
+                          <p className="text-xs text-gray-500">{product.weight}</p>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                ))}
-              </div>
+                  ))}
+                </div>
+              )}
             </div>
 
             {/* Frequency Selection */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-3">Delivery Frequency</label>
+              <label className="block text-sm font-medium text-gray-700 mb-3">
+                Delivery Frequency <span className="text-red-500">*</span>
+              </label>
               <div className="grid grid-cols-3 gap-4">
                 {[
-                  { value: 'weekly', label: 'Weekly', desc: 'Every 7 days' },
-                  { value: 'bi-weekly', label: 'Bi-weekly', desc: 'Every 14 days' },
-                  { value: 'monthly', label: 'Monthly', desc: 'Every 30 days' }
+                  { value: 'weekly', label: 'Weekly', desc: 'Every 7 days', price: '10% off' },
+                  { value: 'bi-weekly', label: 'Bi-weekly', desc: 'Every 14 days', price: '5% off' },
+                  { value: 'monthly', label: 'Monthly', desc: 'Every 30 days', price: '15% off' }
                 ].map((option) => (
                   <div
                     key={option.value}
@@ -140,6 +181,7 @@ function SubscriptionForm({ onClose, onSuccess }: SubscriptionFormProps) {
                   >
                     <div className="font-medium text-gray-900">{option.label}</div>
                     <div className="text-xs text-gray-500">{option.desc}</div>
+                    <div className="text-xs text-green-600 font-medium">{option.price}</div>
                   </div>
                 ))}
               </div>
@@ -238,7 +280,7 @@ function SubscriptionForm({ onClose, onSuccess }: SubscriptionFormProps) {
               <button
                 type="submit"
                 className="flex-1 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                disabled={isSubmitting || !selectedProduct}
+                disabled={isSubmitting || !selectedProduct || availableProducts.length === 0}
               >
                 {isSubmitting ? 'Creating Subscription...' : 'Start Subscription'}
               </button>
@@ -254,10 +296,14 @@ const CustomerSubscriptionsPage = () => {
   const { user: clerkUser, isLoaded: clerkLoaded } = useUser();
   const router = useRouter();
   const [showSubscriptionForm, setShowSubscriptionForm] = useState(false);
+  const [error, setError] = useState('');
 
   // Fetch the user document from Convex to get the role and user ID
   const user = useQuery(api.users.getUserByUserId);
   const isUserLoaded = user !== undefined;
+
+  // Create customer mutation for auto-creation
+  const createCustomer = useMutation(api.customers.createCustomer);
 
   // Redirect if user data is loaded and user is not authenticated or not a customer
   useEffect(() => {
@@ -275,6 +321,28 @@ const CustomerSubscriptionsPage = () => {
   );
   const isCustomerLoaded = customer !== undefined;
 
+  // Auto-create customer record if user is a customer but no customer record exists
+  const [isCreatingCustomer, setIsCreatingCustomer] = useState(false);
+  
+  useEffect(() => {
+    const autoCreateCustomer = async () => {
+      if (isUserLoaded && isCustomerLoaded && user?.role === 'customer' && customer === null && !isCreatingCustomer) {
+        setIsCreatingCustomer(true);
+        try {
+          await createCustomer({});
+          // Customer record will be refetched automatically by Convex
+        } catch (error) {
+          console.error('Failed to create customer record:', error);
+          setError('Failed to initialize customer account. Please refresh the page.');
+        } finally {
+          setIsCreatingCustomer(false);
+        }
+      }
+    };
+
+    autoCreateCustomer();
+  }, [isUserLoaded, isCustomerLoaded, user, customer, createCustomer, isCreatingCustomer]);
+
   // Fetch subscriptions data for the customer
   const subscriptions = useQuery(
     api.subscriptions.listSubscriptionsByCustomer,
@@ -290,13 +358,36 @@ const CustomerSubscriptionsPage = () => {
   const resumeSubscription = useMutation(api.subscriptions.resumeSubscription);
 
   // Show a loading state while data is loading or if not authenticated/authorized
-  if (!clerkLoaded || !isUserLoaded || !clerkUser || user?.role !== 'customer' || !isCustomerLoaded) {
+  if (!clerkLoaded || !isUserLoaded || !clerkUser || user?.role !== 'customer' || !isCustomerLoaded || isCreatingCustomer) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <h2 className="text-xl font-semibold mb-2">Loading Subscriptions...</h2>
-          <p className="text-gray-500">Accessing your subscription dashboard...</p>
+          <h2 className="text-xl font-semibold mb-2">
+            {isCreatingCustomer ? 'Setting up your account...' : 'Loading Subscriptions...'}
+          </h2>
+          <p className="text-gray-500">
+            {isCreatingCustomer ? 'Creating your customer profile...' : 'Accessing your subscription dashboard...'}
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  // Show error if customer creation failed
+  if (customer === null && error) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center max-w-md mx-auto bg-white p-8 rounded-lg shadow-md">
+          <div className="text-red-500 text-5xl mb-4">⚠️</div>
+          <h2 className="text-2xl font-bold text-gray-800 mb-2">Account Setup Error</h2>
+          <p className="text-gray-600 mb-4">{error}</p>
+          <button
+            onClick={() => window.location.reload()}
+            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+          >
+            Retry
+          </button>
         </div>
       </div>
     );
@@ -515,8 +606,9 @@ const CustomerSubscriptionsPage = () => {
       </div>
 
       {/* Subscription Form Modal */}
-      {showSubscriptionForm && (
+      {showSubscriptionForm && customer && (
         <SubscriptionForm
+          customerId={customer._id}
           onClose={() => setShowSubscriptionForm(false)}
           onSuccess={handleSubscriptionSuccess}
         />
