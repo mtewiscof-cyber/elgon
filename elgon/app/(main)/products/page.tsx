@@ -119,7 +119,7 @@ const ProductsPage = () => {
             filteredProducts.map(product => {
                 const grower = product.growerId ? growersMap.get(product.growerId) : null;
                 return (
-                <div key={product._id} className="flex flex-col gap-2 bg-white rounded-xl shadow-sm p-2 pb-3">
+                <Link key={product._id} href={`/products/${product._id}`} className="flex flex-col gap-2 bg-white rounded-xl shadow-sm p-2 pb-3 hover:shadow-md transition-shadow cursor-pointer">
                   <div
                     className="w-full bg-center bg-no-repeat aspect-square bg-cover rounded-lg"
                     style={{ backgroundImage: product.imageUrl ? `url('${product.imageUrl}')` : `url('/coffee1.jpg')` }}
@@ -132,7 +132,7 @@ const ProductsPage = () => {
                     <span className={`px-2 py-0.5 rounded-full text-xs font-semibold ${product.stock > 0 ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>{product.stock > 0 ? `${product.stock} in stock` : 'Out of stock'}</span>
                     <span className="text-[#1c140d] text-sm font-bold">${product.price.toFixed(2)}</span>
                       </div>
-                    </div>
+                    </Link>
                 );
             })
           )}

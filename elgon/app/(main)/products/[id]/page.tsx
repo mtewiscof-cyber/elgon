@@ -8,7 +8,7 @@ import { useUser } from "@clerk/nextjs";
 import Link from "next/link";
 import { Id } from "@/convex/_generated/dataModel";
 
-// Order Form Component
+// --- Modern, Compact Order Form ---
 interface OrderFormProps {
   product: any;
   onClose: () => void;
@@ -16,7 +16,6 @@ interface OrderFormProps {
 }
 
 function OrderForm({ product, onClose, onOrderSuccess }: OrderFormProps) {
-  const [quantity, setQuantity] = useState(1);
   const [shippingAddress, setShippingAddress] = useState({
     name: '',
     email: '',
@@ -28,11 +27,11 @@ function OrderForm({ product, onClose, onOrderSuccess }: OrderFormProps) {
     country: 'Uganda'
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
-  
+
   const user = useQuery(api.users.getUserByUserId);
   const createOrder = useMutation(api.orders.createOrder);
 
-  const totalAmount = product.price * quantity;
+  const totalAmount = product.price;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -44,7 +43,7 @@ function OrderForm({ product, onClose, onOrderSuccess }: OrderFormProps) {
         userId: user._id,
         items: [{
           productId: product._id,
-          quantity,
+          quantity: 1,
           priceAtPurchase: product.price
         }],
         totalAmount,
@@ -54,7 +53,7 @@ function OrderForm({ product, onClose, onOrderSuccess }: OrderFormProps) {
         createdAt: Date.now(),
         updatedAt: Date.now()
       });
-      
+
       onOrderSuccess();
       onClose();
     } catch (error) {
@@ -66,143 +65,124 @@ function OrderForm({ product, onClose, onOrderSuccess }: OrderFormProps) {
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-lg max-w-md w-full max-h-[90vh] overflow-y-auto">
-        <div className="p-6">
-          <div className="flex justify-between items-center mb-4">
-            <h3 className="text-xl font-bold">Place Order</h3>
+    <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-2">
+      <div className="bg-white rounded-2xl shadow-xl w-full max-w-sm overflow-y-auto">
+        <div className="p-5">
+          <div className="flex justify-between items-center mb-2">
+            <h3 className="text-lg font-semibold text-[var(--primary)] tracking-tight">Quick Order</h3>
             <button
               onClick={onClose}
-              className="text-gray-500 hover:text-gray-700"
+              className="text-gray-400 hover:text-[var(--primary)] text-xl transition"
+              aria-label="Close"
             >
-              ✕
+              ×
             </button>
           </div>
-
-          <div className="mb-4 p-4 bg-gray-50 rounded-lg">
-            <h4 className="font-semibold">{product.name}</h4>
-            <p className="text-sm text-gray-600">{product.origin}</p>
-            <p className="font-bold">${product.price.toFixed(2)} / {product.weight}</p>
-          </div>
-
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium mb-1">Quantity</label>
-              <input
-                type="number"
-                min="1"
-                max={product.stock}
-                value={quantity}
-                onChange={(e) => setQuantity(Number(e.target.value))}
-                className="w-full p-2 border rounded-lg"
-                required
+          <div className="mb-3 flex items-center gap-3 bg-[var(--accent)]/40 rounded-xl px-3 py-2">
+            {product.imageUrl ? (
+              <img
+                src={product.imageUrl}
+                alt={product.name}
+                className="w-12 h-12 rounded-lg object-cover border border-[var(--accent)]"
               />
-              <p className="text-sm text-gray-500 mt-1">
-                Available: {product.stock}
-              </p>
+            ) : (
+              <div className="w-12 h-12 flex items-center justify-center rounded-lg bg-[var(--accent)] text-2xl text-[var(--primary)]">☕</div>
+            )}
+            <div>
+              <div className="font-bold text-[var(--primary)] text-base">{product.name}</div>
+              <div className="text-xs text-[var(--secondary)]">{product.origin}</div>
+              <div className="text-[var(--secondary)] text-xs">{product.weight}</div>
             </div>
-
-            <div className="space-y-3">
-              <h4 className="font-semibold">Shipping Information</h4>
-              
+            <div className="ml-auto text-[var(--primary)] font-bold text-base">${product.price.toFixed(2)}</div>
+          </div>
+          <form onSubmit={handleSubmit} className="space-y-2">
+            <div className="grid grid-cols-2 gap-2">
               <input
                 type="text"
                 placeholder="Full Name"
                 value={shippingAddress.name}
-                onChange={(e) => setShippingAddress(prev => ({ ...prev, name: e.target.value }))}
-                className="w-full p-2 border rounded-lg"
+                onChange={e => setShippingAddress(prev => ({ ...prev, name: e.target.value }))}
+                className="col-span-2 bg-[var(--light-bg)] border-none rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-[var(--primary)]"
                 required
+                autoFocus
               />
-
               <input
                 type="email"
-                placeholder="Email Address"
+                placeholder="Email"
                 value={shippingAddress.email}
-                onChange={(e) => setShippingAddress(prev => ({ ...prev, email: e.target.value }))}
-                className="w-full p-2 border rounded-lg"
+                onChange={e => setShippingAddress(prev => ({ ...prev, email: e.target.value }))}
+                className="col-span-2 bg-[var(--light-bg)] border-none rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-[var(--primary)]"
                 required
               />
-
               <input
                 type="tel"
-                placeholder="Phone Number"
+                placeholder="Phone"
                 value={shippingAddress.phone}
-                onChange={(e) => setShippingAddress(prev => ({ ...prev, phone: e.target.value }))}
-                className="w-full p-2 border rounded-lg"
+                onChange={e => setShippingAddress(prev => ({ ...prev, phone: e.target.value }))}
+                className="col-span-2 bg-[var(--light-bg)] border-none rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-[var(--primary)]"
                 required
               />
-              
               <input
                 type="text"
                 placeholder="Street Address"
                 value={shippingAddress.address}
-                onChange={(e) => setShippingAddress(prev => ({ ...prev, address: e.target.value }))}
-                className="w-full p-2 border rounded-lg"
+                onChange={e => setShippingAddress(prev => ({ ...prev, address: e.target.value }))}
+                className="col-span-2 bg-[var(--light-bg)] border-none rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-[var(--primary)]"
                 required
               />
-              
-              <div className="grid grid-cols-2 gap-2">
-                <input
-                  type="text"
-                  placeholder="City"
-                  value={shippingAddress.city}
-                  onChange={(e) => setShippingAddress(prev => ({ ...prev, city: e.target.value }))}
-                  className="p-2 border rounded-lg"
-                  required
-                />
-                <input
-                  type="text"
-                  placeholder="State"
-                  value={shippingAddress.state}
-                  onChange={(e) => setShippingAddress(prev => ({ ...prev, state: e.target.value }))}
-                  className="p-2 border rounded-lg"
-                  required
-                />
-              </div>
-              
-              <div className="grid grid-cols-2 gap-2">
-                <input
-                  type="text"
-                  placeholder="ZIP Code"
-                  value={shippingAddress.zipCode}
-                  onChange={(e) => setShippingAddress(prev => ({ ...prev, zipCode: e.target.value }))}
-                  className="p-2 border rounded-lg"
-                  required
-                />
-                <input
-                  type="text"
-                  placeholder="Country"
-                  value={shippingAddress.country}
-                  onChange={(e) => setShippingAddress(prev => ({ ...prev, country: e.target.value }))}
-                  className="p-2 border rounded-lg"
-                  required
-                />
-              </div>
+              <input
+                type="text"
+                placeholder="City"
+                value={shippingAddress.city}
+                onChange={e => setShippingAddress(prev => ({ ...prev, city: e.target.value }))}
+                className="bg-[var(--light-bg)] border-none rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-[var(--primary)]"
+                required
+              />
+              <input
+                type="text"
+                placeholder="State"
+                value={shippingAddress.state}
+                onChange={e => setShippingAddress(prev => ({ ...prev, state: e.target.value }))}
+                className="bg-[var(--light-bg)] border-none rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-[var(--primary)]"
+                required
+              />
+              <input
+                type="text"
+                placeholder="ZIP"
+                value={shippingAddress.zipCode}
+                onChange={e => setShippingAddress(prev => ({ ...prev, zipCode: e.target.value }))}
+                className="bg-[var(--light-bg)] border-none rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-[var(--primary)]"
+                required
+              />
+              <input
+                type="text"
+                placeholder="Country"
+                value={shippingAddress.country}
+                onChange={e => setShippingAddress(prev => ({ ...prev, country: e.target.value }))}
+                className="bg-[var(--light-bg)] border-none rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-[var(--primary)]"
+                required
+              />
             </div>
-
-            <div className="border-t pt-4">
-              <div className="flex justify-between items-center mb-4">
-                <span className="font-semibold">Total:</span>
-                <span className="text-xl font-bold">${totalAmount.toFixed(2)}</span>
-              </div>
-              
-              <div className="flex gap-2">
-                <button
-                  type="button"
-                  onClick={onClose}
-                  className="flex-1 py-2 px-4 border border-gray-300 rounded-lg hover:bg-gray-50"
-                  disabled={isSubmitting}
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  className="flex-1 py-2 px-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50"
-                  disabled={isSubmitting || quantity > product.stock}
-                >
-                  {isSubmitting ? 'Placing Order...' : 'Place Order'}
-                </button>
-              </div>
+            <div className="flex justify-between items-center mt-2">
+              <span className="text-[var(--secondary)] text-sm">Total</span>
+              <span className="text-[var(--primary)] font-bold text-lg">${totalAmount.toFixed(2)}</span>
+            </div>
+            <div className="flex gap-2 mt-2">
+              <button
+                type="button"
+                onClick={onClose}
+                className="flex-1 py-2 rounded-lg bg-gray-100 text-[var(--secondary)] font-medium hover:bg-gray-200 transition text-sm"
+                disabled={isSubmitting}
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                className="flex-1 py-2 rounded-lg bg-[var(--primary)] text-white font-semibold hover:bg-[var(--secondary)] transition text-sm"
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? 'Placing...' : 'Place Order'}
+              </button>
             </div>
           </form>
         </div>
@@ -211,7 +191,7 @@ function OrderForm({ product, onClose, onOrderSuccess }: OrderFormProps) {
   );
 }
 
-// Message Form Component
+// --- Modern, Compact Message Form ---
 interface MessageFormProps {
   product: any;
   grower: any;
@@ -222,7 +202,7 @@ interface MessageFormProps {
 function MessageForm({ product, grower, onClose, onMessageSuccess }: MessageFormProps) {
   const [message, setMessage] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
-  
+
   const user = useQuery(api.users.getUserByUserId);
   const sendMessage = useMutation(api.messages.sendMessage);
 
@@ -238,7 +218,7 @@ function MessageForm({ product, grower, onClose, onMessageSuccess }: MessageForm
         content: `Regarding product "${product.name}": ${message}`,
         sentAt: Date.now()
       });
-      
+
       onMessageSuccess();
       onClose();
     } catch (error) {
@@ -250,52 +230,49 @@ function MessageForm({ product, grower, onClose, onMessageSuccess }: MessageForm
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-lg max-w-md w-full">
-        <div className="p-6">
-          <div className="flex justify-between items-center mb-4">
-            <h3 className="text-xl font-bold">Message Grower</h3>
+    <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-2">
+      <div className="bg-white rounded-2xl shadow-xl w-full max-w-sm">
+        <div className="p-5">
+          <div className="flex justify-between items-center mb-2">
+            <h3 className="text-lg font-semibold text-[var(--primary)] tracking-tight">Message Grower</h3>
             <button
               onClick={onClose}
-              className="text-gray-500 hover:text-gray-700"
+              className="text-gray-400 hover:text-[var(--primary)] text-xl transition"
+              aria-label="Close"
             >
-              ✕
+              ×
             </button>
           </div>
-
-          <div className="mb-4 p-4 bg-gray-50 rounded-lg">
-            <h4 className="font-semibold">About: {product.name}</h4>
-            <p className="text-sm text-gray-600">To: {grower?.name || 'Grower'}</p>
-          </div>
-
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <div className="mb-3 flex items-center gap-3 bg-[var(--accent)]/40 rounded-xl px-3 py-2">
             <div>
-              <label className="block text-sm font-medium mb-1">Your Message</label>
-              <textarea
-                value={message}
-                onChange={(e) => setMessage(e.target.value)}
-                placeholder="Ask questions about the coffee, farming practices, or anything else..."
-                rows={4}
-                className="w-full p-3 border rounded-lg resize-none"
-                required
-              />
+              <div className="font-bold text-[var(--primary)] text-base">{product.name}</div>
+              <div className="text-xs text-[var(--secondary)]">To: {grower?.name || 'Grower'}</div>
             </div>
-
-            <div className="flex gap-2">
+          </div>
+          <form onSubmit={handleSubmit} className="space-y-2">
+            <textarea
+              value={message}
+              onChange={e => setMessage(e.target.value)}
+              placeholder="Ask about this coffee or farming practices..."
+              rows={3}
+              className="w-full bg-[var(--light-bg)] border-none rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-[var(--primary)] resize-none"
+              required
+            />
+            <div className="flex gap-2 mt-2">
               <button
                 type="button"
                 onClick={onClose}
-                className="flex-1 py-2 px-4 border border-gray-300 rounded-lg hover:bg-gray-50"
+                className="flex-1 py-2 rounded-lg bg-gray-100 text-[var(--secondary)] font-medium hover:bg-gray-200 transition text-sm"
                 disabled={isSubmitting}
               >
                 Cancel
               </button>
               <button
                 type="submit"
-                className="flex-1 py-2 px-4 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50"
+                className="flex-1 py-2 rounded-lg bg-green-600 text-white font-semibold hover:bg-green-700 transition text-sm"
                 disabled={isSubmitting || !message.trim()}
               >
-                {isSubmitting ? 'Sending...' : 'Send Message'}
+                {isSubmitting ? 'Sending...' : 'Send'}
               </button>
             </div>
           </form>
@@ -305,39 +282,34 @@ function MessageForm({ product, grower, onClose, onMessageSuccess }: MessageForm
   );
 }
 
+// --- Modern, Compact Product Detail Page ---
 export default function ProductDetailPage() {
   const params = useParams();
   const router = useRouter();
-  const { user: clerkUser, isLoaded: clerkLoaded } = useUser();
+  const { user: clerkUser } = useUser();
   const productId = params.id as string;
-  
-  // State for loading and modals
+
   const [isLoading, setIsLoading] = useState(true);
   const [showOrderForm, setShowOrderForm] = useState(false);
   const [showMessageForm, setShowMessageForm] = useState(false);
-  
-  // Fetch user data
+
   const user = useQuery(api.users.getUserByUserId);
-  
-  // Fetch product data
-  const product = useQuery(api.products.getProductById, { 
-    productId: productId as Id<"products"> 
+
+  const product = useQuery(api.products.getProductById, {
+    productId: productId as Id<"products">
   });
-  
-  // Fetch grower data (if product has a grower)
+
   const grower = useQuery(
     api.growers.getGrower,
     product?.growerId ? { growerId: product.growerId } : 'skip'
   );
-  
-  // Update loading state when data is fetched
+
   useEffect(() => {
     if (product !== undefined) {
       setIsLoading(false);
     }
   }, [product]);
 
-  // Handle order success
   const handleOrderSuccess = () => {
     alert("Order placed successfully! You can view your orders in your dashboard.");
     if (user?.role === 'customer') {
@@ -345,16 +317,13 @@ export default function ProductDetailPage() {
     }
   };
 
-  // Handle message success
   const handleMessageSuccess = () => {
     alert("Message sent successfully! The grower will respond soon.");
   };
 
-  // Check if user can order (must be authenticated with customer role)
   const canOrder = clerkUser && user?.role === 'customer';
   const canMessage = clerkUser && user && grower?.userId;
 
-  // Handle if product doesn't exist
   if (!isLoading && !product) {
     return (
       <div className="container section">
@@ -368,8 +337,7 @@ export default function ProductDetailPage() {
       </div>
     );
   }
-  
-  // Render loading state
+
   if (isLoading || !product) {
     return (
       <div className="container section">
@@ -379,89 +347,74 @@ export default function ProductDetailPage() {
       </div>
     );
   }
-  
-  // We know product exists at this point
+
   return (
-    <div className="container section product-detail-page" style={{ maxWidth: 960, margin: '0 auto' }}>
+    <div className="container section product-detail-page" style={{ maxWidth: 700, margin: '0 auto' }}>
       {/* Breadcrumbs */}
-      <div className="flex flex-wrap gap-2 p-4">
-        <Link href="/products" className="text-[var(--secondary)] text-base font-medium leading-normal hover:underline">Shop</Link>
-        <span className="text-[var(--secondary)] text-base font-medium leading-normal">/</span>
-        <span className="text-[var(--primary)] text-base font-medium leading-normal">{product.name}</span>
+      <div className="flex items-center gap-2 px-2 py-3 text-sm text-[var(--secondary)]">
+        <Link href="/products" className="hover:underline font-medium">Shop</Link>
+        <span>/</span>
+        <span className="text-[var(--primary)] font-semibold">{product.name}</span>
       </div>
-      {/* Product Title, Subtitle, and Image */}
-      <div className="flex flex-wrap justify-between gap-3 p-4">
-        <div className="flex min-w-72 flex-col gap-3">
-          <h1 className="text-[var(--primary)] text-[32px] font-bold leading-tight">{product.name}</h1>
-          <p className="text-[var(--secondary)] text-sm font-normal leading-normal">{product.description}</p>
-        </div>
-      </div>
-      <div className="flex w-full grow bg-white p-4 rounded-lg shadow-md mb-6 flex-col md:flex-row gap-6">
-        {/* Product Image */}
+      {/* Product Card */}
+      <div className="flex flex-col md:flex-row gap-4 bg-white rounded-2xl shadow-lg p-4 mb-5">
+        {/* Image */}
         <div className="w-full md:w-1/2 flex items-center justify-center">
           {product.imageUrl ? (
             <img
               src={product.imageUrl}
               alt={product.name}
-              className="rounded-lg shadow-md w-full max-w-md object-cover aspect-[3/2]"
+              className="rounded-xl w-full max-w-xs object-cover aspect-[3/2] border border-[var(--accent)]"
               style={{ background: '#fff' }}
             />
           ) : (
-            <div className="flex items-center justify-center rounded-lg bg-[var(--accent)] w-full max-w-md aspect-[3/2] text-6xl text-[var(--primary)]">
+            <div className="flex items-center justify-center rounded-xl bg-[var(--accent)] w-full max-w-xs aspect-[3/2] text-5xl text-[var(--primary)]">
               ☕
             </div>
           )}
         </div>
-        {/* Product Details and Actions */}
-        <div className="flex flex-col gap-4 w-full md:w-1/2 justify-center">
-          <div className="flex flex-wrap gap-3 items-center">
-            <span className="bg-[var(--accent)] text-[var(--primary)] rounded-lg px-4 py-2 font-bold text-lg">${product.price.toFixed(2)} / {product.weight}</span>
-            <span className={`rounded-lg px-4 py-2 font-medium text-base ${product.stock > 0 ? 'bg-[var(--light-bg)] text-[var(--secondary)]' : 'bg-red-100 text-red-700'}`}>{product.stock > 0 ? `${product.stock} in stock` : 'Out of stock'}</span>
-            <span className="bg-[var(--secondary)] text-white rounded-lg px-4 py-2 font-medium text-base">{product.origin}</span>
-            {grower && <span className="bg-[var(--primary)] text-white rounded-lg px-4 py-2 font-medium text-base">{grower.name}</span>}
+        {/* Info */}
+        <div className="flex flex-col gap-2 w-full md:w-1/2 justify-center">
+          <h1 className="text-[var(--primary)] text-2xl font-bold leading-tight">{product.name}</h1>
+          <div className="flex flex-wrap gap-2 items-center">
+            <span className="bg-[var(--accent)] text-[var(--primary)] rounded-lg px-3 py-1 font-bold text-base">${product.price.toFixed(2)} <span className="font-normal text-xs">/ {product.weight}</span></span>
+            <span className={`rounded-lg px-3 py-1 font-medium text-xs ${product.stock > 0 ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>{product.stock > 0 ? 'In stock' : 'Out of stock'}</span>
+            <span className="bg-[var(--secondary)] text-white rounded-lg px-3 py-1 font-medium text-xs">{product.origin}</span>
+            {grower && <span className="bg-[var(--primary)] text-white rounded-lg px-3 py-1 font-medium text-xs">{grower.name}</span>}
           </div>
           {product.tastingNotes && product.tastingNotes.length > 0 && (
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-1 mt-1">
               {product.tastingNotes.map((note, i) => (
-                <span key={i} className="bg-[var(--accent)] text-[var(--primary)] rounded px-3 py-1 text-sm font-medium">{note}</span>
+                <span key={i} className="bg-[var(--accent)] text-[var(--primary)] rounded px-2 py-0.5 text-xs font-medium">{note}</span>
               ))}
             </div>
           )}
-          <div className="flex items-end gap-4 mt-2">
-            <label className="flex flex-col min-w-32 flex-1">
-              <span className="text-[var(--primary)] text-sm font-medium mb-1">Quantity</span>
-              <select
-                className="form-input w-full min-w-0 flex-1 rounded-lg border border-[var(--accent)] bg-white text-[var(--primary)] h-12 p-3 text-base font-normal"
-                value={1}
-                disabled
-              >
-                <option value={1}>1</option>
-              </select>
-            </label>
+          <p className="text-[var(--secondary)] text-sm mt-2 line-clamp-3">{product.description}</p>
+          <div className="flex gap-2 mt-3">
             {canOrder ? (
               <button
                 onClick={() => setShowOrderForm(true)}
-                className="flex min-w-[120px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-[var(--secondary)] text-white text-base font-bold leading-normal tracking-[0.015em] hover:bg-[var(--primary)] transition"
+                className="flex-1 h-10 rounded-lg bg-[var(--primary)] text-white font-semibold text-sm hover:bg-[var(--secondary)] transition"
                 disabled={product.stock <= 0}
               >
                 {product.stock > 0 ? 'Order Now' : 'Out of Stock'}
               </button>
             ) : (
-              <div style={{ width: 130, height: 40, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <div className="flex-1">
                 {!clerkUser ? (
-                  <Link href="/sign-in" className="flex min-w-[120px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-[var(--primary)] text-white text-base font-bold leading-normal tracking-[0.015em] hover:bg-[var(--secondary)] transition">
+                  <Link href="/sign-in" className="block h-10 rounded-lg bg-[var(--primary)] text-white font-semibold text-sm flex items-center justify-center hover:bg-[var(--secondary)] transition">
                     Sign In to Order
                   </Link>
                 ) : user?.role !== 'customer' ? (
-                  <div className="text-center p-2 bg-gray-100 rounded-lg text-sm">
-                    <span className="text-gray-600">Customer account required to place orders</span>
-                    <Link href="/onboarding/customer" className="text-blue-600 hover:underline ml-2">
-                      Complete your profile
+                  <div className="text-center p-2 bg-gray-100 rounded-lg text-xs">
+                    <span className="text-gray-600">Customer account required</span>
+                    <Link href="/onboarding/customer" className="text-blue-600 hover:underline ml-1">
+                      Complete profile
                     </Link>
                   </div>
                 ) : (
                   <button
-                    className="flex min-w-[120px] max-w-[480px] cursor-not-allowed items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-gray-300 text-white text-base font-bold leading-normal tracking-[0.015em]"
+                    className="block w-full h-10 rounded-lg bg-gray-300 text-white font-semibold text-sm cursor-not-allowed"
                     disabled
                   >
                     Loading...
@@ -472,7 +425,7 @@ export default function ProductDetailPage() {
             {canMessage && (
               <button
                 onClick={() => setShowMessageForm(true)}
-                className="flex min-w-[120px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-[var(--accent)] text-[var(--primary)] text-base font-bold leading-normal tracking-[0.015em] hover:bg-[var(--secondary)] hover:text-white transition"
+                className="flex-1 h-10 rounded-lg bg-[var(--accent)] text-[var(--primary)] font-semibold text-sm hover:bg-[var(--secondary)] hover:text-white transition"
               >
                 Message Grower
               </button>
@@ -480,28 +433,29 @@ export default function ProductDetailPage() {
           </div>
         </div>
       </div>
-      {/* About this coffee */}
-      <h2 className="text-[var(--primary)] text-[22px] font-bold leading-tight tracking-[-0.015em] px-4 pb-3 pt-5">About this coffee</h2>
-      <p className="text-[var(--primary)] text-base font-normal leading-normal pb-3 pt-1 px-4">{product.description}</p>
-      {/* Product Details Grid */}
-      <h2 className="text-[var(--primary)] text-[22px] font-bold leading-tight tracking-[-0.015em] px-4 pb-3 pt-5">Product Details</h2>
-      <div className="p-4 grid grid-cols-[20%_1fr] gap-x-6">
-        <div className="col-span-2 grid grid-cols-subgrid border-t border-t-[var(--accent)] py-5">
-          <p className="text-[var(--secondary)] text-sm font-normal leading-normal">Origin</p>
-          <p className="text-[var(--primary)] text-sm font-normal leading-normal">{product.origin}</p>
+      {/* About */}
+      <div className="bg-[var(--light-bg)] rounded-xl p-4 mb-4">
+        <h2 className="text-[var(--primary)] text-lg font-bold mb-1">About this coffee</h2>
+        <p className="text-[var(--primary)] text-sm">{product.description}</p>
+      </div>
+      {/* Details */}
+      <div className="grid grid-cols-2 gap-3 bg-white rounded-xl p-4 shadow-sm text-sm mb-4">
+        <div>
+          <div className="text-[var(--secondary)] font-medium">Origin</div>
+          <div className="text-[var(--primary)]">{product.origin}</div>
         </div>
-        <div className="col-span-2 grid grid-cols-subgrid border-t border-t-[var(--accent)] py-5">
-          <p className="text-[var(--secondary)] text-sm font-normal leading-normal">Weight</p>
-          <p className="text-[var(--primary)] text-sm font-normal leading-normal">{product.weight}</p>
+        <div>
+          <div className="text-[var(--secondary)] font-medium">Weight</div>
+          <div className="text-[var(--primary)]">{product.weight}</div>
         </div>
-        <div className="col-span-2 grid grid-cols-subgrid border-t border-t-[var(--accent)] py-5">
-          <p className="text-[var(--secondary)] text-sm font-normal leading-normal">Price</p>
-          <p className="text-[var(--primary)] text-sm font-normal leading-normal">${product.price.toFixed(2)}</p>
+        <div>
+          <div className="text-[var(--secondary)] font-medium">Price</div>
+          <div className="text-[var(--primary)]">${product.price.toFixed(2)}</div>
         </div>
         {product.tastingNotes && product.tastingNotes.length > 0 && (
-          <div className="col-span-2 grid grid-cols-subgrid border-t border-t-[var(--accent)] py-5">
-            <p className="text-[var(--secondary)] text-sm font-normal leading-normal">Tasting Notes</p>
-            <p className="text-[var(--primary)] text-sm font-normal leading-normal">{product.tastingNotes.join(', ')}</p>
+          <div className="col-span-2">
+            <div className="text-[var(--secondary)] font-medium">Tasting Notes</div>
+            <div className="text-[var(--primary)]">{product.tastingNotes.join(', ')}</div>
           </div>
         )}
       </div>
@@ -512,41 +466,22 @@ export default function ProductDetailPage() {
       {showMessageForm && grower && (
         <MessageForm product={product} grower={grower} onClose={() => setShowMessageForm(false)} onMessageSuccess={handleMessageSuccess} />
       )}
-      {/* Responsive styles for mobile */}
+      {/* Modern, vivid, compact responsive tweaks */}
       <style jsx global>{`
-        @media (max-width: 900px) {
-          .product-detail-hero {
-            padding: 1.2rem !important;
-            gap: 1.2rem !important;
+        .product-detail-page {
+          font-family: 'Inter', system-ui, sans-serif;
+        }
+        @media (max-width: 700px) {
+          .product-detail-page {
+            padding: 0.5rem !important;
           }
         }
-        @media (max-width: 768px) {
-          .product-detail-hero {
+        @media (max-width: 600px) {
+          .product-detail-page .flex-row {
             flex-direction: column !important;
-            padding: 1rem !important;
-            gap: 1rem !important;
-          }
-          .product-image {
-            padding: 0.5rem !important;
-            max-width: 100% !important;
-          }
-          .product-info {
-            gap: 0.7rem !important;
-          }
-          .cta-actions {
-            flex-direction: column !important;
-            gap: 0.7rem !important;
-          }
-          .cta-btn {
-            width: 100% !important;
-            min-width: 0 !important;
-            max-width: 100% !important;
-            height: 44px !important;
-            font-size: 1rem !important;
-            padding: 0.7rem 1.2rem !important;
           }
         }
       `}</style>
     </div>
   );
-} 
+}

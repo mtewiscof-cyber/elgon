@@ -14,6 +14,7 @@ export const createProduct = mutation({
     imageUrl: v.string(),
     stock: v.number(),
     growerId: v.optional(v.id("growers")),
+    featured: v.optional(v.boolean()),
   },
   handler: async (ctx, args) => {
     const productId = await ctx.db.insert("products", args);
@@ -32,7 +33,10 @@ export const updateProduct = mutation({
     price: v.optional(v.number()),
     weight: v.optional(v.string()),
     imageUrl: v.optional(v.string()),
-  },
+    stock: v.optional(v.number()),
+    growerId: v.optional(v.id("growers")),
+    featured: v.optional(v.boolean()),
+    },
   handler: async (ctx, args) => {
     const { productId, ...rest } = args;
     await ctx.db.patch(productId, rest);
@@ -63,4 +67,15 @@ export const getProductById = query({
     const product = await ctx.db.get(args.productId);
     return product;
   }
-}); 
+});
+
+// New function to get featured products
+export const getFeaturedProducts = query({
+  args: {},
+  handler: async (ctx) => {
+    return await ctx.db
+      .query("products")
+      .filter((q) => q.eq(q.field("featured"), true))
+      .collect();
+  }
+});

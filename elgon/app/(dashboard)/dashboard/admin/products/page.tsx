@@ -4,12 +4,16 @@ import { useQuery } from 'convex/react';
 import { api } from '@/convex/_generated/api';
 import { useUser } from '@clerk/nextjs';
 import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import { useMutation } from 'convex/react';
+import { toast } from 'sonner';
+import { Id } from '@/convex/_generated/dataModel';
 
 const AdminProductsPage = () => {
   const { user: clerkUser, isLoaded: clerkLoaded } = useUser();
   const router = useRouter();
+  const [deletingId, setDeletingId] = useState<string | null>(null);
 
   // Fetch the user document from Convex to get the role
   const user = useQuery(api.users.getUserByUserId);
@@ -26,6 +30,21 @@ const AdminProductsPage = () => {
 
   // Fetch products data
   const products = useQuery(api.products.listProducts);
+  const deleteProduct = useMutation(api.products.deleteProduct);
+
+  // Handler for deleting a product
+  const handleDelete = async (productId: string) => {
+    if (!window.confirm('Are you sure you want to delete this product?')) return;
+    setDeletingId(productId);
+    try {
+      await deleteProduct({ productId: productId as Id<'products'> });
+      toast.success('Product deleted successfully!');
+    } catch (error) {
+      toast.error('Failed to delete product.');
+    } finally {
+      setDeletingId(null);
+    }
+  };
 
   if (!clerkLoaded || !isUserLoaded || !clerkUser) {
     return <div className="container section">Loading or Authenticating...</div>;
@@ -36,7 +55,7 @@ const AdminProductsPage = () => {
   }
 
   return (
-    <div className="page-content container section">
+    <div className="container section">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold text-blue-600">Admin - Products</h1>
         <Link 
@@ -47,7 +66,6 @@ const AdminProductsPage = () => {
         </Link>
       </div>
       <p className="lead mb-6">View and manage product listings.</p>
-
       <div className="card bg-white p-6 rounded-lg shadow-sm">
         <h3 className="text-lg font-semibold mb-4">Product List</h3>
         {products === undefined ? (
@@ -85,14 +103,19 @@ const AdminProductsPage = () => {
                     <td className="px-6 py-4 whitespace-no-wrap text-sm leading-5 text-gray-900">{p.stock}</td>
                     <td className="px-6 py-4 whitespace-no-wrap text-sm leading-5 text-gray-900">{p.growerId ? p.growerId.toString() : 'N/A'}</td>
                     <td className="px-6 py-4 whitespace-no-wrap text-sm leading-5">
-                      <button className="text-blue-600 hover:text-blue-800 mr-2">Edit</button>
-                      <button className="text-red-600 hover:text-red-800">Delete</button>
+                      <Link href={`/dashboard/admin/products/edit/${p._id}`} className="text-blue-600 hover:text-blue-800 mr-2">Edit</Link>
+                      <button
+                        className="text-red-600 hover:text-red-800"
+                        onClick={() => handleDelete(p._id)}
+                        disabled={deletingId === p._id}
+                      >
+                        {deletingId === p._id ? 'Deleting...' : 'Delete'}
+                      </button>
                     </td>
                   </tr>
                 ))}
               </tbody>
             </table>
-
             {/* Stacked view for smaller screens */}
             <div className="md:hidden space-y-4">
               {products.map(p => (
@@ -113,8 +136,14 @@ const AdminProductsPage = () => {
                     <div><span className="font-semibold">Grower ID:</span> {p.growerId ? p.growerId.toString() : 'N/A'}</div>
                   </div>
                   <div className="flex justify-end space-x-2">
-                    <button className="px-3 py-1 text-xs bg-blue-100 text-blue-600 rounded hover:bg-blue-200">Edit</button>
-                    <button className="px-3 py-1 text-xs bg-red-100 text-red-600 rounded hover:bg-red-200">Delete</button>
+                    <Link href={`/dashboard/admin/products/edit/${p._id}`} className="px-3 py-1 text-xs bg-blue-100 text-blue-600 rounded hover:bg-blue-200">Edit</Link>
+                    <button
+                      className="px-3 py-1 text-xs bg-red-100 text-red-600 rounded hover:bg-red-200"
+                      onClick={() => handleDelete(p._id)}
+                      disabled={deletingId === p._id}
+                    >
+                      {deletingId === p._id ? 'Deleting...' : 'Delete'}
+                    </button>
                   </div>
                 </div>
               ))}

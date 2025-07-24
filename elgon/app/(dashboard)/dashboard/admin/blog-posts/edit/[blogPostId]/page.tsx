@@ -10,6 +10,7 @@ import { useUploadThing } from '@/utils/uploadthing';
 import { MdCloudUpload, MdImage, MdDelete } from 'react-icons/md';
 import { Id } from '@/convex/_generated/dataModel';
 
+
 interface EditBlogPostPageProps {
   params: Promise<{
     blogPostId: string;

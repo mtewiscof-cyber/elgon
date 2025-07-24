@@ -18,6 +18,10 @@ const Navigation = () => {
     setMenuOpen(!menuOpen);
   };
 
+  const closeMenu = () => {
+    setMenuOpen(false);
+  };
+
   return (
     <div style={{ position: 'fixed', top: 0, left: 0, right: 0, zIndex: 1000, pointerEvents: 'none' }}>
       <nav
@@ -89,6 +93,7 @@ const Navigation = () => {
           <li>
             <Link
               href="/about"
+              onClick={closeMenu}
               style={{
                 color: 'var(--primary)',
                 textDecoration: 'none',
@@ -106,6 +111,7 @@ const Navigation = () => {
           <li>
             <Link
               href="/about#impact"
+              onClick={closeMenu}
               style={{
                 color: 'var(--primary)',
                 textDecoration: 'none',
@@ -123,6 +129,7 @@ const Navigation = () => {
           <li>
             <Link
               href="/blog"
+              onClick={closeMenu}
               style={{
                 color: 'var(--primary)',
                 textDecoration: 'none',
@@ -140,6 +147,7 @@ const Navigation = () => {
           <li>
             <Link
               href="/contact"
+              onClick={closeMenu}
               style={{
                 color: 'var(--primary)',
                 textDecoration: 'none',
@@ -164,6 +172,7 @@ const Navigation = () => {
                     ? "/dashboard/grower"
                     : "/dashboard/admin"
                 }
+                onClick={closeMenu}
                 style={{
                   color: 'var(--primary)',
                   textDecoration: 'none',
@@ -211,6 +220,7 @@ const Navigation = () => {
               </SignedOut>
               <Link
                 href="/products"
+                onClick={closeMenu}
                 style={{
                   color: 'var(--primary)',
                   textDecoration: 'none',
@@ -321,8 +331,8 @@ const Navigation = () => {
             }
             .user-actions-mobile {
               display: block !important;
-              margin-top: 1rem;
-              padding-top: 1rem;
+              margin-top: 0.8rem;
+              padding-top: 0.8rem;
               border-top: 1px solid rgba(0,0,0,0.1);
               width: 100%;
             }
@@ -332,13 +342,13 @@ const Navigation = () => {
             .nav-links.menu-open {
               display: flex !important;
               flex-direction: column !important;
-              gap: 0.8rem !important;
+              gap: 0.4rem !important;
               background: rgba(255, 248, 239, 0.98);
               position: fixed !important;
               top: 76px !important;
               left: 2vw;
               right: 2vw;
-              padding: 1.5rem 1rem 1.2rem 1rem;
+              padding: 1.2rem 1rem 1rem 1rem;
               border-radius: 16px;
               box-shadow: 0 8px 32px 0 rgba(0,0,0,0.12);
               z-index: 1050;
@@ -347,15 +357,15 @@ const Navigation = () => {
               backdrop-filter: blur(8px);
             }
             .nav-links.menu-open li a {
-              padding: 0.75rem 1rem !important;
+              padding: 0.6rem 1rem !important;
               border-radius: 8px !important;
               font-size: 1rem !important;
               text-align: center;
               background: rgba(255,255,255,0.7);
-              margin-bottom: 0.2rem;
+              margin-bottom: 0.1rem;
             }
             .nav-links.menu-open .user-actions-mobile div {
-              gap: 0.8rem !important;
+              gap: 0.5rem !important;
             }
             .nav-links.menu-open .user-actions-mobile button,
             .nav-links.menu-open .user-actions-mobile a {
