@@ -349,7 +349,7 @@ export default function ProductDetailPage() {
   }
 
   return (
-    <div className="container section product-detail-page" style={{ maxWidth: 700, margin: '0 auto' }}>
+    <div className="container section product-detail-page mt-10" >
       {/* Breadcrumbs */}
       <div className="flex items-center gap-2 px-2 py-3 text-sm text-[var(--secondary)]">
         <Link href="/products" className="hover:underline font-medium">Shop</Link>
