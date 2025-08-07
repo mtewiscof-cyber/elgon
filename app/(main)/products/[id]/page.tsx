@@ -81,15 +81,11 @@ function OrderForm({ product, onClose, onOrderSuccess }: OrderFormProps) {
             </button>
           </div>
           <div className="mb-3 flex items-center gap-3 bg-[var(--accent)]/40 rounded-xl px-3 py-2">
-            {product.imageUrl ? (
+          {product.imageUrl ? (
               <img
                 src={product.imageUrl}
                 alt={product.name}
                 className="w-12 h-12 rounded-lg object-cover border border-[var(--accent)]"
-                onError={(e) => {
-                  e.currentTarget.style.display = 'none';
-                  e.currentTarget.nextElementSibling?.classList.remove('hidden');
-                }}
               />
             ) : (
               <div className="w-12 h-12 flex items-center justify-center rounded-lg bg-[var(--accent)] text-2xl text-[var(--primary)]">☕</div>
