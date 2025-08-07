@@ -1,12 +1,12 @@
 'use client';
 
-import { useQuery } from 'convex/react';
-import { api } from '@/convex/_generated/api';
+import { useQuery, useMutation } from "convex/react";
+import { api } from "@/convex/_generated/api";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { formatPrice } from "@/lib/utils";
 import { useUser } from '@clerk/nextjs';
-import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import Link from 'next/link';
-import { useMutation } from 'convex/react';
 import { toast } from 'sonner';
 import { Id } from '@/convex/_generated/dataModel';
 
@@ -99,7 +99,7 @@ const AdminProductsPage = () => {
                       )}
                     </td>
                     <td className="px-6 py-4 whitespace-no-wrap text-sm leading-5 text-gray-900">{p.name}</td>
-                    <td className="px-6 py-4 whitespace-no-wrap text-sm leading-5 text-gray-900">${p.price}</td>
+                    <td className="px-6 py-4 whitespace-no-wrap text-sm leading-5 text-gray-900">{formatPrice(p.price)}</td>
                     <td className="px-6 py-4 whitespace-no-wrap text-sm leading-5 text-gray-900">{p.stock}</td>
                     <td className="px-6 py-4 whitespace-no-wrap text-sm leading-5 text-gray-900">{p.growerId ? p.growerId.toString() : 'N/A'}</td>
                     <td className="px-6 py-4 whitespace-no-wrap text-sm leading-5">
@@ -131,7 +131,7 @@ const AdminProductsPage = () => {
                     <h4 className="font-medium text-lg">{p.name}</h4>
                   </div>
                   <div className="grid grid-cols-2 gap-1 text-sm mb-3">
-                    <div><span className="font-semibold">Price:</span> ${p.price}</div>
+                    <div><span className="font-semibold">Price:</span> {formatPrice(p.price)}</div>
                     <div><span className="font-semibold">Stock:</span> {p.stock}</div>
                     <div><span className="font-semibold">Grower ID:</span> {p.growerId ? p.growerId.toString() : 'N/A'}</div>
                   </div>

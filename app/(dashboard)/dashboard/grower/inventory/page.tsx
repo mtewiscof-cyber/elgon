@@ -5,6 +5,7 @@ import { api } from "@/convex/_generated/api";
 import { useUser } from "@clerk/nextjs";
 import { useState } from "react";
 import { Id } from "@/convex/_generated/dataModel";
+import { formatPrice } from '@/lib/utils';
 
 export default function GrowerInventoryPage() {
   const { user: clerkUser, isLoaded: clerkLoaded } = useUser();
@@ -122,7 +123,7 @@ export default function GrowerInventoryPage() {
                       </div>
                       <div>
                         <p className="text-gray-600">Price</p>
-                        <p className="font-medium">${item.product?.price.toFixed(2)}</p>
+                        <p className="font-medium">{formatPrice(item.product?.price)}</p>
                       </div>
                       <div>
                         <p className="text-gray-600">Weight</p>

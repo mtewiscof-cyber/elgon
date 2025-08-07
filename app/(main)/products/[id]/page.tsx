@@ -6,7 +6,9 @@ import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { useUser } from "@clerk/nextjs";
 import Link from "next/link";
+import Image from "next/image";
 import { Id } from "@/convex/_generated/dataModel";
+import { formatPrice } from "@/lib/utils";
 
 // --- Modern, Compact Order Form ---
 interface OrderFormProps {
@@ -84,16 +86,21 @@ function OrderForm({ product, onClose, onOrderSuccess }: OrderFormProps) {
                 src={product.imageUrl}
                 alt={product.name}
                 className="w-12 h-12 rounded-lg object-cover border border-[var(--accent)]"
+                onError={(e) => {
+                  e.currentTarget.style.display = 'none';
+                  e.currentTarget.nextElementSibling?.classList.remove('hidden');
+                }}
               />
             ) : (
               <div className="w-12 h-12 flex items-center justify-center rounded-lg bg-[var(--accent)] text-2xl text-[var(--primary)]">☕</div>
             )}
+            <div className="hidden w-12 h-12 flex items-center justify-center rounded-lg bg-[var(--accent)] text-2xl text-[var(--primary)]">☕</div>
             <div>
               <div className="font-bold text-[var(--primary)] text-base">{product.name}</div>
               <div className="text-xs text-[var(--secondary)]">{product.origin}</div>
               <div className="text-[var(--secondary)] text-xs">{product.weight}</div>
             </div>
-            <div className="ml-auto text-[var(--primary)] font-bold text-base">${product.price.toFixed(2)}</div>
+            <div className="ml-auto text-[var(--primary)] font-bold text-base">{formatPrice(product.price)}</div>
           </div>
           <form onSubmit={handleSubmit} className="space-y-2">
             <div className="grid grid-cols-2 gap-2">
@@ -178,7 +185,7 @@ function OrderForm({ product, onClose, onOrderSuccess }: OrderFormProps) {
               </button>
               <button
                 type="submit"
-                className="flex-1 py-2 rounded-lg bg-[var(--primary)] text-white font-semibold hover:bg-[var(--secondary)] transition text-sm"
+                className="flex-1 py-2 rounded-lg bg-[var(--primary)] text-white font-semibold hover:bg-[var(--primary)]/90 hover:shadow-lg transition-all duration-200 text-sm"
                 disabled={isSubmitting}
               >
                 {isSubmitting ? 'Placing...' : 'Place Order'}
@@ -304,9 +311,18 @@ export default function ProductDetailPage() {
     product?.growerId ? { growerId: product.growerId } : 'skip'
   );
 
+  // Consistent horizontal padding for all sections
+  const sectionPadding = "clamp(1rem, 5vw, 2.5rem)";
+
   useEffect(() => {
     if (product !== undefined) {
       setIsLoading(false);
+      // Debug: Log product data to see what we're getting
+      console.log('Product data loaded:', product);
+      console.log('Product imageUrl:', product?.imageUrl);
+      console.log('Product imageUrl type:', typeof product?.imageUrl);
+      console.log('Product imageUrl length:', product?.imageUrl?.length);
+      console.log('Product imageUrl trimmed:', product?.imageUrl?.trim());
     }
   }, [product]);
 
@@ -326,11 +342,11 @@ export default function ProductDetailPage() {
 
   if (!isLoading && !product) {
     return (
-      <div className="container section">
-        <div className="text-center">
-          <h2>Product Not Found</h2>
-          <p>The product you are looking for doesn't exist or has been removed.</p>
-          <Link href="/products" className="btn btn-primary mt-4">
+      <div style={{ maxWidth: "1100px", margin: "0 auto", padding: `0 ${sectionPadding}` }}>
+        <div className="text-center py-12">
+          <h2 className="text-2xl font-bold text-[var(--primary)] mb-4">Product Not Found</h2>
+          <p className="text-[var(--secondary)] mb-6">The product you are looking for doesn't exist or has been removed.</p>
+          <Link href="/products" className="inline-block px-6 py-3 bg-[var(--primary)] text-white rounded-xl font-semibold hover:bg-[var(--primary)]/90 hover:shadow-lg transition-all duration-200">
             Back to Products
           </Link>
         </div>
@@ -340,125 +356,146 @@ export default function ProductDetailPage() {
 
   if (isLoading || !product) {
     return (
-      <div className="container section">
-        <div className="flex justify-center items-center" style={{ minHeight: '400px' }}>
-          <div className="loading-spinner"></div>
+      <div style={{ maxWidth: "1100px", margin: "0 auto", padding: `0 ${sectionPadding}` }}>
+        <div className="flex justify-center items-center py-12">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[var(--primary)]"></div>
+          <span className="ml-3 text-[var(--secondary)]">Loading product...</span>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="container section product-detail-page mt-10" >
-      {/* Breadcrumbs */}
-      <div className="flex items-center gap-2 px-2 py-3 text-sm text-[var(--secondary)]">
-        <Link href="/products" className="hover:underline font-medium">Shop</Link>
-        <span>/</span>
-        <span className="text-[var(--primary)] font-semibold">{product.name}</span>
-      </div>
-      {/* Product Card */}
-      <div className="flex flex-col md:flex-row gap-4 bg-white rounded-2xl shadow-lg p-4 mb-5">
-        {/* Image */}
-        <div className="w-full md:w-1/2 flex items-center justify-center">
-          {product.imageUrl ? (
-            <img
-              src={product.imageUrl}
-              alt={product.name}
-              className="rounded-xl w-full max-w-xs object-cover aspect-[3/2] border border-[var(--accent)]"
-              style={{ background: '#fff' }}
-            />
-          ) : (
-            <div className="flex items-center justify-center rounded-xl bg-[var(--accent)] w-full max-w-xs aspect-[3/2] text-5xl text-[var(--primary)]">
-              ☕
-            </div>
-          )}
+    <div style={{ maxWidth: "1100px", margin: "0 auto", padding: `0 ${sectionPadding}` }}>
+      <div className="py-8 md:py-12">
+        {/* Breadcrumbs */}
+        <div className="flex items-center gap-2 py-3 text-sm text-[var(--secondary)] mb-6">
+          <Link href="/products" className="hover:underline font-medium transition-colors">Shop</Link>
+          <span>/</span>
+          <span className="text-[var(--primary)] font-semibold">{product.name}</span>
         </div>
-        {/* Info */}
-        <div className="flex flex-col gap-2 w-full md:w-1/2 justify-center">
-          <h1 className="text-[var(--primary)] text-2xl font-bold leading-tight">{product.name}</h1>
-          <div className="flex flex-wrap gap-2 items-center">
-            <span className="bg-[var(--accent)] text-[var(--primary)] rounded-lg px-3 py-1 font-bold text-base">${product.price.toFixed(2)} <span className="font-normal text-xs">/ {product.weight}</span></span>
-            <span className={`rounded-lg px-3 py-1 font-medium text-xs ${product.stock > 0 ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>{product.stock > 0 ? 'In stock' : 'Out of stock'}</span>
-            <span className="bg-[var(--secondary)] text-white rounded-lg px-3 py-1 font-medium text-xs">{product.origin}</span>
-            {grower && <span className="bg-[var(--primary)] text-white rounded-lg px-3 py-1 font-medium text-xs">{grower.name}</span>}
-          </div>
-          {product.tastingNotes && product.tastingNotes.length > 0 && (
-            <div className="flex flex-wrap gap-1 mt-1">
-              {product.tastingNotes.map((note, i) => (
-                <span key={i} className="bg-[var(--accent)] text-[var(--primary)] rounded px-2 py-0.5 text-xs font-medium">{note}</span>
-              ))}
-            </div>
-          )}
-          <p className="text-[var(--secondary)] text-sm mt-2 line-clamp-3">{product.description}</p>
-          <div className="flex gap-2 mt-3">
-            {canOrder ? (
-              <button
-                onClick={() => setShowOrderForm(true)}
-                className="flex-1 h-10 rounded-lg bg-[var(--primary)] text-white font-semibold text-sm hover:bg-[var(--secondary)] transition"
-                disabled={product.stock <= 0}
-              >
-                {product.stock > 0 ? 'Order Now' : 'Out of Stock'}
-              </button>
+        
+        {/* Product Card */}
+        <div className="flex flex-col md:flex-row gap-6 bg-white rounded-2xl shadow-lg p-6 mb-6">
+          {/* Image */}
+          <div className="w-full md:w-1/2 flex items-center justify-center">
+            {product.imageUrl && product.imageUrl.trim() !== '' && product.imageUrl !== 'undefined' && product.imageUrl !== 'null' ? (
+              <div className="relative w-full max-w-xs aspect-[3/2] rounded-xl overflow-hidden border border-[var(--accent)]">
+                <img
+                  src={product.imageUrl}
+                  alt={product.name}
+                  className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
+                  style={{ background: '#fff' }}
+                  onError={(e) => {
+                    console.error('Image failed to load:', product.imageUrl);
+                    console.error('Product data:', product);
+                    e.currentTarget.style.display = 'none';
+                    e.currentTarget.nextElementSibling?.classList.remove('hidden');
+                  }}
+                  onLoad={() => {
+                    console.log('Image loaded successfully:', product.imageUrl);
+                  }}
+                />
+                <div className="hidden absolute inset-0 flex items-center justify-center bg-[var(--accent)] text-5xl text-[var(--primary)]">
+                  ☕
+                </div>
+              </div>
             ) : (
-              <div className="flex-1">
-                {!clerkUser ? (
-                  <Link href="/sign-in" className="block h-10 rounded-lg bg-[var(--primary)] text-white font-semibold text-sm flex items-center justify-center hover:bg-[var(--secondary)] transition">
-                    Sign In to Order
-                  </Link>
-                ) : user?.role !== 'customer' ? (
-                  <div className="text-center p-2 bg-gray-100 rounded-lg text-xs">
-                    <span className="text-gray-600">Customer account required</span>
-                    <Link href="/onboarding/customer" className="text-blue-600 hover:underline ml-1">
-                      Complete profile
-                    </Link>
-                  </div>
-                ) : (
-                  <button
-                    className="block w-full h-10 rounded-lg bg-gray-300 text-white font-semibold text-sm cursor-not-allowed"
-                    disabled
-                  >
-                    Loading...
-                  </button>
-                )}
+              <div className="flex items-center justify-center rounded-xl bg-[var(--accent)] w-full max-w-xs aspect-[3/2] text-5xl text-[var(--primary)]">
+                ☕
               </div>
             )}
-            {canMessage && (
-              <button
-                onClick={() => setShowMessageForm(true)}
-                className="flex-1 h-10 rounded-lg bg-[var(--accent)] text-[var(--primary)] font-semibold text-sm hover:bg-[var(--secondary)] hover:text-white transition"
-              >
-                Message Grower
-              </button>
+          </div>
+          {/* Info */}
+          <div className="flex flex-col gap-3 w-full md:w-1/2 justify-center">
+            <h1 className="text-[var(--primary)] text-2xl font-bold leading-tight">{product.name}</h1>
+            <div className="flex flex-wrap gap-2 items-center">
+              <span className="bg-[var(--accent)] text-[var(--primary)] rounded-lg px-3 py-1 font-bold text-base">{formatPrice(product.price)} <span className="font-normal text-xs">/ {product.weight}</span></span>
+              <span className={`rounded-lg px-3 py-1 font-medium text-xs ${product.stock > 0 ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>{product.stock > 0 ? 'In stock' : 'Out of stock'}</span>
+              <span className="bg-[var(--secondary)] text-white rounded-lg px-3 py-1 font-medium text-xs">{product.origin}</span>
+              {grower && <span className="bg-[var(--primary)] text-white rounded-lg px-3 py-1 font-medium text-xs">{grower.name}</span>}
+            </div>
+            {product.tastingNotes && product.tastingNotes.length > 0 && (
+              <div className="flex flex-wrap gap-1 mt-1">
+                {product.tastingNotes.map((note, i) => (
+                  <span key={i} className="bg-[var(--accent)] text-[var(--primary)] rounded px-2 py-0.5 text-xs font-medium">{note}</span>
+                ))}
+              </div>
             )}
+            <p className="text-[var(--secondary)] text-sm mt-2 line-clamp-3">{product.description}</p>
+            <div className="flex gap-3 mt-4">
+              {canOrder ? (
+                <button
+                  onClick={() => setShowOrderForm(true)}
+                  className="flex-1 h-12 rounded-xl bg-[var(--primary)] text-white font-semibold text-sm hover:bg-[var(--primary)]/90 hover:shadow-lg transition-all duration-200"
+                  disabled={product.stock <= 0}
+                >
+                  {product.stock > 0 ? 'Order Now' : 'Out of Stock'}
+                </button>
+              ) : (
+                <div className="flex-1">
+                  {!clerkUser ? (
+                    <Link href="/sign-in" className="block h-12 rounded-xl bg-[var(--primary)] text-white font-semibold text-sm flex items-center justify-center hover:bg-[var(--primary)]/90 hover:shadow-lg transition-all duration-200">
+                      Sign In to Order
+                    </Link>
+                  ) : user?.role !== 'customer' ? (
+                    <div className="text-center p-3 bg-gray-100 rounded-xl text-xs">
+                      <span className="text-gray-600">Customer account required</span>
+                      <Link href="/onboarding/customer" className="text-blue-600 hover:underline ml-1">
+                        Complete profile
+                      </Link>
+                    </div>
+                  ) : (
+                    <button
+                      className="block w-full h-12 rounded-xl bg-gray-300 text-white font-semibold text-sm cursor-not-allowed"
+                      disabled
+                    >
+                      Loading...
+                    </button>
+                  )}
+                </div>
+              )}
+              {canMessage && (
+                <button
+                  onClick={() => setShowMessageForm(true)}
+                  className="flex-1 h-12 rounded-xl bg-[var(--accent)] text-[var(--primary)] font-semibold text-sm hover:bg-[var(--primary)] hover:text-white transition-all duration-200"
+                >
+                  Message Grower
+                </button>
+              )}
+            </div>
           </div>
         </div>
-      </div>
-      {/* About */}
-      <div className="bg-[var(--light-bg)] rounded-xl p-4 mb-4">
-        <h2 className="text-[var(--primary)] text-lg font-bold mb-1">About this coffee</h2>
-        <p className="text-[var(--primary)] text-sm">{product.description}</p>
-      </div>
-      {/* Details */}
-      <div className="grid grid-cols-2 gap-3 bg-white rounded-xl p-4 shadow-sm text-sm mb-4">
-        <div>
-          <div className="text-[var(--secondary)] font-medium">Origin</div>
-          <div className="text-[var(--primary)]">{product.origin}</div>
+        
+        {/* About */}
+        <div className="bg-[var(--light-bg)] rounded-xl p-6 mb-6">
+          <h2 className="text-[var(--primary)] text-lg font-bold mb-2">About this coffee</h2>
+          <p className="text-[var(--primary)] text-sm">{product.description}</p>
         </div>
-        <div>
-          <div className="text-[var(--secondary)] font-medium">Weight</div>
-          <div className="text-[var(--primary)]">{product.weight}</div>
-        </div>
-        <div>
-          <div className="text-[var(--secondary)] font-medium">Price</div>
-          <div className="text-[var(--primary)]">${product.price.toFixed(2)}</div>
-        </div>
-        {product.tastingNotes && product.tastingNotes.length > 0 && (
-          <div className="col-span-2">
-            <div className="text-[var(--secondary)] font-medium">Tasting Notes</div>
-            <div className="text-[var(--primary)]">{product.tastingNotes.join(', ')}</div>
+        
+        {/* Details */}
+        <div className="grid grid-cols-2 gap-4 bg-white rounded-xl p-6 shadow-sm text-sm mb-6">
+          <div>
+            <div className="text-[var(--secondary)] font-medium">Origin</div>
+            <div className="text-[var(--primary)]">{product.origin}</div>
           </div>
-        )}
+          <div>
+            <div className="text-[var(--secondary)] font-medium">Weight</div>
+            <div className="text-[var(--primary)]">{product.weight}</div>
+          </div>
+          <div>
+            <div className="text-[var(--secondary)] font-medium">Price</div>
+            <div className="text-[var(--primary)]">{formatPrice(product.price)}</div>
+          </div>
+          {product.tastingNotes && product.tastingNotes.length > 0 && (
+            <div className="col-span-2">
+              <div className="text-[var(--secondary)] font-medium">Tasting Notes</div>
+              <div className="text-[var(--primary)]">{product.tastingNotes.join(', ')}</div>
+            </div>
+          )}
+        </div>
       </div>
+      
       {/* Modals */}
       {showOrderForm && (
         <OrderForm product={product} onClose={() => setShowOrderForm(false)} onOrderSuccess={handleOrderSuccess} />
@@ -466,22 +503,6 @@ export default function ProductDetailPage() {
       {showMessageForm && grower && (
         <MessageForm product={product} grower={grower} onClose={() => setShowMessageForm(false)} onMessageSuccess={handleMessageSuccess} />
       )}
-      {/* Modern, vivid, compact responsive tweaks */}
-      <style jsx global>{`
-        .product-detail-page {
-          font-family: 'Inter', system-ui, sans-serif;
-        }
-        @media (max-width: 700px) {
-          .product-detail-page {
-            padding: 0.5rem !important;
-          }
-        }
-        @media (max-width: 600px) {
-          .product-detail-page .flex-row {
-            flex-direction: column !important;
-          }
-        }
-      `}</style>
     </div>
   );
 }

@@ -8,6 +8,7 @@ import { useUser } from "@clerk/nextjs";
 import { useQuery } from "convex/react";
 import { api } from "../convex/_generated/api";
 import { FaBars, FaTimes } from 'react-icons/fa';
+import CartIcon from './CartIcon';
 
 const Navigation = () => {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -110,24 +111,6 @@ const Navigation = () => {
           </li>
           <li>
             <Link
-              href="/about#impact"
-              onClick={closeMenu}
-              style={{
-                color: 'var(--primary)',
-                textDecoration: 'none',
-                display: 'flex',
-                alignItems: 'center',
-                fontWeight: 500,
-                padding: '0.5rem 1rem',
-                borderRadius: 6,
-                transition: 'background 0.2s',
-              }}
-            >
-              <span style={{ marginLeft: '0.25rem' }}>Our Impact</span>
-            </Link>
-          </li>
-          <li>
-            <Link
               href="/blog"
               onClick={closeMenu}
               style={{
@@ -194,6 +177,7 @@ const Navigation = () => {
           {/* User actions moved inside nav-links for mobile */}
           <li className="user-actions-mobile">
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexDirection: 'column' }}>
+              <CartIcon />
               <SignedIn>
                 <UserButton afterSignOutUrl="/" />
               </SignedIn>
@@ -218,31 +202,12 @@ const Navigation = () => {
                   </button>
                 </SignInButton>
               </SignedOut>
-              <Link
-                href="/products"
-                onClick={closeMenu}
-                style={{
-                  color: 'var(--primary)',
-                  textDecoration: 'none',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  fontWeight: 600,
-                  background: 'var(--accent)',
-                  borderRadius: '9999px',
-                  padding: '0.5rem 1.5rem',
-                  boxShadow: 'var(--shadow-sm)',
-                  transition: 'background 0.2s',
-                  width: '100%',
-                }}
-              >
-                Shop Now
-              </Link>
             </div>
           </li>
         </ul>
         {/* User actions for desktop */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexShrink: 0 }} className="user-actions-desktop">
+          <CartIcon />
           <SignedIn>
             <UserButton afterSignOutUrl="/" />
           </SignedIn>
@@ -267,24 +232,6 @@ const Navigation = () => {
               </button>
             </SignInButton>
           </SignedOut>
-          <Link
-            href="/products"
-            style={{
-              color: 'var(--primary)',
-              textDecoration: 'none',
-              display: 'flex',
-              alignItems: 'center',
-              fontWeight: 600,
-              background: 'var(--accent)',
-              borderRadius: '9999px',
-              padding: '0.5rem 1.5rem',
-              marginLeft: '0.5rem',
-              boxShadow: 'var(--shadow-sm)',
-              transition: 'background 0.2s',
-            }}
-          >
-            Shop Now
-          </Link>
         </div>
         {/* Responsive styles for mobile */}
         <style jsx global>{`
@@ -372,6 +319,11 @@ const Navigation = () => {
               padding: 0.75rem 1.5rem !important;
               font-size: 1rem !important;
               margin: 0 !important;
+            }
+            .nav-links.menu-open .user-actions-mobile .cart-icon {
+              width: 100% !important;
+              justify-content: center !important;
+              padding: 0.75rem 1.5rem !important;
             }
             /* Remove centering of logo on mobile */
             .premium-nav > div:first-child {

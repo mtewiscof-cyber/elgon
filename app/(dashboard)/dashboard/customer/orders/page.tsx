@@ -6,6 +6,7 @@ import { useUser } from '@clerk/nextjs';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import Link from 'next/link';
+import { formatPrice } from '@/lib/utils';
 
 const CustomerOrdersPage = () => {
   const { user: clerkUser, isLoaded: clerkLoaded } = useUser();
@@ -61,7 +62,7 @@ const CustomerOrdersPage = () => {
                 {orders.map(o => (
                   <tr key={o._id.toString()} className="border-b border-gray-200">
                     <td className="px-6 py-4 whitespace-no-wrap text-sm leading-5 text-gray-900">{o._id.toString()}</td>
-                    <td className="px-6 py-4 whitespace-no-wrap text-sm leading-5 text-gray-900">{o.totalAmount}</td>
+                    <td className="px-6 py-4 whitespace-no-wrap text-sm leading-5 text-gray-900">{formatPrice(o.totalAmount)}</td>
                     <td className="px-6 py-4 whitespace-no-wrap text-sm leading-5 text-gray-900">{o.status}</td>
                     <td className="px-6 py-4 whitespace-no-wrap text-sm leading-5 text-gray-900">{o.paymentStatus}</td>
                     <td className="px-6 py-4 whitespace-no-wrap text-sm leading-5 text-gray-900">{new Date(o.createdAt).toLocaleDateString()}</td>
@@ -80,7 +81,7 @@ const CustomerOrdersPage = () => {
               {orders.map(o => (
                 <div key={o._id.toString()} className="card mb-md p-md border border-gray-200">
                   <div className="mb-sm"><span className="font-semibold">Order ID:</span> {o._id.toString()}</div>
-                  <div className="mb-sm"><span className="font-semibold">Total Amount:</span> {o.totalAmount}</div>
+                  <div className="mb-sm"><span className="font-semibold">Total Amount:</span> {formatPrice(o.totalAmount)}</div>
                   <div className="mb-sm"><span className="font-semibold">Status:</span> {o.status}</div>
                   <div className="mb-sm"><span className="font-semibold">Payment Status:</span> {o.paymentStatus}</div>
                   <div className="mb-sm"><span className="font-semibold">Created At:</span> {new Date(o.createdAt).toLocaleDateString()}</div>

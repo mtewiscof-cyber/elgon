@@ -4,7 +4,7 @@ import { useQuery, useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { useUser } from "@clerk/nextjs";
 import { useState } from "react";
-import { normalizeShippingAddress } from '@/lib/utils';
+import { normalizeShippingAddress, formatPrice } from '@/lib/utils';
 
 export default function GrowerOrdersPage() {
   const { user: clerkUser, isLoaded: clerkLoaded } = useUser();
@@ -126,7 +126,7 @@ export default function GrowerOrdersPage() {
                         </span>
                       </div>
                       <p className="text-sm text-gray-600">
-                        {formatDate(order.createdAt)} • ${growerSubtotal.toFixed(2)}
+                        {formatDate(order.createdAt)} • {formatPrice(growerSubtotal)}
                       </p>
                     </div>
                     <button className="text-blue-600 hover:text-blue-800">
@@ -151,7 +151,7 @@ export default function GrowerOrdersPage() {
                         </div>
                         <div>
                           <p className="text-gray-600">Subtotal (Your Products)</p>
-                          <p className="font-medium">${growerSubtotal.toFixed(2)}</p>
+                          <p className="font-medium">{formatPrice(growerSubtotal)}</p>
                         </div>
                       </div>
                       
@@ -185,11 +185,11 @@ export default function GrowerOrdersPage() {
                                 <div>
                                   <p className="font-medium">{product?.name || 'Unknown Product'}</p>
                                   <p className="text-sm text-gray-600">
-                                    ${item.priceAtPurchase.toFixed(2)} × {item.quantity}
+                                    {formatPrice(item.priceAtPurchase)} × {item.quantity}
                                   </p>
                                 </div>
                                 <p className="font-medium">
-                                  ${(item.priceAtPurchase * item.quantity).toFixed(2)}
+                                  {formatPrice(item.priceAtPurchase * item.quantity)}
                                 </p>
                               </div>
                             );

@@ -26,6 +26,9 @@ const BlogPostPage = ({ params }: BlogPostPageProps) => {
   
   // Fetch related blog posts (same category, limit 3)
   const allBlogPosts = useQuery(api.blogPosts.listBlogPosts);
+
+  // Consistent horizontal padding for all sections
+  const sectionPadding = "clamp(1rem, 5vw, 2.5rem)";
   
   if (blogPost === undefined) {
     return (
@@ -79,92 +82,96 @@ const BlogPostPage = ({ params }: BlogPostPageProps) => {
     <div className="min-h-screen bg-white">
       {/* Navigation */}
       <div className="bg-white border-b sticky top-0 z-10">
-        <div className="max-w-4xl mx-auto px-4 py-4">
-          <Link 
-            href="/blog" 
-            className="inline-flex items-center text-[var(--primary)] hover:text-[var(--secondary)] transition-colors"
-          >
-            <MdArrowBack className="mr-2" size={20} />
-            Back to Blog
-          </Link>
+        <div style={{ maxWidth: "1100px", margin: "0 auto", padding: `0 ${sectionPadding}` }}>
+          <div className="py-4">
+            <Link 
+              href="/blog" 
+              className="inline-flex items-center text-[var(--primary)] hover:text-[var(--secondary)] transition-colors"
+            >
+              <MdArrowBack className="mr-2" size={20} />
+              Back to Blog
+            </Link>
+          </div>
         </div>
       </div>
 
       {/* Hero Section */}
-      <article className="max-w-4xl mx-auto px-4 py-8">
-        {/* Article Header */}
-        <header className="mb-8">
-          <div className="flex flex-wrap items-center gap-4 text-sm text-gray-600 mb-4">
-            <span className="inline-flex items-center gap-1">
-              <MdTag size={16} />
-              <span className="bg-[var(--light-bg)] px-2 py-1 rounded-full text-[var(--primary)] font-medium">
-                {blogPost.category}
+      <article style={{ maxWidth: "1100px", margin: "0 auto", padding: `0 ${sectionPadding}` }}>
+        <div className="py-8">
+          {/* Article Header */}
+          <header className="mb-8">
+            <div className="flex flex-wrap items-center gap-4 text-sm text-gray-600 mb-4">
+              <span className="inline-flex items-center gap-1">
+                <MdTag size={16} />
+                <span className="bg-[var(--light-bg)] px-2 py-1 rounded-full text-[var(--primary)] font-medium">
+                  {blogPost.category}
+                </span>
               </span>
-            </span>
-            <span className="inline-flex items-center gap-1">
-              <MdEvent size={16} />
-              {formattedDate}
-            </span>
-            <span className="inline-flex items-center gap-1">
-              <MdPerson size={16} />
-              {blogPost.author}
-            </span>
-          </div>
-          
-          <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-[#171312] leading-tight mb-4">
-            {blogPost.title}
-          </h1>
-          
-          <p className="text-lg md:text-xl text-[#826e68] leading-relaxed mb-6">
-            {blogPost.excerpt}
-          </p>
-          
-          <div className="flex items-center justify-between">
-            <div className="text-sm text-gray-500">
-              {Math.ceil(blogPost.content.split(' ').length / 200)} min read
+              <span className="inline-flex items-center gap-1">
+                <MdEvent size={16} />
+                {formattedDate}
+              </span>
+              <span className="inline-flex items-center gap-1">
+                <MdPerson size={16} />
+                {blogPost.author}
+              </span>
             </div>
-            <button
-              onClick={handleShare}
-              className="inline-flex items-center gap-2 px-4 py-2 bg-[var(--light-bg)] text-[var(--primary)] rounded-lg hover:bg-[#e8e4e1] transition-colors"
-            >
-              <MdShare size={16} />
-              Share
-            </button>
-          </div>
-        </header>
+            
+            <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-[#171312] leading-tight mb-4">
+              {blogPost.title}
+            </h1>
+            
+            <p className="text-lg md:text-xl text-[#826e68] leading-relaxed mb-6">
+              {blogPost.excerpt}
+            </p>
+            
+            <div className="flex items-center justify-between">
+              <div className="text-sm text-gray-500">
+                {Math.ceil(blogPost.content.split(' ').length / 200)} min read
+              </div>
+              <button
+                onClick={handleShare}
+                className="inline-flex items-center gap-2 px-4 py-2 bg-[var(--light-bg)] text-[var(--primary)] rounded-lg hover:bg-[#e8e4e1] transition-colors"
+              >
+                <MdShare size={16} />
+                Share
+              </button>
+            </div>
+          </header>
 
-        {/* Featured Image */}
-        {blogPost.imageUrl && (
-          <div className="relative w-full h-64 md:h-96 lg:h-[500px] mb-8 rounded-xl overflow-hidden">
-            <Image
-              src={blogPost.imageUrl}
-              alt={blogPost.title}
-              fill
-              className="object-cover"
-              priority
-            />
-          </div>
-        )}
+          {/* Featured Image */}
+          {blogPost.imageUrl && (
+            <div className="relative w-full h-64 md:h-96 lg:h-[500px] mb-8 rounded-xl overflow-hidden shadow-lg">
+              <Image
+                src={blogPost.imageUrl}
+                alt={blogPost.title}
+                fill
+                className="object-cover transition-transform duration-300 hover:scale-105"
+                priority
+              />
+            </div>
+          )}
 
-        {/* Article Content */}
-        <div className="prose prose-lg max-w-none">
-          <div className="text-[#171312] leading-relaxed whitespace-pre-wrap">
-            {blogPost.content}
+          {/* Article Content */}
+          <div className="prose prose-lg max-w-none">
+            <div className="text-[#171312] leading-relaxed whitespace-pre-wrap">
+              {blogPost.content}
+            </div>
           </div>
+
+          {/* Share Toast */}
+          {shareOpen && (
+            <div className="fixed bottom-4 right-4 bg-green-600 text-white px-4 py-2 rounded-lg shadow-lg z-20">
+              Link copied to clipboard!
+            </div>
+          )}
         </div>
-
-        {/* Share Toast */}
-        {shareOpen && (
-          <div className="fixed bottom-4 right-4 bg-green-600 text-white px-4 py-2 rounded-lg shadow-lg z-20">
-            Link copied to clipboard!
-          </div>
-        )}
       </article>
 
       {/* Related Posts */}
       {relatedPosts.length > 0 && (
         <section className="bg-[var(--light-bg)] py-12 mt-12">
-          <div className="max-w-6xl mx-auto px-4">
+          <div style={{ maxWidth: "1100px", margin: "0 auto", padding: `0 ${sectionPadding}` }}>
             <h2 className="text-2xl md:text-3xl font-bold text-[#171312] mb-8 text-center">
               Related Articles
             </h2>
@@ -210,48 +217,52 @@ const BlogPostPage = ({ params }: BlogPostPageProps) => {
 
       {/* Call to Action */}
       <section className="bg-[var(--primary)] text-white py-12">
-        <div className="max-w-3xl mx-auto px-4 text-center">
-          <h2 className="text-2xl md:text-3xl font-bold mb-4">
-            Stay Connected with Our Coffee Community
-          </h2>
-          <p className="text-lg mb-6 opacity-90">
-            Get the latest stories, coffee insights, and updates from Mt. Elgon Women's Coffee delivered to your inbox.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 items-center justify-center max-w-md mx-auto">
-            <input
-              type="email"
-              placeholder="Your email address"
-              className="flex-1 w-full px-4 py-3 rounded-lg text-[#171312] placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-white"
-            />
-            <button className="w-full sm:w-auto px-6 py-3 bg-[var(--accent)] text-[var(--primary)] rounded-lg font-bold hover:bg-[#e8d4cb] transition-colors">
-              Subscribe
-            </button>
+        <div style={{ maxWidth: "800px", margin: "0 auto", padding: `0 ${sectionPadding}` }}>
+          <div className="text-center">
+            <h2 className="text-2xl md:text-3xl font-bold mb-4">
+              Stay Connected with Our Coffee Community
+            </h2>
+            <p className="text-lg mb-6 opacity-90">
+              Get the latest stories, coffee insights, and updates from Mt. Elgon Women's Coffee delivered to your inbox.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 items-center justify-center max-w-md mx-auto">
+              <input
+                type="email"
+                placeholder="Your email address"
+                className="flex-1 w-full px-4 py-3 rounded-lg text-[#171312] placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-white"
+              />
+              <button className="w-full sm:w-auto px-6 py-3 bg-[var(--accent)] text-[var(--primary)] rounded-lg font-bold hover:bg-[#e8d4cb] transition-colors">
+                Subscribe
+              </button>
+            </div>
           </div>
         </div>
       </section>
 
       {/* Footer Navigation */}
       <div className="bg-white border-t py-8">
-        <div className="max-w-4xl mx-auto px-4 flex flex-col sm:flex-row justify-between items-center gap-4">
-          <Link 
-            href="/blog" 
-            className="text-[var(--primary)] hover:text-[var(--secondary)] transition-colors"
-          >
-            ← All Blog Posts
-          </Link>
-          <div className="flex gap-4">
+        <div style={{ maxWidth: "1100px", margin: "0 auto", padding: `0 ${sectionPadding}` }}>
+          <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
             <Link 
-              href="/products" 
-              className="px-4 py-2 bg-[var(--accent)] text-[var(--primary)] rounded-lg hover:bg-[#e8d4cb] transition-colors font-medium"
+              href="/blog" 
+              className="text-[var(--primary)] hover:text-[var(--secondary)] transition-colors"
             >
-              Shop Coffee
+              ← All Blog Posts
             </Link>
-            <Link 
-              href="/about" 
-              className="px-4 py-2 border border-[var(--primary)] text-[var(--primary)] rounded-lg hover:bg-[var(--light-bg)] transition-colors"
-            >
-              Our Story
-            </Link>
+            <div className="flex gap-4">
+              <Link 
+                href="/products" 
+                className="px-4 py-2 bg-[var(--accent)] text-[var(--primary)] rounded-lg hover:bg-[#e8d4cb] transition-colors font-medium"
+              >
+                Shop Coffee
+              </Link>
+              <Link 
+                href="/about" 
+                className="px-4 py-2 border border-[var(--primary)] text-[var(--primary)] rounded-lg hover:bg-[var(--light-bg)] transition-colors"
+              >
+                Our Story
+              </Link>
+            </div>
           </div>
         </div>
       </div>

@@ -7,6 +7,7 @@ import { useRouter, useParams } from 'next/navigation';
 import { useEffect } from 'react';
 import { Id } from '@/convex/_generated/dataModel';
 import Link from 'next/link';
+import { formatPrice } from '@/lib/utils';
 
 const CustomerSubscriptionDetailPage = () => {
   const { user: clerkUser, isLoaded: clerkLoaded } = useUser();
@@ -176,7 +177,7 @@ const CustomerSubscriptionDetailPage = () => {
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
                       <div><span className="font-medium">Origin:</span> {product.origin}</div>
                       <div><span className="font-medium">Weight:</span> {product.weight}</div>
-                      <div><span className="font-medium">Price:</span> ${product.price.toFixed(2)}</div>
+                      <div><span className="font-medium">Price:</span> {formatPrice(product.price)}</div>
                       <div><span className="font-medium">Stock:</span> {product.stock} available</div>
                     </div>
 

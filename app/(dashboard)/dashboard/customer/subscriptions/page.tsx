@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { Id } from '@/convex/_generated/dataModel';
 import Link from 'next/link';
+import { formatPrice } from '@/lib/utils';
 
 // Subscription Form Component
 interface SubscriptionFormProps {
@@ -501,7 +502,7 @@ const CustomerSubscriptionsPage = () => {
 
                         {product?.price && (
                           <div className="mt-2">
-                            <span className="text-lg font-bold text-gray-900">${product.price.toFixed(2)}</span>
+                            <p className="font-bold text-gray-900">{formatPrice(product.price)}</p>
                             <span className="text-gray-500 ml-2">per delivery ({product.weight})</span>
                           </div>
                         )}

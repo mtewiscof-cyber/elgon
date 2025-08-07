@@ -6,7 +6,7 @@ import { useUser } from '@clerk/nextjs';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { Id } from '@/convex/_generated/dataModel';
-import { normalizeShippingAddress } from '@/lib/utils';
+import { normalizeShippingAddress, formatPrice } from '@/lib/utils';
 
 const AdminOrdersPage = () => {
   const { user: clerkUser, isLoaded: clerkLoaded } = useUser();
@@ -442,11 +442,11 @@ const AdminOrdersPage = () => {
                               <div>
                                 <div className="font-medium text-gray-900">{product?.name || 'Unknown Product'}</div>
                                 <div className="text-sm text-gray-500">Quantity: {item.quantity}</div>
-                                <div className="text-sm text-gray-500">Price: ${item.priceAtPurchase.toFixed(2)}</div>
+                                <div className="text-sm text-gray-500">Price: {formatPrice(item.priceAtPurchase)}</div>
                               </div>
                               <div className="text-right">
                                 <div className="font-medium text-gray-900">
-                                  ${(item.priceAtPurchase * item.quantity).toFixed(2)}
+                                  {formatPrice(item.priceAtPurchase * item.quantity)}
                                 </div>
                               </div>
                             </div>

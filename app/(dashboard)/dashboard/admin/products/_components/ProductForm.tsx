@@ -114,8 +114,8 @@ export default function ProductForm({ initialValues, growers, onSubmit, isSubmit
         <h2 className="text-lg font-semibold mb-4">Product Details</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Price (USD) *</label>
-            <input type="number" name="price" min="0" step="0.01" value={productData.price || ""} onChange={handleInputChange} className="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" required />
+            <label className="block text-sm font-medium text-gray-700 mb-1">Price (UGX) *</label>
+            <input type="number" name="price" min="0" step="1" value={productData.price || ""} onChange={handleInputChange} className="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" required />
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Weight *</label>

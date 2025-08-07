@@ -4,7 +4,9 @@ import { useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { useUser } from "@clerk/nextjs";
+import { formatPrice } from "@/lib/utils";
 
 export default function Home() {
   const { user: clerkUser, isLoaded: clerkLoaded } = useUser();
@@ -37,7 +39,7 @@ export default function Home() {
           style={{
             minHeight: "420px",
             backgroundImage:
-              'linear-gradient(rgba(0,0,0,0.10) 0%, rgba(0,0,0,0.35) 100%), url("/coffee1.jpg")',
+              'linear-gradient(rgba(0,0,0,0.10) 0%, rgba(0,0,0,0.35) 100%), url("/coffeeeebg.jpg")',
             backgroundSize: "cover",
             backgroundPosition: "center",
             margin: 0,
@@ -107,7 +109,7 @@ export default function Home() {
                 >
                   <Link
                     href="/onboarding/customer"
-                    className="flex min-w-[120px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-10 px-4 bg-[var(--accent)] text-[var(--primary)] text-base font-bold leading-normal tracking-[0.015em] hover:bg-[var(--secondary)] hover:text-white transition"
+                    className="flex min-w-[120px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-10 px-4 bg-[var(--accent)] text-[var(--primary)] text-base font-bold leading-normal tracking-[0.015em] hover:bg-[var(--primary)] hover:text-white transition-all duration-200"
                     style={{ flex: 1 }}
                   >
                     <span className="truncate">Join as Customer</span>
@@ -229,7 +231,7 @@ export default function Home() {
                     textShadow: "0 1px 8px rgba(80,60,120,0.04)",
                   }}
                 >
-                  Mt. Elgon Women in Specialty Coffee Ltd (MTEWISCOF) uplifts women coffee farmers in Uganda’s highlands. <span className="font-bold text-[var(--primary)]">We champion economic independence</span> through <span className="font-bold text-[var(--primary)]">resources, training, and fair trade</span>. Our mission: <span className="font-bold text-[var(--primary)]">a more equitable, sustainable, and delicious coffee industry</span>—one cup at a time.
+                  Mt. Elgon Women in Specialty Coffee Ltd (MTEWISCOF) uplifts women coffee farmers in Uganda's highlands. <span className="font-bold text-[var(--primary)]">We champion economic independence</span> through <span className="font-bold text-[var(--primary)]">resources, training, and fair trade</span>. Our mission: <span className="font-bold text-[var(--primary)]">a more equitable, sustainable, and delicious coffee industry</span>—one cup at a time.
                 </h2>
                 <ul className="mt-2 space-y-2 text-base md:text-lg text-[var(--primary)] font-medium">
                   <li className="flex items-center gap-2">
@@ -274,7 +276,7 @@ export default function Home() {
                 }}
               >
                 <img
-                  src="/coffee2.jpg"
+                  src="/home1.jpg"
                   alt="Women coffee farmers"
                   className="object-cover w-full h-full transition-transform duration-300 hover:scale-105"
                   style={{
@@ -338,84 +340,87 @@ export default function Home() {
                 className="featured-grid"
                 style={{
                   display: "grid",
-                  gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
-                  gap: "0.85rem",
+                  gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
+                  gap: "1.5rem",
                   margin: "0 auto",
-                  maxWidth: 800,
+                  maxWidth: 900,
                 }}
               >
                 {featuredProducts.map((product, idx) => {
                   let fallbackImg =
                     idx % 2 === 0 ? "/coffee1.jpg" : "/coffee3.jpg";
                   return (
-                    <div
+                    <Link
                       key={product._id}
-                      className="flex flex-col bg-white/90 shadow-lg rounded-xl p-2 h-full hover:shadow-xl transition-shadow"
+                      href={`/products/${product._id}`}
+                      className="product-card"
                       style={{
-                        minHeight: 140,
-                        justifyContent: "flex-start",
-                        gap: "0.5rem",
+                        position: "relative",
+                        display: "block",
+                        textDecoration: "none",
+                        borderRadius: "16px",
+                        overflow: "hidden",
+                        minHeight: "200px",
+                        background: "var(--accent)",
+                        boxShadow: "0 4px 24px 0 rgba(80,60,120,0.10)",
+                        transition: "all 0.3s ease",
                       }}
                     >
-                      {/* Product Image */}
+                      {/* Product Image Background */}
                       <div
-                        className="w-full bg-center bg-no-repeat aspect-[4/3] bg-cover rounded-lg mb-2"
+                        className="product-image-bg"
                         style={{
+                          position: "absolute",
+                          top: 0,
+                          left: 0,
+                          right: 0,
+                          bottom: 0,
                           backgroundImage: product.imageUrl
                             ? `url('${product.imageUrl}')`
                             : `url('${fallbackImg}')`,
-                          backgroundColor: product.imageUrl
-                            ? undefined
-                            : "var(--accent)",
-                          minHeight: 70,
-                          maxHeight: 90,
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                          boxShadow: "0 2px 8px 0 rgba(0,0,0,0.04)",
+                          backgroundSize: "cover",
+                          backgroundPosition: "center",
+                          backgroundRepeat: "no-repeat",
+                          transform: "scale(0.85)",
+                          transition: "transform 0.3s ease",
+                        }}
+                      />
+
+                      {/* Gradient Overlay */}
+                      <div
+                        className="product-overlay"
+                        style={{
+                          position: "absolute",
+                          bottom: 0,
+                          left: 0,
+                          right: 0,
+                          background: "linear-gradient(transparent 0%, rgba(0,0,0,0.7) 100%)",
+                          padding: "1.5rem",
+                          color: "white",
                         }}
                       >
-                        {!product.imageUrl && (
-                          <span className="text-2xl text-[var(--primary)] opacity-80">
-                            ☕
-                          </span>
-                        )}
-                      </div>
-                      {/* Product Info */}
-                      <div className="flex flex-col gap-0.5 flex-1">
-                        <div className="flex items-center justify-between">
-                          <span className="text-[var(--primary)] text-base font-semibold truncate">
+                        {/* Product Info */}
+                        <div className="product-info">
+                          <div className="product-name" style={{
+                            fontSize: "1.1rem",
+                            fontWeight: "700",
+                            marginBottom: "0.25rem",
+                            color: "white",
+                            textShadow: "0 2px 4px rgba(0,0,0,0.3)",
+                          }}>
                             {product.name}
-                          </span>
-                          <span className="text-[var(--primary)] text-xs font-bold bg-[var(--accent-light)] rounded px-2 py-0.5 ml-2">
-                            {product.price ? `$${(product.price / 100).toFixed(2)}` : ""}
-                          </span>
+                          </div>
+                          <div className="product-price" style={{
+                            fontSize: "1.2rem",
+                            fontWeight: "800",
+                            color: "white",
+                            textShadow: "0 2px 4px rgba(0,0,0,0.3)",
+                          }}>
+                            {product.price ? formatPrice(product.price) : ""}
+                          </div>
                         </div>
-                        <div className="flex items-center text-xs text-[var(--secondary)] font-medium gap-1">
-                          <span className="truncate">{product.origin}</span>
-                          {product.tastingNotes && product.tastingNotes.length > 0 && (
-                            <span className="ml-1 text-[var(--accent)] font-semibold truncate">
-                              • {product.tastingNotes.slice(0, 2).join(", ")}
-                              {product.tastingNotes.length > 2
-                                ? `, +${product.tastingNotes.length - 2}`
-                                : ""}
-                            </span>
-                          )}
-                        </div>
-                        <p className="text-[var(--foreground)] text-xs font-normal leading-snug mt-0.5 line-clamp-2 opacity-90">
-                          {product.description}
-                        </p>
                       </div>
-                      <div className="mt-2 flex">
-                        <Link
-                          href={`/products/${product._id}`}
-                          className="flex items-center justify-center rounded-full h-7 px-3 bg-[var(--accent)] text-[var(--primary)] text-xs font-semibold w-fit border border-[var(--accent)] hover:bg-[var(--primary)] hover:text-white transition-all shadow-sm"
-                          style={{ fontWeight: 600, minWidth: 0 }}
-                        >
-                          <span className="truncate">View</span>
-                        </Link>
-                      </div>
-                    </div>
+                    </Link>
                   );
                 })}
               </div>
@@ -426,10 +431,10 @@ export default function Home() {
             )}
 
             {products.length > 3 && (
-              <div className="flex justify-center mt-4">
+              <div className="flex justify-center mt-6">
                 <Link
                   href="/products"
-                  className="flex min-w-[70px] max-w-[320px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-8 px-4 bg-[var(--light-bg)] text-[var(--primary)] text-sm font-bold leading-normal tracking-[0.015em] border border-[var(--accent)] hover:bg-[var(--accent)] hover:text-[var(--primary)] transition"
+                  className="flex min-w-[70px] max-w-[320px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-10 px-6 bg-[var(--light-bg)] text-[var(--primary)] text-sm font-bold leading-normal tracking-[0.015em] border border-[var(--accent)] hover:bg-[var(--accent)] hover:text-[var(--primary)] transition"
                   style={{ fontWeight: 700 }}
                 >
                   <span className="truncate">View All Coffee Products</span>
@@ -439,138 +444,188 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Impact Section */}
+        {/* Minimal Impact Section */}
         <section
           className="section impact-section"
           style={{
             padding: `${sectionPadding} 0`,
             margin: 0,
             borderRadius: "clamp(0.5rem, 2vw, 1.25rem)",
+            background: "#fff",
           }}
         >
           <div
             className="flex flex-col items-center"
             style={{
-              maxWidth: 1100,
-              margin: "0 auto",
-              padding: `0 ${sectionPadding}`,
-            }}
-          >
-            <div className="flex flex-col md:flex-row gap-4 w-full justify-center">
-              {/* Card 1 */}
-              <div
-                className="flex flex-col justify-center bg-[var(--light-bg)] rounded-lg p-4 min-w-[120px] flex-1"
-                style={{ textAlign: "left" }}
-              >
-                <span className="text-[var(--primary)] text-sm font-medium mb-1">
-                  Women Farmers Supported
-                </span>
-                <span className="text-[var(--primary)] text-xl font-bold">
-                  1,200+
-                </span>
-              </div>
-              {/* Card 2 */}
-              <div
-                className="flex flex-col justify-center bg-[var(--light-bg)] rounded-lg p-4 min-w-[120px] flex-1"
-                style={{ textAlign: "left" }}
-              >
-                <span className="text-[var(--primary)] text-sm font-medium mb-1">
-                  Hectares of Sustainable Farming
-                </span>
-                <span className="text-[var(--primary)] text-xl font-bold">
-                  500+
-                </span>
-              </div>
-              {/* Card 3 */}
-              <div
-                className="flex flex-col justify-center bg-[var(--light-bg)] rounded-lg p-4 min-w-[120px] flex-1"
-                style={{ textAlign: "left" }}
-              >
-                <span className="text-[var(--primary)] text-sm font-medium mb-1">
-                  Increase in Farmer Income
-                </span>
-                <span className="text-[var(--primary)] text-xl font-bold">
-                  25%
-                </span>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Call to Action */}
-        <section
-          className="section cta-section"
-          style={{
-            backgroundColor: "var(--primary)",
-            color: "white",
-            textAlign: "center",
-            padding: `${sectionPadding} 0`,
-            margin: 0,
-            borderRadius: "clamp(0.5rem, 2vw, 1.25rem)",
-            boxShadow: "var(--shadow-md)",
-          }}
-        >
-          <div
-            className="cta-container"
-            style={{
-              maxWidth: 1100,
+              maxWidth: 900,
               margin: "0 auto",
               padding: `0 ${sectionPadding}`,
             }}
           >
             <h2
               style={{
-                color: "white",
-                fontSize: "1.2rem",
-                marginBottom: 10,
+                color: "var(--primary)",
+                textAlign: "center",
+                marginBottom: "2rem",
+                fontSize: "1.35rem",
+                fontWeight: 700,
+                letterSpacing: "-0.01em",
               }}
             >
-              Join Our Coffee Journey
+              Our Impact
             </h2>
-            <p
-              style={{
-                maxWidth: "500px",
-                margin: "0 auto 1.5rem",
-                color: "white",
-                fontSize: "1rem",
-              }}
-            >
-              Support women coffee farmers and enjoy exceptional specialty coffee from the slopes of Mt. Elgon.
-            </p>
-            <Link
-              href="/products"
-              className="btn btn-accent"
-              style={{
-                minWidth: 120,
-                fontWeight: 600,
-                fontSize: "1rem",
-                borderRadius: 9999,
-                padding: "0.5rem 1.5rem",
-              }}
-            >
-              Shop Now
-            </Link>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full">
+              {/* Impact Card 1 */}
+              <div className="impact-card-minimal">
+                <div className="number-minimal" style={{ color: "var(--primary)" }}>1,200+</div>
+                <div className="label-minimal">Women Farmers</div>
+              </div>
+              {/* Impact Card 2 */}
+              <div className="impact-card-minimal">
+                <div className="number-minimal" style={{ color: "var(--secondary)" }}>500+</div>
+                <div className="label-minimal">Hectares Farmed</div>
+              </div>
+              {/* Impact Card 3 */}
+              <div className="impact-card-minimal">
+                <div className="number-minimal" style={{ color: "var(--accent)" }}>25%</div>
+                <div className="label-minimal">Income Increase</div>
+              </div>
+            </div>
           </div>
         </section>
 
-        {/* Responsive styles for mobile */}
+        {/* Responsive styles for mobile and minimal impact section */}
         <style jsx global>{`
           .section {
             box-sizing: border-box;
             width: 100%;
           }
+
+          /* Minimal Impact Cards Styling */
+          .impact-card-minimal {
+            background: #fff;
+            border-radius: 18px;
+            box-shadow: 0 4px 24px 0 rgba(80,60,120,0.10);
+            padding: 2rem 1.5rem;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid var(--accent-light, #f3e9f7);
+            min-height: 120px;
+            transition: box-shadow 0.2s;
+          }
+          .impact-card-minimal:hover {
+            box-shadow: 0 8px 32px 0 rgba(80,60,120,0.16);
+          }
+          .number-minimal {
+            font-size: 2.2rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+            line-height: 1;
+          }
+          .label-minimal {
+            font-size: 1.08rem;
+            font-weight: 600;
+            color: var(--foreground);
+            letter-spacing: -0.01em;
+          }
+
+          /* Product Cards Styling */
+          .product-card {
+            position: relative;
+            display: block;
+            text-decoration: none;
+            border-radius: 16px;
+            overflow: hidden;
+            min-height: 200px;
+            background: var(--accent);
+            box-shadow: 0 4px 24px 0 rgba(80,60,120,0.10);
+            transition: all 0.3s ease;
+          }
+
+          .product-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 40px 0 rgba(80,60,120,0.20);
+          }
+
+          .product-card:hover .product-image-bg {
+            transform: scale(1.05);
+          }
+
+          .product-image-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            transition: transform 0.3s ease;
+            transform: scale(0.85);
+          }
+
+          .product-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent 0%, rgba(0,0,0,0.7) 100%);
+            padding: 1.5rem;
+            color: white;
+          }
+
+          .product-info {
+            position: relative;
+            z-index: 2;
+          }
+
+          .product-name {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+            color: white;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+          }
+
+          .product-price {
+            font-size: 1.2rem;
+            font-weight: 800;
+            color: white;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+          }
+
           @media (max-width: 900px) {
             .featured-section .featured-grid {
-              grid-template-columns: 1fr !important;
+              grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)) !important;
               gap: 1rem !important;
             }
             .section,
             .about-section,
-            .impact-section,
-            .cta-section {
+            .impact-section {
               border-radius: 0.75rem !important;
               padding-left: 1rem !important;
               padding-right: 1rem !important;
+            }
+            .impact-card-minimal {
+              padding: 1.5rem 1rem;
+            }
+            .number-minimal {
+              font-size: 1.7rem;
+            }
+            .product-card {
+              min-height: 180px;
+            }
+            .product-image-bg {
+              transform: scale(0.9);
+            }
+            .product-name {
+              font-size: 1rem;
+            }
+            .product-price {
+              font-size: 1.1rem;
             }
           }
           @media (max-width: 768px) {
@@ -599,23 +654,39 @@ export default function Home() {
               grid-template-columns: 1fr !important;
               gap: 1rem !important;
             }
-            .impact-section .flex-row {
-              flex-direction: column !important;
+            .impact-section .grid {
+              grid-template-columns: 1fr !important;
               gap: 1rem !important;
-            }
-            .cta-section {
-              padding: 1.5rem 0 !important;
-              border-radius: 0.75rem !important;
             }
             .page-content {
               padding-top: 60px !important;
             }
             .section,
             .about-section,
-            .impact-section,
-            .cta-section {
+            .impact-section {
               padding-left: 0.75rem !important;
               padding-right: 0.75rem !important;
+            }
+            .impact-card-minimal {
+              padding: 1rem 0.75rem;
+            }
+            .number-minimal {
+              font-size: 1.3rem;
+            }
+            .product-card {
+              min-height: 160px;
+            }
+            .product-image-bg {
+              transform: scale(0.95);
+            }
+            .product-name {
+              font-size: 0.95rem;
+            }
+            .product-price {
+              font-size: 1rem;
+            }
+            .product-overlay {
+              padding: 1rem;
             }
           }
         `}</style>
