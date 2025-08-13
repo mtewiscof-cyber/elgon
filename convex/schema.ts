@@ -35,6 +35,26 @@ export default defineSchema({
     // Link to growers/lots? Could be added later if we track specific lots
   }),
 
+  // Items added to a user cart (one row per product in cart)
+  cartItems: defineTable({
+    userId: v.id("users"),
+    productId: v.id("products"),
+    quantity: v.number(),
+    addedAt: v.number(),
+    updatedAt: v.number(),
+  })
+    .index("by_user", ["userId"]) 
+    .index("by_user_product", ["userId", "productId"]),
+
+  // User wishlist (one row per wished product)
+  wishlistItems: defineTable({
+    userId: v.id("users"),
+    productId: v.id("products"),
+    addedAt: v.number(),
+  })
+    .index("by_user", ["userId"]) 
+    .index("by_user_product", ["userId", "productId"]),
+
   orders: defineTable({
     userId: v.id("users"), // Link to the user who placed the order
     items: v.array(v.object({

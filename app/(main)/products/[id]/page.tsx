@@ -7,8 +7,9 @@ import { useParams, useRouter } from "next/navigation";
 import { useUser } from "@clerk/nextjs";
 import Link from "next/link";
 import Image from "next/image";
-import { Id } from "@/convex/_generated/dataModel";
-import { formatPrice } from "@/lib/utils";
+import { formatPrice, slugify } from "@/lib/utils";
+import { toast } from "sonner";
+import { FaHeart, FaShareAlt } from "react-icons/fa";
 
 // --- Modern, Compact Order Form ---
 interface OrderFormProps {
@@ -67,7 +68,7 @@ function OrderForm({ product, onClose, onOrderSuccess }: OrderFormProps) {
   };
 
   return (
-    <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-2">
+    <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-2  ">
       <div className="bg-white rounded-2xl shadow-xl w-full max-w-sm overflow-y-auto">
         <div className="p-5">
           <div className="flex justify-between items-center mb-2">
@@ -81,16 +82,13 @@ function OrderForm({ product, onClose, onOrderSuccess }: OrderFormProps) {
             </button>
           </div>
           <div className="mb-3 flex items-center gap-3 bg-[var(--accent)]/40 rounded-xl px-3 py-2">
-          {product.imageUrl ? (
+
               <img
                 src={product.imageUrl}
                 alt={product.name}
                 className="w-12 h-12 rounded-lg object-cover border border-[var(--accent)]"
               />
-            ) : (
-              <div className="w-12 h-12 flex items-center justify-center rounded-lg bg-[var(--accent)] text-2xl text-[var(--primary)]">☕</div>
-            )}
-            <div className="hidden w-12 h-12 flex items-center justify-center rounded-lg bg-[var(--accent)] text-2xl text-[var(--primary)]">☕</div>
+
             <div>
               <div className="font-bold text-[var(--primary)] text-base">{product.name}</div>
               <div className="text-xs text-[var(--secondary)]">{product.origin}</div>
@@ -290,17 +288,36 @@ export default function ProductDetailPage() {
   const params = useParams();
   const router = useRouter();
   const { user: clerkUser } = useUser();
-  const productId = params.id as string;
+  const productParam = params.id as string;
 
   const [isLoading, setIsLoading] = useState(true);
   const [showOrderForm, setShowOrderForm] = useState(false);
   const [showMessageForm, setShowMessageForm] = useState(false);
+  const [selectedImageIdx, setSelectedImageIdx] = useState<number>(0);
+  const [quantity, setQuantity] = useState<number>(1);
+  const [wished, setWished] = useState<boolean>(false);
 
   const user = useQuery(api.users.getUserByUserId);
-
-  const product = useQuery(api.products.getProductById, {
-    productId: productId as Id<"products">
+  const allProducts = useQuery(api.products.listProducts) || [];
+  const product = allProducts.find((p: any) => {
+    try {
+      return slugify(p.name) === productParam || (p._id as unknown as string) === productParam;
+    } catch {
+      return false;
+    }
   });
+
+  // Wishlist state from server
+  const wishlist = useQuery(api.wishlist.getWishlist) || [];
+  useEffect(() => {
+    if (product && wishlist) {
+      const isWished = wishlist.some((w: any) => w.productId === product._id);
+      setWished(isWished);
+    }
+  }, [product, wishlist]);
+
+  const addToCart = useMutation(api.cart.addToCart);
+  const toggleWishlist = useMutation(api.wishlist.toggleWishlist);
 
   const grower = useQuery(
     api.growers.getGrower,
@@ -362,115 +379,130 @@ export default function ProductDetailPage() {
   }
 
   return (
-    <div style={{ maxWidth: "1100px", margin: "0 auto", padding: `0 ${sectionPadding}` }}>
+    <div className="pb-20 md:pt-72" style={{ maxWidth: "1100px", margin: "0 auto", padding: `0 ${sectionPadding}` }}>
       <div className="py-8 md:py-12">
         {/* Breadcrumbs */}
-        <div className="flex items-center gap-2 py-3 text-sm text-[var(--secondary)] mb-6">
+        <div className="flex items-center gap-2 pb-3 mt-12 text-sm text-[var(--secondary)] mb-6">
           <Link href="/products" className="hover:underline font-medium transition-colors">Shop</Link>
           <span>/</span>
           <span className="text-[var(--primary)] font-semibold">{product.name}</span>
         </div>
         
-        {/* Product Card */}
-        <div className="flex flex-col md:flex-row gap-6 bg-white rounded-2xl shadow-lg p-6 mb-6">
-          {/* Image */}
-          <div className="w-full md:w-1/2 flex items-center justify-center">
-            {product.imageUrl && product.imageUrl.trim() !== '' && product.imageUrl !== 'undefined' && product.imageUrl !== 'null' ? (
-              <div className="relative w-full max-w-xs aspect-[3/2] rounded-xl overflow-hidden border border-[var(--accent)]">
-                <img
-                  src={product.imageUrl}
+        {/* Product Detail Layout */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-start">
+          {/* Left: Gallery */}
+          <div className="sticky top-32 md:top-44">
+            <div className="bg-[#f3f3f3] rounded-xl overflow-hidden">
+              <div className="relative aspect-[4/3]">
+                <Image
+                  src={(product.imageUrl && product.imageUrl.trim() !== '' && product.imageUrl !== 'undefined' && product.imageUrl !== 'null') ? product.imageUrl : '/coffee1.jpg'}
                   alt={product.name}
-                  className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
-                  style={{ background: '#fff' }}
-                  onError={(e) => {
-                    console.error('Image failed to load:', product.imageUrl);
-                    console.error('Product data:', product);
-                    e.currentTarget.style.display = 'none';
-                    e.currentTarget.nextElementSibling?.classList.remove('hidden');
-                  }}
-                  onLoad={() => {
-                    console.log('Image loaded successfully:', product.imageUrl);
-                  }}
+                  fill
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                  className="object-contain p-6"
                 />
-                <div className="hidden absolute inset-0 flex items-center justify-center bg-[var(--accent)] text-5xl text-[var(--primary)]">
-                  ☕
-                </div>
               </div>
-            ) : (
-              <div className="flex items-center justify-center rounded-xl bg-[var(--accent)] w-full max-w-xs aspect-[3/2] text-5xl text-[var(--primary)]">
-                ☕
-              </div>
-            )}
-          </div>
-          {/* Info */}
-          <div className="flex flex-col gap-3 w-full md:w-1/2 justify-center">
-            <h1 className="text-[var(--primary)] text-2xl font-bold leading-tight">{product.name}</h1>
-            <div className="flex flex-wrap gap-2 items-center">
-              <span className="bg-[var(--accent)] text-[var(--primary)] rounded-lg px-3 py-1 font-bold text-base">{formatPrice(product.price)} <span className="font-normal text-xs">/ {product.weight}</span></span>
-              <span className={`rounded-lg px-3 py-1 font-medium text-xs ${product.stock > 0 ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>{product.stock > 0 ? 'In stock' : 'Out of stock'}</span>
-              <span className="bg-[var(--secondary)] text-white rounded-lg px-3 py-1 font-medium text-xs">{product.origin}</span>
-              {grower && <span className="bg-[var(--primary)] text-white rounded-lg px-3 py-1 font-medium text-xs">{grower.name}</span>}
             </div>
-            {product.tastingNotes && product.tastingNotes.length > 0 && (
-              <div className="flex flex-wrap gap-1 mt-1">
-                {product.tastingNotes.map((note, i) => (
-                  <span key={i} className="bg-[var(--accent)] text-[var(--primary)] rounded px-2 py-0.5 text-xs font-medium">{note}</span>
-                ))}
+            {/* No extra thumbnails to avoid dummy images */}
+          </div>
+
+          {/* Right: Info */}
+          <div className="space-y-5">
+            <div className="flex items-start justify-between gap-4">
+              <h1 className="text-2xl md:text-3xl font-bold text-[var(--primary)]">{product.name}</h1>
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={async () => {
+                    try {
+                      const res = await toggleWishlist({ productId: product._id });
+                      setWished((prev) => !prev);
+                      toast.success(res?.wished ? "Added to wishlist" : "Removed from wishlist");
+                    } catch (e) {
+                      toast.error("Failed to update wishlist");
+                    }
+                  }}
+                  className={`w-9 h-9 rounded-full border flex items-center justify-center ${wished ? 'text-[var(--primary)]' : 'text-gray-600'} hover:text-[var(--primary)]`}
+                  aria-label="Toggle wishlist"
+                >
+                  <FaHeart />
+                </button>
+                <button className="w-9 h-9 rounded-full border flex items-center justify-center text-gray-600 hover:text-[var(--primary)]">
+                  <FaShareAlt />
+                </button>
               </div>
-            )}
-            <p className="text-[var(--secondary)] text-sm mt-2 line-clamp-3">{product.description}</p>
-            <div className="flex gap-3 mt-4">
-              {canOrder ? (
+            </div>
+
+            <div className="text-2xl font-semibold text-[var(--primary)]">
+              {formatPrice(product.price)}
+            </div>
+
+            {/* Selects */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <select className="h-11 rounded-md border px-3 text-sm">
+                <option>Weight: {product.weight}</option>
+              </select>
+              <select className="h-11 rounded-md border px-3 text-sm">
+                <option>Origin: {product.origin}</option>
+              </select>
+            </div>
+
+            {/* Shipping info */}
+            <details className="rounded-md border px-4 py-3 text-sm text-gray-700">
+              <summary className="cursor-pointer font-medium">Shipping information</summary>
+              <div className="mt-2 text-gray-600">Ships within 2-4 business days. Free shipping on orders over $50.</div>
+            </details>
+
+            {/* Quantity and CTA */}
+            <div className="flex items-center gap-3">
+              <div className="flex items-center border rounded-full">
                 <button
-                  onClick={() => setShowOrderForm(true)}
-                  className="flex-1 h-12 rounded-xl bg-[var(--primary)] text-white font-semibold text-sm hover:bg-[var(--primary)]/90 hover:shadow-lg transition-all duration-200"
-                  disabled={product.stock <= 0}
+                  onClick={() => setQuantity(q => Math.max(1, q - 1))}
+                  className="w-10 h-10 text-lg"
+                  aria-label="Decrease quantity"
                 >
-                  {product.stock > 0 ? 'Order Now' : 'Out of Stock'}
+                  −
                 </button>
-              ) : (
-                <div className="flex-1">
-                  {!clerkUser ? (
-                    <Link href="/sign-in" className="block h-12 rounded-xl bg-[var(--primary)] text-white font-semibold text-sm flex items-center justify-center hover:bg-[var(--primary)]/90 hover:shadow-lg transition-all duration-200">
-                      Sign In to Order
-                    </Link>
-                  ) : user?.role !== 'customer' ? (
-                    <div className="text-center p-3 bg-gray-100 rounded-xl text-xs">
-                      <span className="text-gray-600">Customer account required</span>
-                      <Link href="/onboarding/customer" className="text-blue-600 hover:underline ml-1">
-                        Complete profile
-                      </Link>
-                    </div>
-                  ) : (
-                    <button
-                      className="block w-full h-12 rounded-xl bg-gray-300 text-white font-semibold text-sm cursor-not-allowed"
-                      disabled
-                    >
-                      Loading...
-                    </button>
-                  )}
-                </div>
-              )}
-              {canMessage && (
+                <div className="w-10 text-center select-none">{quantity}</div>
                 <button
-                  onClick={() => setShowMessageForm(true)}
-                  className="flex-1 h-12 rounded-xl bg-[var(--accent)] text-[var(--primary)] font-semibold text-sm hover:bg-[var(--primary)] hover:text-white transition-all duration-200"
+                  onClick={() => setQuantity(q => Math.min(99, q + 1))}
+                  className="w-10 h-10 text-lg"
+                  aria-label="Increase quantity"
                 >
-                  Message Grower
+                  +
                 </button>
-              )}
+              </div>
+              <button
+                onClick={async () => {
+                  try {
+                    await addToCart({ productId: product._id, quantity });
+                    toast.success("Added to cart");
+                  } catch (e) {
+                    toast.error("Failed to add to cart");
+                  }
+                }}
+                disabled={product.stock <= 0}
+                className="flex-1 h-11 rounded-full bg-[var(--primary)] text-white font-semibold hover:bg-[var(--primary)]/90 transition disabled:opacity-60 min-w-[200px]"
+              >
+                Add to cart
+              </button>
+            </div>
+
+            {/* Meta */}
+            <div className="mt-4 flex flex-wrap items-center gap-2 text-xs">
+              <span className={`rounded-full px-2.5 py-1 ${product.stock>0?'bg-green-100 text-green-700':'bg-red-100 text-red-700'}`}>{product.stock>0?'In stock':'Out of stock'}</span>
+              {grower && <span className="rounded-full px-2.5 py-1 bg-[var(--accent)] text-[var(--primary)]">By {grower.name}</span>}
             </div>
           </div>
         </div>
         
         {/* About */}
-        <div className="bg-[var(--light-bg)] rounded-xl p-6 mb-6">
+        <div className="bg-[var(--light-bg)] rounded-xl p-6 mt-8">
           <h2 className="text-[var(--primary)] text-lg font-bold mb-2">About this coffee</h2>
           <p className="text-[var(--primary)] text-sm">{product.description}</p>
         </div>
         
         {/* Details */}
-        <div className="grid grid-cols-2 gap-4 bg-white rounded-xl p-6 shadow-sm text-sm mb-6">
+        <div className="grid grid-cols-2 gap-4 bg-white rounded-xl p-6 shadow-sm text-sm mt-6">
           <div>
             <div className="text-[var(--secondary)] font-medium">Origin</div>
             <div className="text-[var(--primary)]">{product.origin}</div>

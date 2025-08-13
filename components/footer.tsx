@@ -110,21 +110,21 @@ const Footer = () => {
               gap: '0.75rem',
               marginBottom: '1.5rem',
             }}>
-              <Image
-                src="/Logo Icon.png"
-                alt="Mt.Elgon Women Logo"
+          <Image
+            src="/Logo Icon.png"
+            alt="Mt.Elgon Women Logo"
                 width={40}
                 height={40}
-                style={{ objectFit: 'contain' }}
-              />
+            style={{ objectFit: 'contain' }}
+          />
               <span style={{
                 fontWeight: '700',
                 fontSize: '1.1rem',
-                color: 'var(--primary)',
+              color: 'var(--primary)',
               }}>
-                Mt.Elgon Women in Specialty Coffee
-              </span>
-            </div>
+            Mt.Elgon Women in Specialty Coffee
+          </span>
+        </div>
             <p style={{
               fontSize: '0.95rem',
               lineHeight: '1.6',
@@ -136,8 +136,8 @@ const Footer = () => {
               quality production, and community development.
             </p>
             <div style={{
-              display: 'flex',
-              gap: '1rem',
+            display: 'flex',
+            gap: '1rem',
             }}>
               <a
                 href="#"
@@ -181,7 +181,7 @@ const Footer = () => {
               <a
                 href="#"
                 aria-label="LinkedIn"
-                style={{
+            style={{
                   color: 'var(--secondary)',
                   fontSize: '1.25rem',
                   transition: 'color 0.3s ease',
@@ -212,12 +212,12 @@ const Footer = () => {
               flexDirection: 'column',
               gap: '0.75rem',
             }}>
-              <li>
-                <Link
-                  href="/"
-                  style={{
+            <li>
+              <Link
+                href="/"
+                style={{
                     color: 'var(--foreground)',
-                    textDecoration: 'none',
+                  textDecoration: 'none',
                     fontSize: '0.95rem',
                     transition: 'color 0.3s ease',
                     display: 'flex',
@@ -226,15 +226,15 @@ const Footer = () => {
                   }}
                 >
                   <FaArrowRight style={{ fontSize: '0.75rem' }} />
-                  Home
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/about"
-                  style={{
+                Home
+              </Link>
+            </li>
+            <li>
+              <Link
+                href="/about"
+                style={{
                     color: 'var(--foreground)',
-                    textDecoration: 'none',
+                  textDecoration: 'none',
                     fontSize: '0.95rem',
                     transition: 'color 0.3s ease',
                     display: 'flex',
@@ -243,15 +243,15 @@ const Footer = () => {
                   }}
                 >
                   <FaArrowRight style={{ fontSize: '0.75rem' }} />
-                  About & Impact
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/products"
-                  style={{
+                About & Impact
+              </Link>
+            </li>
+            <li>
+              <Link
+                href="/products"
+                style={{
                     color: 'var(--foreground)',
-                    textDecoration: 'none',
+                  textDecoration: 'none',
                     fontSize: '0.95rem',
                     transition: 'color 0.3s ease',
                     display: 'flex',
@@ -260,13 +260,13 @@ const Footer = () => {
                   }}
                 >
                   <FaArrowRight style={{ fontSize: '0.75rem' }} />
-                  Products & Education
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/blog"
-                  style={{
+                Products & Education
+              </Link>
+            </li>
+            <li>
+              <Link
+                href="/blog"
+                style={{
                     color: 'var(--foreground)',
                     textDecoration: 'none',
                     fontSize: '0.95rem',
@@ -285,7 +285,7 @@ const Footer = () => {
                   href="/contact"
                   style={{
                     color: 'var(--foreground)',
-                    textDecoration: 'none',
+                  textDecoration: 'none',
                     fontSize: '0.95rem',
                     transition: 'color 0.3s ease',
                     display: 'flex',
@@ -295,10 +295,10 @@ const Footer = () => {
                 >
                   <FaArrowRight style={{ fontSize: '0.75rem' }} />
                   Contact Us
-                </Link>
-              </li>
-            </ul>
-          </div>
+              </Link>
+            </li>
+          </ul>
+        </div>
 
           {/* Products & Services */}
           <div>
@@ -321,12 +321,12 @@ const Footer = () => {
               <li>
                 <Link
                   href="/products"
-                  style={{
+          style={{
                     color: 'var(--foreground)',
                     textDecoration: 'none',
                     fontSize: '0.95rem',
                     transition: 'color 0.3s ease',
-                    display: 'flex',
+            display: 'flex',
                     alignItems: 'center',
                     gap: '0.5rem',
                   }}
@@ -404,10 +404,10 @@ const Footer = () => {
                 </Link>
               </li>
             </ul>
-          </div>
+        </div>
 
           {/* Contact Information */}
-          <div>
+        <div>
             <h4 style={{
               fontSize: '1.25rem',
               fontWeight: '600',

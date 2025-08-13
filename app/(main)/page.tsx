@@ -6,7 +6,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useUser } from "@clerk/nextjs";
-import { formatPrice } from "@/lib/utils";
+import { formatPrice, slugify } from "@/lib/utils";
 
 export default function Home() {
   const { user: clerkUser, isLoaded: clerkLoaded } = useUser();
@@ -340,85 +340,38 @@ export default function Home() {
                 className="featured-grid"
                 style={{
                   display: "grid",
-                  gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
-                  gap: "1.5rem",
+                  gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
+                  gap: "1rem",
                   margin: "0 auto",
                   maxWidth: 900,
                 }}
               >
-                {featuredProducts.map((product, idx) => {
-                  let fallbackImg =
-                    idx % 2 === 0 ? "/coffee1.jpg" : "/coffee3.jpg";
+                {featuredProducts.map((product) => {
+                  const imageSrc = product.imageUrl || "/coffee1.jpg";
                   return (
                     <Link
                       key={product._id}
-                      href={`/products/${product._id}`}
-                      className="product-card"
-                      style={{
-                        position: "relative",
-                        display: "block",
-                        textDecoration: "none",
-                        borderRadius: "16px",
-                        overflow: "hidden",
-                        minHeight: "200px",
-                        background: "var(--accent)",
-                        boxShadow: "0 4px 24px 0 rgba(80,60,120,0.10)",
-                        transition: "all 0.3s ease",
-                      }}
+                      href={`/products/${slugify(product.name)}`}
+                      className="group block"
                     >
-                      {/* Product Image Background */}
-                      <div
-                        className="product-image-bg"
-                        style={{
-                          position: "absolute",
-                          top: 0,
-                          left: 0,
-                          right: 0,
-                          bottom: 0,
-                          backgroundImage: product.imageUrl
-                            ? `url('${product.imageUrl}')`
-                            : `url('${fallbackImg}')`,
-                          backgroundSize: "cover",
-                          backgroundPosition: "center",
-                          backgroundRepeat: "no-repeat",
-                          transform: "scale(0.85)",
-                          transition: "transform 0.3s ease",
-                        }}
-                      />
-
-                      {/* Gradient Overlay */}
-                      <div
-                        className="product-overlay"
-                        style={{
-                          position: "absolute",
-                          bottom: 0,
-                          left: 0,
-                          right: 0,
-                          background: "linear-gradient(transparent 0%, rgba(0,0,0,0.7) 100%)",
-                          padding: "1.5rem",
-                          color: "white",
-                        }}
-                      >
-                        {/* Product Info */}
-                        <div className="product-info">
-                          <div className="product-name" style={{
-                            fontSize: "1.1rem",
-                            fontWeight: "700",
-                            marginBottom: "0.25rem",
-                            color: "white",
-                            textShadow: "0 2px 4px rgba(0,0,0,0.3)",
-                          }}>
-                            {product.name}
-                          </div>
-                          <div className="product-price" style={{
-                            fontSize: "1.2rem",
-                            fontWeight: "800",
-                            color: "white",
-                            textShadow: "0 2px 4px rgba(0,0,0,0.3)",
-                          }}>
-                            {product.price ? formatPrice(product.price) : ""}
-                          </div>
+                      <div className="bg-[#f3f3f3] rounded-md overflow-hidden">
+                        <div className="relative aspect-[4/5]">
+                          <Image
+                            src={imageSrc}
+                            alt={product.name}
+                            fill
+                            sizes="(max-width: 768px) 50vw, (max-width: 1200px) 25vw, 20vw"
+                            className="object-contain p-4 transition-transform duration-300 group-hover:scale-105"
+                          />
                         </div>
+                      </div>
+                      <div className="mt-3 flex items-center justify-between gap-3">
+                        <h3 className="text-xs sm:text-sm font-semibold tracking-wide text-[#1c140d] line-clamp-1 uppercase">
+                          {product.name}
+                        </h3>
+                        <span className="text-xs sm:text-sm font-medium text-[#1c140d]">
+                          {product.price ? formatPrice(product.price) : ""}
+                        </span>
                       </div>
                     </Link>
                   );

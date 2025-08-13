@@ -1,30 +1,42 @@
 "use client";
 
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { FaShoppingCart } from 'react-icons/fa';
 import { useQuery } from "convex/react";
 import { api } from "../convex/_generated/api";
-import { useUser } from "@clerk/nextjs";
 
 const CartIcon = () => {
-  const { user: clerkUser } = useUser();
-  const user = useQuery(api.users.getUserByUserId, clerkUser ? {} : "skip");
+  const cart = useQuery(api.cart.getCart) || [];
+  const [isMounted, setIsMounted] = useState(false);
   
-  // For now, we'll show a simple cart icon
-  // In the future, this could be enhanced to show cart count and items
-  const cartItemCount = 0; // This would be fetched from cart state
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+  
+  const cartItemCount = Array.isArray(cart)
+    ? cart.reduce((sum: number, item: any) => sum + (item.quantity || 0), 0)
+    : 0;
+
+  if (!isMounted) {
+    return (
+      <Link
+        href="/cart"
+        className="relative flex items-center justify-center w-10 h-10 rounded-full bg-amber-100 hover:bg-amber-200 transition-colors duration-200"
+      >
+        <FaShoppingCart className="text-amber-600 text-lg" />
+      </Link>
+    );
+  }
 
   return (
     <Link
-      href="/products"
-      className="relative flex items-center justify-center w-10 h-10 rounded-full bg-[var(--accent)] hover:bg-[var(--accent)]/80 transition-colors duration-200 cart-icon"
-      style={{
-        boxShadow: 'var(--shadow-sm)',
-      }}
+      href="/cart"
+      className="relative flex items-center justify-center w-10 h-10 rounded-full bg-amber-100 hover:bg-amber-200 transition-colors duration-200"
     >
-      <FaShoppingCart className="text-[var(--primary)] text-lg" />
+      <FaShoppingCart className="text-amber-600 text-lg" />
       {cartItemCount > 0 && (
-        <span className="absolute -top-1 -right-1 bg-[var(--primary)] text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold">
+        <span className="absolute -top-1 -right-1 bg-amber-600 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold">
           {cartItemCount}
         </span>
       )}

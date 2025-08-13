@@ -14,6 +14,7 @@ import type {
   FunctionReference,
 } from "convex/server";
 import type * as blogPosts from "../blogPosts.js";
+import type * as cart from "../cart.js";
 import type * as customers from "../customers.js";
 import type * as growers from "../growers.js";
 import type * as inventory from "../inventory.js";
@@ -24,6 +25,7 @@ import type * as orders from "../orders.js";
 import type * as products from "../products.js";
 import type * as subscriptions from "../subscriptions.js";
 import type * as users from "../users.js";
+import type * as wishlist from "../wishlist.js";
 
 /**
  * A utility for referencing Convex functions in your app's API.
@@ -35,6 +37,7 @@ import type * as users from "../users.js";
  */
 declare const fullApi: ApiFromModules<{
   blogPosts: typeof blogPosts;
+  cart: typeof cart;
   customers: typeof customers;
   growers: typeof growers;
   inventory: typeof inventory;
@@ -45,6 +48,7 @@ declare const fullApi: ApiFromModules<{
   products: typeof products;
   subscriptions: typeof subscriptions;
   users: typeof users;
+  wishlist: typeof wishlist;
 }>;
 export declare const api: FilterApi<
   typeof fullApi,
