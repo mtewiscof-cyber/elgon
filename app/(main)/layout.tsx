@@ -1,6 +1,5 @@
 import Navigation from "@/components/navigation";
 import Footer from "@/components/footer";
-import FixedShopButton from "@/components/FixedShopButton";
 
 export default function MainLayout({
   children,
@@ -11,7 +10,6 @@ export default function MainLayout({
     <>
       <Navigation />
       {children}
-      <FixedShopButton />
       <Footer />
     </>
   );

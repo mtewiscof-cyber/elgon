@@ -141,11 +141,11 @@ const ProductsPage = () => {
                         />
                       </div>
                     </div>
-                    <div className="mt-1 flex items-center justify-between gap-1">
-                      <h3 className="text-[8px] sm:text-[10px] md:text-xs font-semibold tracking-wide text-[#1c140d] line-clamp-1 uppercase">
+                    <div className="mt-1 flex flex-col items-center justify-center ">
+                      <h3 className="text-[8px] sm:text-[10px] md:text-xs font-semibold tracking-wide text-[#1c140d] line-clamp-1 uppercase text-center">
                         {product.name}
                       </h3>
-                      <span className="text-[8px] sm:text-[10px] md:text-xs font-medium text-[#1c140d]">
+                      <span className="text-[8px] sm:text-[10px] md:text-xs font-medium text-[#1c140d] text-center">
                         {product.price ? formatPrice(product.price) : ""}
                       </span>
                     </div>
