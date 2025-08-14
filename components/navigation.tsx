@@ -87,8 +87,8 @@ const Navigation = () => {
                   <Image
                     src="/Main Logo.png"
                     alt="Mt.Elgon Women Logo Icon"
-                    width={60}
-                    height={60}
+                    width={120}
+                    height={120}
                     className="object-contain transition-all duration-200 hover:scale-105"
                   />
                 </Link>
