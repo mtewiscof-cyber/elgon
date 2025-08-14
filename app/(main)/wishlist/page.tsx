@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import Image from "next/image";
-import { slugify } from "@/lib/utils";
+import { slugify, formatPrice } from "@/lib/utils";
 
 export default function WishlistPage() {
 	const wishlist = useQuery(api.wishlist.getWishlist) || [];
@@ -37,19 +37,54 @@ export default function WishlistPage() {
 function WishlistRow({ item }: { item: any }) {
     const products = useQuery(api.products.listProducts) || [];
     const toggleWishlist = useMutation(api.wishlist.toggleWishlist);
+    const addToCart = useMutation(api.cart.addToCart);
     const product = products.find((p: any) => p._id === item.productId);
     const href = product ? `/products/${slugify(product.name)}` : `/products/${item.productId}`;
+    const imageSrc: string = product?.imageUrl 
+        ? Array.isArray(product.imageUrl) 
+            ? (product.imageUrl[0] || '/coffee1.jpg') 
+            : (product.imageUrl || '/coffee1.jpg')
+        : '/coffee1.jpg';
+
+    const handleAddToCart = async () => {
+        try {
+            await addToCart({ productId: item.productId, quantity: 1 });
+            // Remove from wishlist after successfully adding to cart
+            await toggleWishlist({ productId: item.productId });
+        } catch (error) {
+            console.error("Failed to add to cart:", error);
+        }
+    };
+
     return (
         <li className="p-4 flex items-center justify-between gap-4">
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-3 flex-1">
                 <div className="w-14 h-14 relative rounded bg-gray-100 overflow-hidden">
-                    {product?.imageUrl && (
-                        <Image src={product.imageUrl} alt={product?.name || 'Product'} fill className="object-contain p-1" />
-                    )}
+                    <Image src={imageSrc} alt={product?.name || 'Product'} fill className="object-contain p-1" />
                 </div>
-                <Link href={href} className="text-sm font-medium">{product?.name || 'Product'}</Link>
+                <div className="flex-1">
+                    <Link href={href} className="text-sm font-medium hover:text-amber-700 transition-colors">
+                        {product?.name || 'Product'}
+                    </Link>
+                    <p className="text-xs text-gray-500 mt-1">
+                        {product?.price ? formatPrice(product.price) : 'Price unavailable'}
+                    </p>
+                </div>
             </div>
-            <button onClick={() => toggleWishlist({ productId: item.productId })} className="text-red-600 text-sm">Remove</button>
+            <div className="flex items-center gap-2">
+                <button 
+                    onClick={handleAddToCart}
+                    className="px-3 py-1.5 bg-amber-100 text-amber-900 rounded-full text-xs font-medium hover:bg-amber-200 transition-colors"
+                >
+                    Add to Cart
+                </button>
+                <button 
+                    onClick={() => toggleWishlist({ productId: item.productId })} 
+                    className="text-red-600 text-xs hover:text-red-700 transition-colors"
+                >
+                    Remove
+                </button>
+            </div>
         </li>
     );
 }

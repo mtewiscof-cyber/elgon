@@ -97,7 +97,7 @@ const AdminProductsPage = () => {
                     <td className="px-6 py-4 whitespace-no-wrap">
                       {p.imageUrl && (
                         <img 
-                          src={p.imageUrl} 
+                          src={Array.isArray(p.imageUrl) ? (p.imageUrl[0] || '/coffee1.jpg') : p.imageUrl} 
                           alt={p.name} 
                           className="h-10 w-10 object-cover rounded"
                         />
@@ -128,7 +128,7 @@ const AdminProductsPage = () => {
                   <div className="flex items-center mb-2">
                     {p.imageUrl && (
                       <img 
-                        src={p.imageUrl} 
+                        src={Array.isArray(p.imageUrl) ? (p.imageUrl[0] || '/coffee1.jpg') : p.imageUrl} 
                         alt={p.name} 
                         className="h-12 w-12 object-cover rounded mr-2"
                       />

@@ -28,7 +28,7 @@ export default defineSchema({
     certifications: v.array(v.string()),
     price: v.number(), // Price in base units (e.g., cents)
     weight: v.string(), // e.g., "12 oz", "250g"
-    imageUrl: v.string(),
+    imageUrl: v.optional(v.array(v.string())),
     stock: v.number(), // Add stock field
     growerId: v.optional(v.id("growers")), // Add optional link to grower
     featured: v.optional(v.boolean()), // Indicates if the product is featured

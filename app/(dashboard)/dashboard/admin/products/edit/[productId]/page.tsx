@@ -44,7 +44,7 @@ export default function EditProductPage() {
     price: product.price || 0,
     weight: product.weight || '',
     stock: product.stock || 0,
-    imageUrl: product.imageUrl || '',
+    imageUrl: Array.isArray(product.imageUrl) ? product.imageUrl : (product.imageUrl ? [product.imageUrl] : []),
     growerId: product.growerId ? product.growerId.toString() : '',
     featured: product.featured || false,
   };

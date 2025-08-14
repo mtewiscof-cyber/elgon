@@ -4,7 +4,6 @@ import { Id } from "./_generated/dataModel";
 
 export const createOrder = mutation({
   args: {
-    userId: v.id("users"),
     items: v.array(v.object({
       productId: v.id("products"),
       quantity: v.number(),
@@ -29,7 +28,28 @@ export const createOrder = mutation({
     updatedAt: v.number(),
   },
   handler: async (ctx, args) => {
-    const orderId = await ctx.db.insert("orders", args);
+    // Get the current user identity
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error("Not authenticated");
+    }
+
+    // Find the user in the 'users' table to get their ID
+    const user = await ctx.db
+      .query("users")
+      .withIndex("by_clerkId", (q) =>
+        q.eq("clerkId", identity.subject)
+      )
+      .unique();
+
+    if (!user) {
+      throw new Error("User not found");
+    }
+
+    const orderId = await ctx.db.insert("orders", {
+      userId: user._id,
+      ...args,
+    });
     return orderId;
   },
 });

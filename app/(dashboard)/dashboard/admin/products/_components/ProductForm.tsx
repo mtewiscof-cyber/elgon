@@ -12,7 +12,7 @@ export interface ProductFormProps {
     price: number;
     weight: string;
     stock: number;
-    imageUrl: string;
+    imageUrl: string[];
     growerId: string;
     featured: boolean;
   };
@@ -74,14 +74,15 @@ export default function ProductForm({ initialValues, growers, onSubmit, isSubmit
   };
 
   const handleImageUpload = (res: any) => {
-    if (res && res[0]) {
-      setProductData(prev => ({ ...prev, imageUrl: res[0].url }));
-      toast.success("Image uploaded successfully!");
+    if (res && res.length > 0) {
+      const urls = res.map((r: any) => r.url).filter(Boolean);
+      setProductData(prev => ({ ...prev, imageUrl: [...prev.imageUrl, ...urls] }));
+      toast.success("Image(s) uploaded successfully!");
     }
   };
 
-  const handleImageRemove = () => {
-    setProductData(prev => ({ ...prev, imageUrl: "" }));
+  const handleImageRemove = (url: string) => {
+    setProductData(prev => ({ ...prev, imageUrl: prev.imageUrl.filter(u => u !== url) }));
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -179,20 +180,21 @@ export default function ProductForm({ initialValues, growers, onSubmit, isSubmit
         <h2 className="text-lg font-semibold mb-4">Product Image</h2>
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">Upload Product Image *</label>
-          {productData.imageUrl ? (
-            <div className="mb-4">
-              <div className="relative w-40 h-40 rounded-md overflow-hidden">
-                <img src={productData.imageUrl} alt="Product preview" className="object-cover w-full h-full" />
-                <button type="button" onClick={handleImageRemove} className="absolute top-2 right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600 focus:outline-none">&times;</button>
-              </div>
+          <UploadButton
+            endpoint="productImage"
+            onClientUploadComplete={handleImageUpload}
+            onUploadError={error => { toast.error(`Error uploading image: ${error.message}`); }}
+            config={{ mode: "auto" }}
+          />
+          {productData.imageUrl && productData.imageUrl.length > 0 && (
+            <div className="mt-4 grid grid-cols-2 sm:grid-cols-3 gap-3">
+              {productData.imageUrl.map((url) => (
+                <div key={url} className="relative w-full aspect-square rounded-md overflow-hidden border">
+                  <img src={url} alt="Product" className="object-cover w-full h-full" />
+                  <button type="button" onClick={() => handleImageRemove(url)} className="absolute top-2 right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600 focus:outline-none">&times;</button>
+                </div>
+              ))}
             </div>
-          ) : (
-            <UploadButton
-              endpoint="productImage"
-              onClientUploadComplete={handleImageUpload}
-              onUploadError={error => { toast.error(`Error uploading image: ${error.message}`); }}
-              config={{ mode: "auto" }}
-            />
           )}
         </div>
       </div>

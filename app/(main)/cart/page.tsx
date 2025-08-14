@@ -44,12 +44,15 @@ export default function CartPage() {
 							<ul className="divide-y">
                                 {cart.map((item: any) => {
                                     const product = products.find((p: any) => p._id === item.productId);
+                                    const imageSrc = product?.imageUrl 
+                                        ? Array.isArray(product.imageUrl) 
+                                            ? (product.imageUrl[0] || '/coffee1.jpg') 
+                                            : (product.imageUrl || '/coffee1.jpg')
+                                        : '/coffee1.jpg';
                                     return (
                                     <li key={item._id} className="p-4 flex items-center gap-4">
                                         <div className="w-16 h-16 rounded bg-gray-100 relative overflow-hidden">
-                                            {product?.imageUrl && (
-                                                <Image src={product.imageUrl} alt={product?.name || 'Product'} fill className="object-contain p-1" />
-                                            )}
+                                            <Image src={imageSrc} alt={product?.name || 'Product'} fill className="object-contain p-1" />
                                         </div>
                                         <div className="flex-1">
                                             <p className="font-medium">{product?.name || 'Product'}</p>

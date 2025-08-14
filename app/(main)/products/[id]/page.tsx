@@ -43,7 +43,6 @@ function OrderForm({ product, onClose, onOrderSuccess }: OrderFormProps) {
     setIsSubmitting(true);
     try {
       await createOrder({
-        userId: user._id,
         items: [{
           productId: product._id,
           quantity: 1,
@@ -84,7 +83,7 @@ function OrderForm({ product, onClose, onOrderSuccess }: OrderFormProps) {
           <div className="mb-3 flex items-center gap-3 bg-[var(--accent)]/40 rounded-xl px-3 py-2">
 
               <img
-                src={product.imageUrl}
+                src={Array.isArray(product.imageUrl) ? (product.imageUrl[0] || '/coffee1.jpg') : product.imageUrl}
                 alt={product.name}
                 className="w-12 h-12 rounded-lg object-cover border border-[var(--accent)]"
               />
@@ -333,9 +332,8 @@ export default function ProductDetailPage() {
       // Debug: Log product data to see what we're getting
       console.log('Product data loaded:', product);
       console.log('Product imageUrl:', product?.imageUrl);
-      console.log('Product imageUrl type:', typeof product?.imageUrl);
-      console.log('Product imageUrl length:', product?.imageUrl?.length);
-      console.log('Product imageUrl trimmed:', product?.imageUrl?.trim());
+      console.log('Product imageUrl type:', Array.isArray(product?.imageUrl) ? 'array' : typeof product?.imageUrl);
+      console.log('Product primary image:', Array.isArray(product?.imageUrl) ? product?.imageUrl?.[0] : product?.imageUrl);
     }
   }, [product]);
 
@@ -395,7 +393,9 @@ export default function ProductDetailPage() {
             <div className="bg-[#f3f3f3] rounded-xl overflow-hidden">
               <div className="relative aspect-[4/3]">
                 <Image
-                  src={(product.imageUrl && product.imageUrl.trim() !== '' && product.imageUrl !== 'undefined' && product.imageUrl !== 'null') ? product.imageUrl : '/coffee1.jpg'}
+                  src={Array.isArray(product.imageUrl)
+                    ? (product.imageUrl[0] && product.imageUrl[0] !== 'undefined' && product.imageUrl[0] !== 'null' ? product.imageUrl[0] : '/coffee1.jpg')
+                    : ((product.imageUrl && product.imageUrl !== 'undefined' && product.imageUrl !== 'null') ? product.imageUrl : '/coffee1.jpg')}
                   alt={product.name}
                   fill
                   sizes="(max-width: 768px) 100vw, 50vw"

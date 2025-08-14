@@ -114,7 +114,7 @@ const ProductsPage = () => {
           </div>
         </div>
         {/* Product Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-1 sm:gap-2">
             {filteredProducts.length === 0 ? (
               <div className="col-span-full text-center py-16">
                 <div className="text-6xl mb-4">☕</div>
@@ -123,7 +123,7 @@ const ProductsPage = () => {
               </div>
             ) : (
               filteredProducts.map(product => {
-                const imageSrc = product.imageUrl || "/coffee1.jpg";
+                const imageSrc = Array.isArray(product.imageUrl) ? (product.imageUrl[0] || "/coffee1.jpg") : (product.imageUrl || "/coffee1.jpg");
                 return (
                   <Link
                     key={product._id}
@@ -131,21 +131,21 @@ const ProductsPage = () => {
                     className="group block"
                   >
                     <div className="bg-[#f3f3f3] rounded-md overflow-hidden">
-                      <div className="relative aspect-[4/5]">
+                      <div className="relative aspect-square">
                         <Image
                           src={imageSrc}
                           alt={product.name}
                           fill
-                          sizes="(max-width: 768px) 50vw, (max-width: 1200px) 25vw, 20vw"
-                          className="object-contain p-4 transition-transform duration-300 group-hover:scale-105"
+                          sizes="(max-width: 640px) 50vw, (max-width: 1200px) 25vw, 20vw"
+                          className="object-contain p-1 sm:p-1.5 md:p-2 transition-transform duration-300 group-hover:scale-105"
                         />
                       </div>
                     </div>
-                    <div className="mt-3 flex items-center justify-between gap-3">
-                      <h3 className="text-xs sm:text-sm font-semibold tracking-wide text-[#1c140d] line-clamp-1 uppercase">
+                    <div className="mt-1 flex items-center justify-between gap-1">
+                      <h3 className="text-[8px] sm:text-[10px] md:text-xs font-semibold tracking-wide text-[#1c140d] line-clamp-1 uppercase">
                         {product.name}
                       </h3>
-                      <span className="text-xs sm:text-sm font-medium text-[#1c140d]">
+                      <span className="text-[8px] sm:text-[10px] md:text-xs font-medium text-[#1c140d]">
                         {product.price ? formatPrice(product.price) : ""}
                       </span>
                     </div>

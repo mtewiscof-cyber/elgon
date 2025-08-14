@@ -42,13 +42,13 @@ export default function AddProductPage() {
     price: 0,
     weight: "",
     stock: 0,
-    imageUrl: "",
+    imageUrl: [] as string[],
     growerId: "",
     featured: false,
   };
   // Handle form submission
   const handleSubmit = async (data: typeof initialValues) => {
-    if (!data.name || !data.description || !data.origin || !data.price || !data.weight || !data.imageUrl) {
+    if (!data.name || !data.description || !data.origin || !data.price || !data.weight || data.imageUrl.length === 0) {
       toast.error("Please fill in all required fields");
       return;
     }

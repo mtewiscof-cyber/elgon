@@ -162,7 +162,7 @@ const CustomerSubscriptionDetailPage = () => {
                   {product.imageUrl && (
                     <div className="w-full sm:w-32 h-32 bg-gray-100 rounded-lg overflow-hidden flex-shrink-0">
                       <img 
-                        src={product.imageUrl} 
+                        src={Array.isArray(product.imageUrl) ? (product.imageUrl[0] || '/coffee1.jpg') : product.imageUrl} 
                         alt={product.name}
                         className="w-full h-full object-cover"
                       />

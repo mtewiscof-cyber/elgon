@@ -39,7 +39,7 @@ export default function Home() {
           style={{
             minHeight: "420px",
             backgroundImage:
-              'linear-gradient(rgba(0,0,0,0.10) 0%, rgba(0,0,0,0.35) 100%), url("/coffeeeebg.jpg")',
+              'linear-gradient(rgba(0,0,0,0.10) 0%, rgba(0,0,0,0.35) 100%), url("https://6ils2uesws.ufs.sh/f/r6Kf7hy1iVyLChqcZqvoSdT5aJtscCl8ONXjqwLZgvDrHxAG")',
             backgroundSize: "cover",
             backgroundPosition: "center",
             margin: 0,
@@ -47,7 +47,7 @@ export default function Home() {
             padding: `${sectionPadding} 0`,
             paddingTop: "clamp(2rem, 8vw, 3.5rem)",
             paddingBottom: "clamp(2rem, 8vw, 3.5rem)",
-            borderRadius: "clamp(0.5rem, 2vw, 1.25rem)",
+
           }}
         >
           {/* Onboarding Banner Overlay */}
@@ -336,43 +336,36 @@ export default function Home() {
                 <div className="loading-spinner"></div>
               </div>
             ) : featuredProducts.length > 0 ? (
-              <div
-                className="featured-grid"
-                style={{
-                  display: "grid",
-                  gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
-                  gap: "1rem",
-                  margin: "0 auto",
-                  maxWidth: 900,
-                }}
-              >
+              <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-1 sm:gap-2">
                 {featuredProducts.map((product) => {
-                  const imageSrc = product.imageUrl || "/coffee1.jpg";
+                  const imageSrc: string = Array.isArray(product.imageUrl)
+                    ? (product.imageUrl[0] || "/coffee1.jpg")
+                    : (product.imageUrl || "/coffee1.jpg");
                   return (
                     <Link
                       key={product._id}
                       href={`/products/${slugify(product.name)}`}
                       className="group block"
                     >
-                      <div className="bg-[#f3f3f3] rounded-md overflow-hidden">
-                        <div className="relative aspect-[4/5]">
-                          <Image
-                            src={imageSrc}
-                            alt={product.name}
-                            fill
-                            sizes="(max-width: 768px) 50vw, (max-width: 1200px) 25vw, 20vw"
-                            className="object-contain p-4 transition-transform duration-300 group-hover:scale-105"
-                          />
+                                             <div className="bg-[#f3f3f3] rounded-md overflow-hidden">
+                         <div className="relative aspect-square">
+                           <Image
+                             src={imageSrc}
+                             alt={product.name}
+                             fill
+                             sizes="(max-width: 640px) 33vw, (max-width: 1200px) 20vw, 16vw"
+                             className="object-contain p-1 sm:p-1.5 md:p-2 transition-transform duration-300 group-hover:scale-105"
+                           />
                         </div>
                       </div>
-                      <div className="mt-3 flex items-center justify-between gap-3">
-                        <h3 className="text-xs sm:text-sm font-semibold tracking-wide text-[#1c140d] line-clamp-1 uppercase">
-                          {product.name}
-                        </h3>
-                        <span className="text-xs sm:text-sm font-medium text-[#1c140d]">
-                          {product.price ? formatPrice(product.price) : ""}
-                        </span>
-                      </div>
+                                             <div className="mt-1 flex items-center justify-between gap-1">
+                         <h3 className="text-[8px] sm:text-[10px] md:text-xs font-semibold tracking-wide text-[#1c140d] line-clamp-1 uppercase">
+                           {product.name}
+                         </h3>
+                         <span className="text-[8px] sm:text-[10px] md:text-xs font-medium text-[#1c140d]">
+                           {product.price ? formatPrice(product.price) : ""}
+                         </span>
+                       </div>
                     </Link>
                   );
                 })}
@@ -552,7 +545,7 @@ export default function Home() {
 
           @media (max-width: 900px) {
             .featured-section .featured-grid {
-              grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)) !important;
+              grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)) !important;
               gap: 1rem !important;
             }
             .section,
@@ -604,8 +597,8 @@ export default function Home() {
               max-width: 100% !important;
             }
             .featured-section .featured-grid {
-              grid-template-columns: 1fr !important;
-              gap: 1rem !important;
+              grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+              gap: 0.75rem !important;
             }
             .impact-section .grid {
               grid-template-columns: 1fr !important;

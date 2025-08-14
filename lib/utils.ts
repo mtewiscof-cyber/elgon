@@ -15,8 +15,9 @@ export function formatPrice(price: number, currency: string = 'shs'): string {
   if (typeof price !== 'number' || isNaN(price)) {
     return 'N/A'
   }
-  
-  return `${currency}${price.toFixed(2)}`
+  // Format with commas, no decimal places
+  const formatted = Math.round(price).toLocaleString()
+  return `${currency} ${formatted}`
 }
 
 // Generate a URL-friendly slug from a string
