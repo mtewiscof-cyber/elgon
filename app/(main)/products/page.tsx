@@ -130,22 +130,36 @@ const ProductsPage = () => {
                     href={`/products/${slugify(product.name)}`}
                     className="group block"
                   >
-                    <div className="bg-[#f3f3f3] rounded-md overflow-hidden">
-                      <div className="relative aspect-square">
+                    <div className="bg-[#f3f3f3] rounded-lg overflow-hidden">
+                      <div
+                        className="relative"
+                        style={{
+                          aspectRatio: "1/1",
+                          width: "100%",
+                          minHeight: "120px",
+                          height: "clamp(120px, 18vw, 180px)",
+                          maxHeight: "220px",
+                          position: "relative",
+                        }}
+                      >
                         <Image
                           src={imageSrc}
                           alt={product.name}
                           fill
-                          sizes="(max-width: 640px) 50vw, (max-width: 1200px) 25vw, 20vw"
-                          className="object-contain p-1 sm:p-1.5 md:p-2 transition-transform duration-300 group-hover:scale-105"
+                          sizes="(max-width: 640px) 80vw, (max-width: 1200px) 35vw, 22vw"
+                          className="object-contain p-2 sm:p-3 md:p-4 transition-transform duration-300 group-hover:scale-105"
+                          style={{
+                            position: "absolute",
+                            inset: 0,
+                          }}
                         />
                       </div>
                     </div>
-                    <div className="mt-1 flex flex-col items-center justify-center ">
-                      <h3 className="text-[8px] sm:text-[10px] md:text-xs font-semibold tracking-wide text-[#1c140d] line-clamp-1 uppercase text-center">
+                    <div className="mt-2 flex flex-col items-center justify-center gap-1">
+                      <h3 className="text-[10px] sm:text-xs md:text-sm font-semibold tracking-wide text-[#1c140d] line-clamp-1 uppercase text-center">
                         {product.name}
                       </h3>
-                      <span className="text-[8px] sm:text-[10px] md:text-xs font-medium text-[#1c140d] text-center">
+                      <span className="text-[10px] sm:text-xs md:text-sm font-medium text-[#1c140d] text-center">
                         {product.price ? formatPrice(product.price) : ""}
                       </span>
                     </div>

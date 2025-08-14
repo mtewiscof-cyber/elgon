@@ -347,22 +347,35 @@ export default function Home() {
                       href={`/products/${slugify(product.name)}`}
                       className="group block"
                     >
-                      <div className="bg-[#f3f3f3] rounded-md overflow-hidden">
-                        <div className="relative aspect-square">
+                      <div className="bg-[#f3f3f3] rounded-lg overflow-hidden">
+                        <div
+                          className="relative aspect-square"
+                          style={{
+                            width: "100%",
+                            height: "0",
+                            paddingBottom: "150%", // 1.5x the normal aspect-square
+                            position: "relative",
+                          }}
+                        >
                           <Image
                             src={imageSrc}
                             alt={product.name}
                             fill
-                            sizes="(max-width: 640px) 33vw, (max-width: 1200px) 20vw, 16vw"
-                            className="object-contain p-1 sm:p-1.5 md:p-2 transition-transform duration-300 group-hover:scale-105"
+                            sizes="(max-width: 640px) 50vw, (max-width: 1200px) 30vw, 24vw"
+                            className="object-contain p-2 sm:p-3 md:p-4 transition-transform duration-300 group-hover:scale-105"
+                            style={{
+                              // Make sure the image fills the new larger container
+                              position: "absolute",
+                              inset: 0,
+                            }}
                           />
                         </div>
                       </div>
-                      <div className="mt-1 flex flex-col items-center justify-center gap-0.5">
-                        <h3 className="text-[8px] sm:text-[10px] md:text-xs font-semibold tracking-wide text-[#1c140d] line-clamp-1 uppercase text-center">
+                      <div className="mt-2 flex flex-col items-center justify-center gap-1">
+                        <h3 className="text-[10px] sm:text-xs md:text-sm font-semibold tracking-wide text-[#1c140d] line-clamp-1 uppercase text-center">
                           {product.name}
                         </h3>
-                        <span className="text-[8px] sm:text-[10px] md:text-xs font-medium text-[#1c140d] text-center">
+                        <span className="text-[10px] sm:text-xs md:text-sm font-medium text-[#1c140d] text-center">
                           {product.price ? formatPrice(product.price) : ""}
                         </span>
                       </div>
@@ -433,7 +446,7 @@ export default function Home() {
               </div>
               {/* Impact Card 3 */}
               <div className="impact-card-minimal">
-                <div className="number-minimal" style={{ color: "var(--accent)" }}>25%</div>
+                <div className="number-minimal" style={{ color: "var(--primary)" }}>25%</div>
                 <div className="label-minimal">Income Increase</div>
               </div>
             </div>
