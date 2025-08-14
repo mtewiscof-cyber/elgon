@@ -23,25 +23,25 @@ export default function CartPage() {
     }, [cart, products]);
 
 	return (
-		<main className="min-h-[60vh] container mx-auto px-4 pb-16 pt-24 md:pt-44">
-			<div className="mb-8">
-				<h1 className="text-3xl font-semibold">Your Cart</h1>
-				<p className="text-gray-600">Review your items and proceed to checkout.</p>
+		<main className="min-h-[60vh] container mx-auto px-4 pb-16 pt-32 md:pt-72">
+			<div className="mb-8 pt-16">
+				<h1 className="text-3xl font-semibold text-gray-900">Your Cart</h1>
+				<p className="text-gray-600 mt-2">Review your items and proceed to checkout.</p>
 			</div>
 
 			<div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
 				{/* Cart items */}
 				<div className="lg:col-span-2">
-					<div className="rounded-2xl border bg-white dark:bg-black/40">
+					<div className="rounded-2xl border border-gray-200 bg-white shadow-sm">
 						{cart.length === 0 ? (
-							<div className="p-6 text-center text-gray-600">
-								<p className="mb-6">Your cart is currently empty.</p>
+							<div className="p-8 text-center text-gray-600">
+								<p className="mb-6 text-lg">Your cart is currently empty.</p>
 								<div className="flex items-center justify-center gap-3">
-									<Link href="/products" className="inline-flex items-center px-4 py-2 bg-amber-100 text-amber-900 rounded-full font-medium text-sm hover:bg-amber-200 transition-colors duration-200">Browse products</Link>
+									<Link href="/products" className="inline-flex items-center px-6 py-3 bg-amber-100 text-amber-900 rounded-full font-medium text-sm hover:bg-amber-200 transition-colors duration-200">Browse products</Link>
 								</div>
 							</div>
 						) : (
-							<ul className="divide-y">
+							<ul className="divide-y divide-gray-100">
                                 {cart.map((item: any) => {
                                     const product = products.find((p: any) => p._id === item.productId);
                                     const imageSrc = product?.imageUrl 
@@ -50,18 +50,37 @@ export default function CartPage() {
                                             : (product.imageUrl || '/coffee1.jpg')
                                         : '/coffee1.jpg';
                                     return (
-                                    <li key={item._id} className="p-4 flex items-center gap-4">
-                                        <div className="w-16 h-16 rounded bg-gray-100 relative overflow-hidden">
-                                            <Image src={imageSrc} alt={product?.name || 'Product'} fill className="object-contain p-1" />
+                                    <li key={item._id} className="p-6 flex items-center gap-4">
+                                        <div className="w-20 h-20 rounded-lg bg-gray-100 relative overflow-hidden flex-shrink-0">
+                                            <Image src={imageSrc} alt={product?.name || 'Product'} fill className="object-contain p-2" />
                                         </div>
-                                        <div className="flex-1">
-                                            <p className="font-medium">{product?.name || 'Product'}</p>
-                                            <div className="text-sm text-gray-500">Qty: {item.quantity}</div>
+                                        <div className="flex-1 min-w-0">
+                                            <h3 className="font-semibold text-gray-900 text-lg mb-1">{product?.name || 'Product'}</h3>
+                                            <div className="text-sm text-gray-500 mb-3">Qty: {item.quantity}</div>
+                                            <div className="text-lg font-medium text-gray-900">{formatPrice((product?.price || 0) * item.quantity)}</div>
                                         </div>
-										<div className="flex items-center gap-2">
-											<button onClick={() => updateCartItem({ cartItemId: item._id, quantity: Math.max(1, item.quantity - 1) })} className="w-8 h-8 rounded-full border">-</button>
-											<button onClick={() => updateCartItem({ cartItemId: item._id, quantity: item.quantity + 1 })} className="w-8 h-8 rounded-full border">+</button>
-											<button onClick={() => removeFromCart({ cartItemId: item._id })} className="text-red-600 text-sm">Remove</button>
+										<div className="flex items-center gap-3 flex-shrink-0">
+											<div className="flex items-center border border-gray-300 rounded-full">
+												<button 
+													onClick={() => updateCartItem({ cartItemId: item._id, quantity: Math.max(1, item.quantity - 1) })} 
+													className="w-8 h-8 rounded-l-full flex items-center justify-center text-gray-600 hover:bg-gray-100 transition-colors"
+												>
+													−
+												</button>
+												<span className="w-8 text-center text-sm font-medium">{item.quantity}</span>
+												<button 
+													onClick={() => updateCartItem({ cartItemId: item._id, quantity: item.quantity + 1 })} 
+													className="w-8 h-8 rounded-r-full flex items-center justify-center text-gray-600 hover:bg-gray-100 transition-colors"
+												>
+													+
+												</button>
+											</div>
+											<button 
+												onClick={() => removeFromCart({ cartItemId: item._id })} 
+												className="text-red-600 text-sm hover:text-red-700 transition-colors font-medium"
+											>
+												Remove
+											</button>
 										</div>
 									</li>
                                     )
@@ -73,23 +92,26 @@ export default function CartPage() {
 
 				{/* Order summary */}
 				<aside className="lg:col-span-1">
-					<div className="rounded-2xl border bg-white dark:bg-black/40 p-6">
-						<h2 className="text-lg font-semibold mb-4">Order Summary</h2>
-						<div className="space-y-2 text-sm text-gray-600">
-							<div className="flex justify-between">
-								<span>Subtotal</span>
-								<span>{formatPrice(subtotal)}</span>
+					<div className="rounded-2xl border border-gray-200 bg-white shadow-sm p-6 sticky top-24">
+						<h2 className="text-xl font-semibold text-gray-900 mb-6">Order Summary</h2>
+						<div className="space-y-4 text-sm">
+							<div className="flex justify-between items-center">
+								<span className="text-gray-600">Subtotal</span>
+								<span className="font-medium text-gray-900">{formatPrice(subtotal)}</span>
 							</div>
-							<div className="flex justify-between">
-								<span>Shipping</span>
-								<span>Calculated at checkout</span>
+							<div className="flex justify-between items-center">
+								<span className="text-gray-600">Shipping</span>
+								<span className="text-gray-600">Calculated at checkout</span>
 							</div>
-							<div className="flex justify-between font-medium pt-2 border-t">
-								<span>Total</span>
-								<span>{formatPrice(subtotal)}</span>
+							<div className="flex justify-between items-center pt-4 border-t border-gray-200">
+								<span className="text-lg font-semibold text-gray-900">Total</span>
+								<span className="text-xl font-bold text-gray-900">{formatPrice(subtotal)}</span>
 							</div>
 						</div>
-						<Link href="/checkout" className="mt-6 w-full inline-flex items-center justify-center px-4 py-2 rounded-full font-medium text-sm bg-amber-100 text-amber-900 hover:bg-amber-200 transition-colors duration-200">
+						<Link 
+							href="/checkout" 
+							className="mt-6 w-full inline-flex items-center justify-center px-6 py-3 rounded-full font-semibold text-sm bg-amber-100 text-amber-900 hover:bg-amber-200 transition-colors duration-200 shadow-sm"
+						>
 							Proceed to checkout
 						</Link>
 					</div>

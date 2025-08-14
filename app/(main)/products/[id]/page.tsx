@@ -200,7 +200,7 @@ export default function ProductDetailPage() {
         {/* Product Detail Layout */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-start">
           {/* Left: Gallery */}
-          <div className="sticky top-32 md:top-44">
+          <div className=" md:top-44">
             <div className="bg-[#f3f3f3] rounded-xl overflow-hidden">
               <div className="relative aspect-[4/3]">
                 <Image
