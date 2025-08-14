@@ -9,187 +9,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { formatPrice, slugify } from "@/lib/utils";
 import { toast } from "sonner";
-import { FaHeart, FaShareAlt } from "react-icons/fa";
-
-// --- Modern, Compact Order Form ---
-interface OrderFormProps {
-  product: any;
-  onClose: () => void;
-  onOrderSuccess: () => void;
-}
-
-function OrderForm({ product, onClose, onOrderSuccess }: OrderFormProps) {
-  const [shippingAddress, setShippingAddress] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    address: '',
-    city: '',
-    state: '',
-    zipCode: '',
-    country: 'Uganda'
-  });
-  const [isSubmitting, setIsSubmitting] = useState(false);
-
-  const user = useQuery(api.users.getUserByUserId);
-  const createOrder = useMutation(api.orders.createOrder);
-
-  const totalAmount = product.price;
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!user) return;
-
-    setIsSubmitting(true);
-    try {
-      await createOrder({
-        items: [{
-          productId: product._id,
-          quantity: 1,
-          priceAtPurchase: product.price
-        }],
-        totalAmount,
-        shippingAddress,
-        status: "pending",
-        paymentStatus: "pending",
-        createdAt: Date.now(),
-        updatedAt: Date.now()
-      });
-
-      onOrderSuccess();
-      onClose();
-    } catch (error) {
-      console.error("Failed to create order:", error);
-      alert("Failed to create order. Please try again.");
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-
-  return (
-    <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-2  ">
-      <div className="bg-white rounded-2xl shadow-xl w-full max-w-sm overflow-y-auto">
-        <div className="p-5">
-          <div className="flex justify-between items-center mb-2">
-            <h3 className="text-lg font-semibold text-[var(--primary)] tracking-tight">Quick Order</h3>
-            <button
-              onClick={onClose}
-              className="text-gray-400 hover:text-[var(--primary)] text-xl transition"
-              aria-label="Close"
-            >
-              ×
-            </button>
-          </div>
-          <div className="mb-3 flex items-center gap-3 bg-[var(--accent)]/40 rounded-xl px-3 py-2">
-
-              <img
-                src={Array.isArray(product.imageUrl) ? (product.imageUrl[0] || '/coffee1.jpg') : product.imageUrl}
-                alt={product.name}
-                className="w-12 h-12 rounded-lg object-cover border border-[var(--accent)]"
-              />
-
-            <div>
-              <div className="font-bold text-[var(--primary)] text-base">{product.name}</div>
-              <div className="text-xs text-[var(--secondary)]">{product.origin}</div>
-              <div className="text-[var(--secondary)] text-xs">{product.weight}</div>
-            </div>
-            <div className="ml-auto text-[var(--primary)] font-bold text-base">{formatPrice(product.price)}</div>
-          </div>
-          <form onSubmit={handleSubmit} className="space-y-2">
-            <div className="grid grid-cols-2 gap-2">
-              <input
-                type="text"
-                placeholder="Full Name"
-                value={shippingAddress.name}
-                onChange={e => setShippingAddress(prev => ({ ...prev, name: e.target.value }))}
-                className="col-span-2 bg-[var(--light-bg)] border-none rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-[var(--primary)]"
-                required
-                autoFocus
-              />
-              <input
-                type="email"
-                placeholder="Email"
-                value={shippingAddress.email}
-                onChange={e => setShippingAddress(prev => ({ ...prev, email: e.target.value }))}
-                className="col-span-2 bg-[var(--light-bg)] border-none rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-[var(--primary)]"
-                required
-              />
-              <input
-                type="tel"
-                placeholder="Phone"
-                value={shippingAddress.phone}
-                onChange={e => setShippingAddress(prev => ({ ...prev, phone: e.target.value }))}
-                className="col-span-2 bg-[var(--light-bg)] border-none rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-[var(--primary)]"
-                required
-              />
-              <input
-                type="text"
-                placeholder="Street Address"
-                value={shippingAddress.address}
-                onChange={e => setShippingAddress(prev => ({ ...prev, address: e.target.value }))}
-                className="col-span-2 bg-[var(--light-bg)] border-none rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-[var(--primary)]"
-                required
-              />
-              <input
-                type="text"
-                placeholder="City"
-                value={shippingAddress.city}
-                onChange={e => setShippingAddress(prev => ({ ...prev, city: e.target.value }))}
-                className="bg-[var(--light-bg)] border-none rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-[var(--primary)]"
-                required
-              />
-              <input
-                type="text"
-                placeholder="State"
-                value={shippingAddress.state}
-                onChange={e => setShippingAddress(prev => ({ ...prev, state: e.target.value }))}
-                className="bg-[var(--light-bg)] border-none rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-[var(--primary)]"
-                required
-              />
-              <input
-                type="text"
-                placeholder="ZIP"
-                value={shippingAddress.zipCode}
-                onChange={e => setShippingAddress(prev => ({ ...prev, zipCode: e.target.value }))}
-                className="bg-[var(--light-bg)] border-none rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-[var(--primary)]"
-                required
-              />
-              <input
-                type="text"
-                placeholder="Country"
-                value={shippingAddress.country}
-                onChange={e => setShippingAddress(prev => ({ ...prev, country: e.target.value }))}
-                className="bg-[var(--light-bg)] border-none rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-[var(--primary)]"
-                required
-              />
-            </div>
-            <div className="flex justify-between items-center mt-2">
-              <span className="text-[var(--secondary)] text-sm">Total</span>
-              <span className="text-[var(--primary)] font-bold text-lg">${totalAmount.toFixed(2)}</span>
-            </div>
-            <div className="flex gap-2 mt-2">
-              <button
-                type="button"
-                onClick={onClose}
-                className="flex-1 py-2 rounded-lg bg-gray-100 text-[var(--secondary)] font-medium hover:bg-gray-200 transition text-sm"
-                disabled={isSubmitting}
-              >
-                Cancel
-              </button>
-              <button
-                type="submit"
-                className="flex-1 py-2 rounded-lg bg-[var(--primary)] text-white font-semibold hover:bg-[var(--primary)]/90 hover:shadow-lg transition-all duration-200 text-sm"
-                disabled={isSubmitting}
-              >
-                {isSubmitting ? 'Placing...' : 'Place Order'}
-              </button>
-            </div>
-          </form>
-        </div>
-      </div>
-    </div>
-  );
-}
+import { FaHeart } from "react-icons/fa";
 
 // --- Modern, Compact Message Form ---
 interface MessageFormProps {
@@ -290,7 +110,6 @@ export default function ProductDetailPage() {
   const productParam = params.id as string;
 
   const [isLoading, setIsLoading] = useState(true);
-  const [showOrderForm, setShowOrderForm] = useState(false);
   const [showMessageForm, setShowMessageForm] = useState(false);
   const [selectedImageIdx, setSelectedImageIdx] = useState<number>(0);
   const [quantity, setQuantity] = useState<number>(1);
@@ -337,18 +156,10 @@ export default function ProductDetailPage() {
     }
   }, [product]);
 
-  const handleOrderSuccess = () => {
-    alert("Order placed successfully! You can view your orders in your dashboard.");
-    if (user?.role === 'customer') {
-      router.push('/dashboard/customer/orders');
-    }
-  };
-
   const handleMessageSuccess = () => {
     alert("Message sent successfully! The grower will respond soon.");
   };
 
-  const canOrder = clerkUser && user?.role === 'customer';
   const canMessage = clerkUser && user && grower?.userId;
 
   if (!isLoading && !product) {
@@ -394,7 +205,7 @@ export default function ProductDetailPage() {
               <div className="relative aspect-[4/3]">
                 <Image
                   src={Array.isArray(product.imageUrl)
-                    ? (product.imageUrl[0] && product.imageUrl[0] !== 'undefined' && product.imageUrl[0] !== 'null' ? product.imageUrl[0] : '/coffee1.jpg')
+                    ? (product.imageUrl[selectedImageIdx] && product.imageUrl[selectedImageIdx] !== 'undefined' && product.imageUrl[selectedImageIdx] !== 'null' ? product.imageUrl[selectedImageIdx] : '/coffee1.jpg')
                     : ((product.imageUrl && product.imageUrl !== 'undefined' && product.imageUrl !== 'null') ? product.imageUrl : '/coffee1.jpg')}
                   alt={product.name}
                   fill
@@ -403,13 +214,40 @@ export default function ProductDetailPage() {
                 />
               </div>
             </div>
-            {/* No extra thumbnails to avoid dummy images */}
+            
+            {/* Image Thumbnails */}
+            {Array.isArray(product.imageUrl) && product.imageUrl.length > 1 && (
+              <div className="mt-4 flex gap-2 overflow-x-auto">
+                {product.imageUrl.slice(0, 5).map((image, index) => (
+                  <button
+                    key={index}
+                    onClick={() => setSelectedImageIdx(index)}
+                    className={`flex-shrink-0 w-16 h-16 rounded-lg overflow-hidden border-2 transition-all ${
+                      selectedImageIdx === index 
+                        ? 'border-[var(--primary)] ring-2 ring-[var(--primary)]/20' 
+                        : 'border-gray-200 hover:border-gray-300'
+                    }`}
+                  >
+                    <Image
+                      src={image && image !== 'undefined' && image !== 'null' ? image : '/coffee1.jpg'}
+                      alt={`${product.name} - Image ${index + 1}`}
+                      width={64}
+                      height={64}
+                      className="w-full h-full object-cover"
+                    />
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
 
           {/* Right: Info */}
           <div className="space-y-5">
             <div className="flex items-start justify-between gap-4">
-              <h1 className="text-2xl md:text-3xl font-bold text-[var(--primary)]">{product.name}</h1>
+              <div className="flex-1">
+                <h1 className="text-2xl md:text-3xl font-bold text-[var(--primary)] mb-3">{product.name}</h1>
+                <p className="text-[var(--secondary)] text-base leading-relaxed mb-4">{product.description}</p>
+              </div>
               <div className="flex items-center gap-2">
                 <button
                   onClick={async () => {
@@ -421,13 +259,14 @@ export default function ProductDetailPage() {
                       toast.error("Failed to update wishlist");
                     }
                   }}
-                  className={`w-9 h-9 rounded-full border flex items-center justify-center ${wished ? 'text-[var(--primary)]' : 'text-gray-600'} hover:text-[var(--primary)]`}
+                  className={`w-9 h-9 rounded-full border flex items-center justify-center transition-colors ${
+                    wished 
+                      ? 'bg-[var(--primary)] text-white border-[var(--primary)]' 
+                      : 'text-gray-600 border-gray-300 hover:text-[var(--primary)] hover:border-[var(--primary)]'
+                  }`}
                   aria-label="Toggle wishlist"
                 >
                   <FaHeart />
-                </button>
-                <button className="w-9 h-9 rounded-full border flex items-center justify-center text-gray-600 hover:text-[var(--primary)]">
-                  <FaShareAlt />
                 </button>
               </div>
             </div>
@@ -445,12 +284,6 @@ export default function ProductDetailPage() {
                 <option>Origin: {product.origin}</option>
               </select>
             </div>
-
-            {/* Shipping info */}
-            <details className="rounded-md border px-4 py-3 text-sm text-gray-700">
-              <summary className="cursor-pointer font-medium">Shipping information</summary>
-              <div className="mt-2 text-gray-600">Ships within 2-4 business days. Free shipping on orders over $50.</div>
-            </details>
 
             {/* Quantity and CTA */}
             <div className="flex items-center gap-3">
@@ -489,16 +322,9 @@ export default function ProductDetailPage() {
 
             {/* Meta */}
             <div className="mt-4 flex flex-wrap items-center gap-2 text-xs">
-              <span className={`rounded-full px-2.5 py-1 ${product.stock>0?'bg-green-100 text-green-700':'bg-red-100 text-red-700'}`}>{product.stock>0?'In stock':'Out of stock'}</span>
               {grower && <span className="rounded-full px-2.5 py-1 bg-[var(--accent)] text-[var(--primary)]">By {grower.name}</span>}
             </div>
           </div>
-        </div>
-        
-        {/* About */}
-        <div className="bg-[var(--light-bg)] rounded-xl p-6 mt-8">
-          <h2 className="text-[var(--primary)] text-lg font-bold mb-2">About this coffee</h2>
-          <p className="text-[var(--primary)] text-sm">{product.description}</p>
         </div>
         
         {/* Details */}
@@ -525,9 +351,6 @@ export default function ProductDetailPage() {
       </div>
       
       {/* Modals */}
-      {showOrderForm && (
-        <OrderForm product={product} onClose={() => setShowOrderForm(false)} onOrderSuccess={handleOrderSuccess} />
-      )}
       {showMessageForm && grower && (
         <MessageForm product={product} grower={grower} onClose={() => setShowMessageForm(false)} onMessageSuccess={handleMessageSuccess} />
       )}

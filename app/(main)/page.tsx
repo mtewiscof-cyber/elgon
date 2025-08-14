@@ -347,25 +347,25 @@ export default function Home() {
                       href={`/products/${slugify(product.name)}`}
                       className="group block"
                     >
-                                             <div className="bg-[#f3f3f3] rounded-md overflow-hidden">
-                         <div className="relative aspect-square">
-                           <Image
-                             src={imageSrc}
-                             alt={product.name}
-                             fill
-                             sizes="(max-width: 640px) 33vw, (max-width: 1200px) 20vw, 16vw"
-                             className="object-contain p-1 sm:p-1.5 md:p-2 transition-transform duration-300 group-hover:scale-105"
-                           />
+                      <div className="bg-[#f3f3f3] rounded-md overflow-hidden">
+                        <div className="relative aspect-square">
+                          <Image
+                            src={imageSrc}
+                            alt={product.name}
+                            fill
+                            sizes="(max-width: 640px) 33vw, (max-width: 1200px) 20vw, 16vw"
+                            className="object-contain p-1 sm:p-1.5 md:p-2 transition-transform duration-300 group-hover:scale-105"
+                          />
                         </div>
                       </div>
-                                             <div className="mt-1 flex items-center justify-between gap-1">
-                         <h3 className="text-[8px] sm:text-[10px] md:text-xs font-semibold tracking-wide text-[#1c140d] line-clamp-1 uppercase">
-                           {product.name}
-                         </h3>
-                         <span className="text-[8px] sm:text-[10px] md:text-xs font-medium text-[#1c140d]">
-                           {product.price ? formatPrice(product.price) : ""}
-                         </span>
-                       </div>
+                      <div className="mt-1 flex flex-col items-center justify-center gap-0.5">
+                        <h3 className="text-[8px] sm:text-[10px] md:text-xs font-semibold tracking-wide text-[#1c140d] line-clamp-1 uppercase text-center">
+                          {product.name}
+                        </h3>
+                        <span className="text-[8px] sm:text-[10px] md:text-xs font-medium text-[#1c140d] text-center">
+                          {product.price ? formatPrice(product.price) : ""}
+                        </span>
+                      </div>
                     </Link>
                   );
                 })}
