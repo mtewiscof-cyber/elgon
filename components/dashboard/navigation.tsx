@@ -248,10 +248,6 @@ export default function DashboardNavigation({
 
       {/* Desktop sidebar */}
       <aside className="hidden lg:flex lg:fixed h-screen flex-col w-64 bg-white border-r border-gray-200 z-30">
-        <div className="flex items-center justify-between h-16 px-4 border-b border-gray-200">
-          <span className="text-xl font-semibold">Elgon Coffee</span>
-          <UserButton afterSignOutUrl="/" />
-        </div>
         <nav className="flex-1 overflow-y-auto">
           <ul className="py-4">
             {navItems.map((item) => {

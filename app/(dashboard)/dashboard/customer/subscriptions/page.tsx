@@ -431,177 +431,175 @@ const CustomerSubscriptionsPage = () => {
   const productsMap = new Map(products?.map(p => [p._id, p]) || []);
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="container mx-auto px-4 py-8">
-        {/* Header */}
-        <div className="mb-8">
-          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-            <div>
-              <h1 className="text-3xl font-bold text-gray-900 mb-2">Your Coffee Subscriptions</h1>
-              <p className="text-gray-600">Manage your recurring coffee deliveries</p>
-            </div>
+    <div className="space-y-6">
+      {/* Header */}
+      <div className="mb-8">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">Your Coffee Subscriptions</h1>
+            <p className="text-gray-600">Manage your recurring coffee deliveries</p>
+          </div>
+          <button
+            onClick={() => setShowSubscriptionForm(true)}
+            className="flex items-center gap-2 bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors"
+          >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+            </svg>
+            Start New Subscription
+          </button>
+        </div>
+      </div>
+
+      {/* Subscriptions List */}
+      <div className="bg-white rounded-lg shadow-sm">
+        {subscriptions === undefined ? (
+          <div className="p-8 text-center">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4"></div>
+            <p className="text-gray-500">Loading your subscriptions...</p>
+          </div>
+        ) : subscriptions.length === 0 ? (
+          <div className="p-12 text-center">
+            <div className="text-gray-400 text-6xl mb-4">☕</div>
+            <h3 className="text-xl font-medium text-gray-900 mb-2">No subscriptions yet</h3>
+            <p className="text-gray-500 mb-6">Start your first coffee subscription to enjoy regular deliveries of premium coffee</p>
             <button
               onClick={() => setShowSubscriptionForm(true)}
-              className="flex items-center gap-2 bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors"
+              className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors"
             >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-              </svg>
-              Start New Subscription
+              Start Your First Subscription
             </button>
           </div>
-        </div>
-
-        {/* Subscriptions List */}
-        <div className="bg-white rounded-lg shadow-sm">
-          {subscriptions === undefined ? (
-            <div className="p-8 text-center">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4"></div>
-              <p className="text-gray-500">Loading your subscriptions...</p>
-            </div>
-          ) : subscriptions.length === 0 ? (
-            <div className="p-12 text-center">
-              <div className="text-gray-400 text-6xl mb-4">☕</div>
-              <h3 className="text-xl font-medium text-gray-900 mb-2">No subscriptions yet</h3>
-              <p className="text-gray-500 mb-6">Start your first coffee subscription to enjoy regular deliveries of premium coffee</p>
-              <button
-                onClick={() => setShowSubscriptionForm(true)}
-                className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors"
-              >
-                Start Your First Subscription
-              </button>
-            </div>
-          ) : (
-            <div className="divide-y divide-gray-200">
-              {subscriptions.map((subscription) => {
-                const product = productsMap.get(subscription.productId);
-                return (
-                  <div key={subscription._id} className="p-6">
-                    <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
-                      <div className="flex-1">
-                        <div className="flex items-center gap-3 mb-2">
-                          <h3 className="text-lg font-semibold text-gray-900">
-                            {product?.name || 'Unknown Product'}
-                          </h3>
-                          <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusColor(subscription.status)}`}>
-                            {subscription.status}
-                          </span>
+        ) : (
+          <div className="divide-y divide-gray-200">
+            {subscriptions.map((subscription) => {
+              const product = productsMap.get(subscription.productId);
+              return (
+                <div key={subscription._id} className="p-6">
+                  <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
+                    <div className="flex-1">
+                      <div className="flex items-center gap-3 mb-2">
+                        <h3 className="text-lg font-semibold text-gray-900">
+                          {product?.name || 'Unknown Product'}
+                        </h3>
+                        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusColor(subscription.status)}`}>
+                          {subscription.status}
+                        </span>
+                      </div>
+                      
+                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-sm text-gray-600">
+                        <div>
+                          <span className="font-medium">Origin:</span> {product?.origin || 'Unknown'}
                         </div>
-                        
-                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-sm text-gray-600">
-                          <div>
-                            <span className="font-medium">Origin:</span> {product?.origin || 'Unknown'}
-                          </div>
-                          <div>
-                            <span className="font-medium">Frequency:</span> {subscription.frequency}
-                          </div>
-                          <div>
-                            <span className="font-medium">Started:</span> {new Date(subscription.startDate).toLocaleDateString()}
-                          </div>
+                        <div>
+                          <span className="font-medium">Frequency:</span> {subscription.frequency}
                         </div>
-
-                        {product?.price && (
-                          <div className="mt-2">
-                            <p className="font-bold text-gray-900">{formatPrice(product.price)}</p>
-                            <span className="text-gray-500 ml-2">per delivery ({product.weight})</span>
-                          </div>
-                        )}
+                        <div>
+                          <span className="font-medium">Started:</span> {new Date(subscription.startDate).toLocaleDateString()}
+                        </div>
                       </div>
 
-                      <div className="flex flex-col sm:flex-row gap-2">
-                        {subscription.status === 'active' && (
-                          <>
-                            <button
-                              onClick={() => handleSubscriptionAction(subscription._id, 'pause')}
-                              className="px-4 py-2 text-yellow-600 border border-yellow-600 rounded-lg hover:bg-yellow-50 transition-colors"
-                            >
-                              Pause
-                            </button>
-                            <button
-                              onClick={() => handleSubscriptionAction(subscription._id, 'cancel')}
-                              className="px-4 py-2 text-red-600 border border-red-600 rounded-lg hover:bg-red-50 transition-colors"
-                            >
-                              Cancel
-                            </button>
-                          </>
-                        )}
-                        {subscription.status === 'paused' && (
-                          <>
-                            <button
-                              onClick={() => handleSubscriptionAction(subscription._id, 'resume')}
-                              className="px-4 py-2 text-green-600 border border-green-600 rounded-lg hover:bg-green-50 transition-colors"
-                            >
-                              Resume
-                            </button>
-                            <button
-                              onClick={() => handleSubscriptionAction(subscription._id, 'cancel')}
-                              className="px-4 py-2 text-red-600 border border-red-600 rounded-lg hover:bg-red-50 transition-colors"
-                            >
-                              Cancel
-                            </button>
-                          </>
-                        )}
-                        <Link
-                          href={`/dashboard/customer/subscriptions/${subscription._id}`}
-                          className="px-4 py-2 text-blue-600 border border-blue-600 rounded-lg hover:bg-blue-50 transition-colors text-center"
-                        >
-                          View Details
-                       </Link>
-                   </div>
-                </div>
-                  </div>
-                );
-              })}
-            </div>
-          )}
-        </div>
+                      {product?.price && (
+                        <div className="mt-2">
+                          <p className="font-bold text-gray-900">{formatPrice(product.price)}</p>
+                          <span className="text-gray-500 ml-2">per delivery ({product.weight})</span>
+                        </div>
+                      )}
+                    </div>
 
-        {/* Benefits Section */}
-        <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg shadow-sm p-8 mt-8 border border-blue-100">
-          <h3 className="text-blue-800 text-xl font-semibold mb-6 flex items-center gap-2">
-            ☕ Subscription Benefits
-          </h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 text-sm">
-            <div className="bg-white/70 p-4 rounded-lg">
-              <h4 className="font-semibold text-blue-800 mb-3 flex items-center gap-2">
-                <span className="text-lg">💰</span> Save Money
-              </h4>
-              <ul className="space-y-2 text-blue-700">
-                <li>• 10% off regular prices</li>
-                <li>• No delivery fees</li>
-                <li>• Exclusive subscriber discounts</li>
-              </ul>
-            </div>
-            <div className="bg-white/70 p-4 rounded-lg">
-              <h4 className="font-semibold text-blue-800 mb-3 flex items-center gap-2">
-                <span className="text-lg">📅</span> Convenience
-              </h4>
-              <ul className="space-y-2 text-blue-700">
-                <li>• Never run out of coffee</li>
-                <li>• Flexible delivery schedule</li>
-                <li>• Pause or cancel anytime</li>
-              </ul>
-            </div>
-            <div className="bg-white/70 p-4 rounded-lg">
-              <h4 className="font-semibold text-blue-800 mb-3 flex items-center gap-2">
-                <span className="text-lg">🌟</span> Quality
-              </h4>
-              <ul className="space-y-2 text-blue-700">
-                <li>• Fresh roasted coffee</li>
-                <li>• Premium beans</li>
-                <li>• Direct from growers</li>
-              </ul>
-            </div>
-            <div className="bg-white/70 p-4 rounded-lg">
-              <h4 className="font-semibold text-blue-800 mb-3 flex items-center gap-2">
-                <span className="text-lg">🤝</span> Impact
-              </h4>
-              <ul className="space-y-2 text-blue-700">
-                <li>• Support women farmers</li>
-                <li>• Sustainable practices</li>
-                <li>• Fair trade principles</li>
-              </ul>
-            </div>
+                    <div className="flex flex-col sm:flex-row gap-2">
+                      {subscription.status === 'active' && (
+                        <>
+                          <button
+                            onClick={() => handleSubscriptionAction(subscription._id, 'pause')}
+                            className="px-4 py-2 text-yellow-600 border border-yellow-600 rounded-lg hover:bg-yellow-50 transition-colors"
+                          >
+                            Pause
+                          </button>
+                          <button
+                            onClick={() => handleSubscriptionAction(subscription._id, 'cancel')}
+                            className="px-4 py-2 text-red-600 border border-red-600 rounded-lg hover:bg-red-50 transition-colors"
+                          >
+                            Cancel
+                          </button>
+                        </>
+                      )}
+                      {subscription.status === 'paused' && (
+                        <>
+                          <button
+                            onClick={() => handleSubscriptionAction(subscription._id, 'resume')}
+                            className="px-4 py-2 text-green-600 border border-green-600 rounded-lg hover:bg-green-50 transition-colors"
+                          >
+                            Resume
+                          </button>
+                          <button
+                            onClick={() => handleSubscriptionAction(subscription._id, 'cancel')}
+                            className="px-4 py-2 text-red-600 border border-red-600 rounded-lg hover:bg-red-50 transition-colors"
+                          >
+                            Cancel
+                          </button>
+                        </>
+                      )}
+                      <Link
+                        href={`/dashboard/customer/subscriptions/${subscription._id}`}
+                        className="px-4 py-2 text-blue-600 border border-blue-600 rounded-lg hover:bg-blue-50 transition-colors text-center"
+                      >
+                        View Details
+                      </Link>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
+      </div>
+
+      {/* Benefits Section */}
+      <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg shadow-sm p-8 border border-blue-100">
+        <h3 className="text-blue-800 text-xl font-semibold mb-6 flex items-center gap-2">
+          ☕ Subscription Benefits
+        </h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 text-sm">
+          <div className="bg-white/70 p-4 rounded-lg">
+            <h4 className="font-semibold text-blue-800 mb-3 flex items-center gap-2">
+              <span className="text-lg">💰</span> Save Money
+            </h4>
+            <ul className="space-y-2 text-blue-700">
+              <li>• 10% off regular prices</li>
+              <li>• No delivery fees</li>
+              <li>• Exclusive subscriber discounts</li>
+            </ul>
+          </div>
+          <div className="bg-white/70 p-4 rounded-lg">
+            <h4 className="font-semibold text-blue-800 mb-3 flex items-center gap-2">
+              <span className="text-lg">📅</span> Convenience
+            </h4>
+            <ul className="space-y-2 text-blue-700">
+              <li>• Never run out of coffee</li>
+              <li>• Flexible delivery schedule</li>
+              <li>• Pause or cancel anytime</li>
+            </ul>
+          </div>
+          <div className="bg-white/70 p-4 rounded-lg">
+            <h4 className="font-semibold text-blue-800 mb-3 flex items-center gap-2">
+              <span className="text-lg">🌟</span> Quality
+            </h4>
+            <ul className="space-y-2 text-blue-700">
+              <li>• Fresh roasted coffee</li>
+              <li>• Premium beans</li>
+              <li>• Direct from growers</li>
+            </ul>
+          </div>
+          <div className="bg-white/70 p-4 rounded-lg">
+            <h4 className="font-semibold text-blue-800 mb-3 flex items-center gap-2">
+              <span className="text-lg">🤝</span> Impact
+            </h4>
+            <ul className="space-y-2 text-blue-700">
+              <li>• Support women farmers</li>
+              <li>• Sustainable practices</li>
+              <li>• Fair trade principles</li>
+            </ul>
           </div>
         </div>
       </div>

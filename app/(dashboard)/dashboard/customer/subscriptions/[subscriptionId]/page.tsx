@@ -129,8 +129,7 @@ const CustomerSubscriptionDetailPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="container mx-auto px-4 py-8">
+    <div className="space-y-6">
         {/* Header */}
         <div className="mb-8">
           <Link href="/dashboard/customer/subscriptions" className="text-blue-600 hover:text-blue-700 flex items-center gap-2 mb-4">
@@ -245,8 +244,8 @@ const CustomerSubscriptionDetailPage = () => {
                     <p>{subscription.shippingAddress.name}</p>
                     <p>{subscription.shippingAddress.email}</p>
                     <p>{subscription.shippingAddress.phone}</p>
-         </div>
-      </div>
+                  </div>
+                </div>
 
                 <div>
                   <h3 className="font-medium text-gray-900 mb-2">Delivery Address</h3>
@@ -332,7 +331,7 @@ const CustomerSubscriptionDetailPage = () => {
                   <h4 className="font-medium text-blue-800">Change Frequency</h4>
                   <p className="text-blue-700">Modify your delivery schedule anytime</p>
                 </div>
-          <div>
+                <div>
                   <h4 className="font-medium text-blue-800">Questions?</h4>
                   <p className="text-blue-700">Our support team is here to help</p>
                 </div>
@@ -340,7 +339,6 @@ const CustomerSubscriptionDetailPage = () => {
             </div>
           </div>
           </div>
-      </div>
     </div>
   );
 };

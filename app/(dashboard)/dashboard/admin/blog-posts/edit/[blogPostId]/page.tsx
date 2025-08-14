@@ -168,7 +168,7 @@ const EditBlogPostPage = async ({ params }: EditBlogPostPageProps) => {
   return (
     <>
       <Toaster position="top-right" richColors />
-      <div className="page-content container section">
+      <div className="space-y-6">
         <div className="mb-6">
           <button
             onClick={() => router.back()}

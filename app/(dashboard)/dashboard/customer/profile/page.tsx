@@ -202,7 +202,7 @@ const CustomerProfilePage = () => {
 
    // User is loaded and is a customer (customer document may be null if onboarding is incomplete)
   return (
-    <div className="page-content container section">
+    <div className="space-y-6">
       <h1 style={{ color: 'var(--primary)' }}>Your Profile</h1>
       <p className="lead">View and manage your profile information.</p>
 

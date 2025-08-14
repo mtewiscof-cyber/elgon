@@ -35,7 +35,7 @@ const AdminInventoryPage = () => {
   }
 
   return (
-    <div className="page-content container section">
+    <div className="space-y-6">
       <h1 style={{ color: 'var(--primary)' }}>Admin - Inventory</h1>
       <p className="lead">View product inventory levels.</p>
 

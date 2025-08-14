@@ -55,7 +55,7 @@ const AdminBlogPostsPage = () => {
   return (
     <>
       <Toaster position="top-right" richColors />
-      <div className="page-content container section">
+      <div className="space-y-6">
         <div className="flex justify-between items-center mb-6">
           <div>
             <h1 style={{ color: 'var(--primary)' }}>Admin - Blog Posts</h1>

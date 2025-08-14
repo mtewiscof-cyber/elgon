@@ -35,7 +35,7 @@ const AdminCustomersPage = () => {
   }
 
   return (
-    <div className="page-content container section">
+    <div className="space-y-6">
       <h1 style={{ color: 'var(--primary)' }}>Admin - Customers</h1>
       <p className="lead">View and manage customer profiles.</p>
 

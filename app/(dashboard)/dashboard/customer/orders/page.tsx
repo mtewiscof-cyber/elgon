@@ -34,7 +34,7 @@ const CustomerOrdersPage = () => {
   }
 
   return (
-    <div className="page-content container section">
+    <div className="space-y-6">
       <h1 style={{ color: 'var(--primary)' }}>Your Orders</h1>
       <p className="lead">View your order history.</p>
 

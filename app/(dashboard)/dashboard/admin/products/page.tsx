@@ -55,23 +55,28 @@ const AdminProductsPage = () => {
   }
 
   return (
-    <div className="container section">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold text-blue-600">Admin - Products</h1>
+    <div className="space-y-6">
+      <div className="flex justify-between items-center">
+        <h1 className="text-3xl font-bold text-gray-900">Product Management</h1>
         <Link 
           href="/dashboard/admin/products/add" 
-          className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
         >
           Add New Product
         </Link>
       </div>
-      <p className="lead mb-6">View and manage product listings.</p>
-      <div className="card bg-white p-6 rounded-lg shadow-sm">
+      <p className="text-gray-600">View and manage product listings.</p>
+      <div className="bg-white p-6 rounded-lg shadow-sm">
         <h3 className="text-lg font-semibold mb-4">Product List</h3>
         {products === undefined ? (
           <div>Loading products...</div>
         ) : products.length === 0 ? (
-           <div>No products found.</div>
+           <div className="text-center py-12">
+             <p className="text-gray-600 mb-4">No products found.</p>
+             <Link href="/dashboard/admin/products/add" className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+               Add your first product
+             </Link>
+           </div>
          ) : (
           <div className="overflow-x-auto">
             {/* Table for larger screens */}

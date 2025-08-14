@@ -9,6 +9,7 @@ import { useQuery } from "convex/react";
 import { api } from "../convex/_generated/api";
 import { FaBars, FaTimes, FaInfoCircle, FaBox, FaBlog, FaNewspaper, FaEnvelope } from 'react-icons/fa';
 import CartIcon from './CartIcon';
+import WishlistIcon from './WishlistIcon';
 import CustomUserButton from './CustomUserButton';
 import { FloatingNav } from './ui/floating-navbar';
 import { cn } from "@/lib/utils";
@@ -61,7 +62,12 @@ const Navigation = () => {
       <FloatingNav 
         navItems={navItems}
         className="hidden md:flex"
-        cartComponent={<CartIcon />}
+        cartComponent={
+          <div className="flex items-center gap-2">
+            <WishlistIcon />
+            <CartIcon />
+          </div>
+        }
         user={user}
         clerkLoaded={clerkLoaded}
         clerkUser={clerkUser}
@@ -90,6 +96,7 @@ const Navigation = () => {
 
               {/* Mobile menu button */}
               <div className="flex items-center space-x-3">
+                <WishlistIcon />
                 <CartIcon />
                 <button
                   onClick={toggleMenu}

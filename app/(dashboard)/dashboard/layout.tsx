@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { usePathname } from 'next/navigation';
+import DashboardHeader from '@/components/dashboard/header';
 
 export default function DashboardLayout({
   children,
@@ -20,6 +21,7 @@ export default function DashboardLayout({
   
   return (
     <div className="min-h-screen">
+      <DashboardHeader />
       {children}
     </div>
   );

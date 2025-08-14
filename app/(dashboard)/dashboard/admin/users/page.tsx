@@ -41,7 +41,7 @@ const AdminUsersPage = () => {
 
   // Admin user is loaded, display users data
   return (
-    <div className="page-content container section">
+    <div className="space-y-6">
       <h1 style={{ color: 'var(--primary)' }}>Admin - Users</h1>
       <p className="lead">View and manage all user accounts.</p>
 

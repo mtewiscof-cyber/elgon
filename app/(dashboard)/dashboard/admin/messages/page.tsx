@@ -115,7 +115,7 @@ const AdminMessagesPage = () => {
     .sort((a, b) => b.lastMessage.sentAt - a.lastMessage.sentAt);
 
   return (
-    <div className="page-content container section">
+    <div className="space-y-6">
       <h1 style={{ color: 'var(--primary)' }}>Admin Messages</h1>
       <p className="lead">Manage all user messages and communications.</p>
 

@@ -55,7 +55,7 @@ const AdminNewsPage = () => {
   return (
     <>
       <Toaster position="top-right" richColors />
-      <div className="page-content container section">
+      <div className="space-y-6">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
           <div>
             <h1 style={{ color: 'var(--primary)' }}>Admin - News</h1>

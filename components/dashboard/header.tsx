@@ -1,12 +1,13 @@
 import React from "react";
 import Link from "next/link";
-import { UserButton, SignedIn, SignedOut, SignInButton } from "@clerk/nextjs";
+import { SignedIn, SignedOut, SignInButton } from "@clerk/nextjs";
+import CustomUserButton from "../CustomUserButton";
 
 export default function DashboardHeader() {
   return (
-    <header className="bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between">
-      {/* Logo / Title */}
-      <div className="flex items-center space-x-3">
+    <header className="sticky top-0 z-40 bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between">
+      {/* Logo / Title - hidden on small screens */}
+      <div className="hidden sm:flex items-center space-x-3">
         <Link href="/dashboard">
           <span className="text-xl font-bold text-amber-900 tracking-tight hover:text-amber-700 transition-colors duration-200">
             Mt.Elgon Dashboard
@@ -14,23 +15,13 @@ export default function DashboardHeader() {
         </Link>
       </div>
 
-      {/* Navigation Links */}
-      <nav className="hidden md:flex items-center space-x-6">
-        <Link href="/dashboard" className="text-gray-700 hover:text-amber-900 font-medium transition-colors duration-200">
-          Home
-        </Link>
-        <Link href="/dashboard/profile" className="text-gray-700 hover:text-amber-900 font-medium transition-colors duration-200">
-          Profile
-        </Link>
-        <Link href="/dashboard/support" className="text-gray-700 hover:text-amber-900 font-medium transition-colors duration-200">
-          Support
-        </Link>
-      </nav>
+      {/* Spacer to push user actions to the right on small screens */}
+      <div className="flex-1"></div>
 
       {/* User Actions */}
       <div className="flex items-center space-x-4">
         <SignedIn>
-          <UserButton afterSignOutUrl="/" />
+          <CustomUserButton />
         </SignedIn>
         <SignedOut>
           <SignInButton mode="modal">

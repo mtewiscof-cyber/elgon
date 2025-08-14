@@ -42,7 +42,7 @@ const CustomerOrderDetailPage = () => {
    }
 
   return (
-    <div className="page-content container section">
+    <div className="space-y-6">
       <h1 style={{ color: 'var(--primary)' }}>Order Details</h1>
       <p className="lead">Details for Order ID: {order._id.toString()}</p>
 

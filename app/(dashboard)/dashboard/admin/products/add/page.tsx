@@ -85,8 +85,8 @@ export default function AddProductPage() {
   }
   
   return (
-    <div className="container section">
-      <h1 className="text-2xl font-bold mb-6">Add New Coffee Product</h1>
+    <div className="space-y-6">
+      <h1 className="text-3xl font-bold text-gray-900">Add New Coffee Product</h1>
       <ProductForm
         initialValues={initialValues}
         growers={growers}
