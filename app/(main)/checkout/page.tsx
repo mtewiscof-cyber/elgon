@@ -24,7 +24,7 @@ export default function CheckoutPage() {
     address: "",
     city: "",
     state: "",
-    country: "Kenya",
+    country: "Uganda",
     zipCode: "",
   });
 
@@ -196,11 +196,10 @@ export default function CheckoutPage() {
                 onChange={e => setShippingInfo(prev => ({ ...prev, country: e.target.value }))}
                 className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent"
               >
-                <option value="Kenya">Kenya</option>
-                <option value="Uganda">Uganda</option>
-                <option value="Tanzania">Tanzania</option>
-                <option value="Rwanda">Rwanda</option>
-                <option value="Other">Other</option>
+                                                    <option value="Uganda">Uganda</option>
+                  <option value="Tanzania">Tanzania</option>
+                  <option value="Rwanda">Rwanda</option>
+                  <option value="Other">Other</option>
               </select>
             </div>
 

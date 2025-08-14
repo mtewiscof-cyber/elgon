@@ -157,11 +157,14 @@ const ContactPage = () => {
                 <h2 className="text-xl font-semibold mb-4 text-amber-800">Get in Touch</h2>
                 <div className="mb-4">
                   <h3 className="font-semibold text-gray-700 mb-1">Email</h3>
-                  <p><a href="mailto:info@mtelgonwomen.com" className="text-amber-600 hover:text-amber-700 hover:underline transition-colors">info@mtelgonwomen.com</a></p>
+                  <p><a href="mailto:mtewiscof@gmail.com" className="text-amber-600 hover:text-amber-700 hover:underline transition-colors">mtewiscof@gmail.com</a></p>
                 </div>
                 <div className="mb-4">
                   <h3 className="font-semibold text-gray-700 mb-1">Phone</h3>
-                  <p><a href="tel:+256700123456" className="text-amber-600 hover:text-amber-700 hover:underline transition-colors">+256 700 123 456</a></p>
+                  <p>
+                    <a href="tel:+256778859968" className="text-amber-600 hover:text-amber-700 hover:underline transition-colors">+256 778 859 968</a><br />
+                    <a href="tel:+256784506168" className="text-amber-600 hover:text-amber-700 hover:underline transition-colors">+256 784 506 168</a>
+                  </p>
                 </div>
                 <div className="mb-4">
                   <h3 className="font-semibold text-gray-700 mb-1">Address</h3>

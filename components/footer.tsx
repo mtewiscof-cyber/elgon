@@ -428,7 +428,7 @@ const Footer = () => {
               }}>
                 <FaMapMarkerAlt style={{ color: 'var(--secondary)', fontSize: '1rem' }} />
                 <span style={{ fontSize: '0.95rem', color: 'var(--foreground)' }}>
-                  Mt. Elgon Region, Kenya
+                  Mt. Elgon Region, Uganda
                 </span>
               </div>
               <div style={{
@@ -438,7 +438,8 @@ const Footer = () => {
               }}>
                 <FaPhone style={{ color: 'var(--secondary)', fontSize: '1rem' }} />
                 <span style={{ fontSize: '0.95rem', color: 'var(--foreground)' }}>
-                  +254 XXX XXX XXX
+                  +256 778 859 968<br />
+                  +256 784 506 168
                 </span>
               </div>
               <div style={{
@@ -448,7 +449,7 @@ const Footer = () => {
               }}>
                 <FaEnvelope style={{ color: 'var(--secondary)', fontSize: '1rem' }} />
                 <span style={{ fontSize: '0.95rem', color: 'var(--foreground)' }}>
-                  info@mtelgonwomen.com
+                  mtewiscof@gmail.com
                 </span>
               </div>
             </div>
@@ -477,56 +478,7 @@ const Footer = () => {
             }}>
               &copy; {currentYear} Mt.Elgon Women in Specialty Coffee Ltd. All rights reserved.
             </p>
-            <div style={{
-              display: 'flex',
-              gap: '2rem',
-              flexWrap: 'wrap',
-            }}>
-              <Link
-                href="/privacy"
-                style={{
-                  fontSize: '0.9rem',
-                  color: 'var(--foreground)',
-                  textDecoration: 'none',
-                  transition: 'color 0.3s ease',
-                }}
-              >
-                Privacy Policy
-              </Link>
-              <Link
-                href="/terms"
-                style={{
-                  fontSize: '0.9rem',
-                  color: 'var(--foreground)',
-                  textDecoration: 'none',
-                  transition: 'color 0.3s ease',
-                }}
-              >
-                Terms of Service
-              </Link>
-              <Link
-                href="/shipping"
-                style={{
-                  fontSize: '0.9rem',
-                  color: 'var(--foreground)',
-                  textDecoration: 'none',
-                  transition: 'color 0.3s ease',
-                }}
-              >
-                Shipping Info
-              </Link>
-              <Link
-                href="/returns"
-                style={{
-                  fontSize: '0.9rem',
-                  color: 'var(--foreground)',
-                  textDecoration: 'none',
-                  transition: 'color 0.3s ease',
-                }}
-              >
-                Returns & Refunds
-              </Link>
-            </div>
+
           </div>
         </div>
       </div>
