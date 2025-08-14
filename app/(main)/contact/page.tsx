@@ -64,11 +64,14 @@ const ContactPage = () => {
           <div className="flex flex-col md:flex-row gap-6">
             {/* Contact Form */}
             <div className="flex-1 min-w-[260px]">
-              <div className="bg-white rounded-2xl shadow-lg p-6 md:p-8 border border-[var(--card-bg)]">
-                <h2 className="text-xl font-semibold mb-4" style={{ color: 'var(--primary)' }}>Send Us a Message</h2>
-                <form onSubmit={handleSubmit} className="space-y-5">
-                  {/* Floating label input */}
-                  <div className="relative">
+              <div className="bg-white rounded-2xl shadow-lg p-6 md:p-8 border border-gray-200">
+                <h2 className="text-xl font-semibold mb-4 text-amber-800">Send Us a Message</h2>
+                <form onSubmit={handleSubmit} className="space-y-6">
+                  {/* Name Input */}
+                  <div className="space-y-2">
+                    <label htmlFor="name" className="block text-sm font-medium text-gray-700">
+                      Your Name *
+                    </label>
                     <input
                       type="text"
                       id="name"
@@ -76,12 +79,16 @@ const ContactPage = () => {
                       value={formData.name}
                       onChange={handleChange}
                       required
-                      className="peer w-full px-3 py-3 rounded-xl border border-[var(--primary)] bg-[var(--light-bg)] focus:outline-none focus:ring-2 focus:ring-[var(--secondary)] placeholder-transparent"
-                      placeholder="Your Name"
+                      className="w-full px-4 py-3 rounded-xl border border-gray-300 bg-white focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition-colors"
+                      placeholder="Enter your full name"
                     />
-                    <label htmlFor="name" className="absolute left-3 top-3 text-gray-500 text-sm transition-all peer-placeholder-shown:top-3 peer-placeholder-shown:text-base peer-focus:-top-4 peer-focus:text-xs peer-focus:text-[var(--primary)] bg-white px-1 pointer-events-none">Your Name</label>
                   </div>
-                  <div className="relative">
+
+                  {/* Email Input */}
+                  <div className="space-y-2">
+                    <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+                      Email Address *
+                    </label>
                     <input
                       type="email"
                       id="email"
@@ -89,43 +96,55 @@ const ContactPage = () => {
                       value={formData.email}
                       onChange={handleChange}
                       required
-                      className="peer w-full px-3 py-3 rounded-xl border border-[var(--primary)] bg-[var(--light-bg)] focus:outline-none focus:ring-2 focus:ring-[var(--secondary)] placeholder-transparent"
-                      placeholder="Email Address"
+                      className="w-full px-4 py-3 rounded-xl border border-gray-300 bg-white focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition-colors"
+                      placeholder="Enter your email address"
                     />
-                    <label htmlFor="email" className="absolute left-3 top-3 text-gray-500 text-sm transition-all peer-placeholder-shown:top-3 peer-placeholder-shown:text-base peer-focus:-top-4 peer-focus:text-xs peer-focus:text-[var(--primary)] bg-white px-1 pointer-events-none">Email Address</label>
                   </div>
-                  <div className="relative pt-4">
+
+                  {/* Subject Dropdown */}
+                  <div className="space-y-2">
+                    <label htmlFor="subject" className="block text-sm font-medium text-gray-700">
+                      Subject *
+                    </label>
                     <select
                       id="subject"
                       name="subject"
                       value={formData.subject}
                       onChange={handleChange}
                       required
-                      className="peer w-full px-3 py-3 rounded-xl border border-[var(--primary)] bg-[var(--light-bg)] focus:outline-none focus:ring-2 focus:ring-[var(--secondary)] text-gray-700"
+                      className="w-full px-4 py-3 rounded-xl border border-gray-300 bg-white focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition-colors"
                     >
-                      <option value="" disabled hidden></option>
+                      <option value="" disabled>Select a subject</option>
                       <option value="General Inquiry">General Inquiry</option>
                       <option value="Wholesale">Wholesale Partnership</option>
                       <option value="Order Support">Order Support</option>
                       <option value="Coffee Subscription">Coffee Subscription</option>
                       <option value="Press/Media">Press/Media</option>
                     </select>
-                    <label htmlFor="subject" className="absolute left-3 top-3 text-gray-500 text-sm transition-all peer-focus:-top-4 peer-focus:text-xs peer-focus:text-[var(--primary)] bg-white px-1 pointer-events-none">Subject</label>
                   </div>
-                  <div className="relative">
+
+                  {/* Message Textarea */}
+                  <div className="space-y-2">
+                    <label htmlFor="message" className="block text-sm font-medium text-gray-700">
+                      Your Message *
+                    </label>
                     <textarea
                       id="message"
                       name="message"
                       value={formData.message}
                       onChange={handleChange}
                       required
-                      rows={4}
-                      className="peer w-full px-3 py-3 rounded-xl border border-[var(--primary)] bg-[var(--light-bg)] focus:outline-none focus:ring-2 focus:ring-[var(--secondary)] placeholder-transparent"
-                      placeholder="Your Message"
+                      rows={5}
+                      className="w-full px-4 py-3 rounded-xl border border-gray-300 bg-white focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition-colors resize-none"
+                      placeholder="Tell us how we can help you..."
                     ></textarea>
-                    <label htmlFor="message" className="absolute left-3 top-3 text-gray-500 text-sm transition-all peer-placeholder-shown:top-3 peer-placeholder-shown:text-base peer-focus:-top-4 peer-focus:text-xs peer-focus:text-[var(--primary)] bg-white px-1 pointer-events-none">Your Message</label>
                   </div>
-                  <button type="submit" className="w-full py-3 rounded-xl font-semibold transition-all duration-200 bg-[var(--primary)] text-white hover:bg-[var(--primary)]/90 hover:shadow-lg shadow-md">
+
+                  {/* Submit Button */}
+                  <button 
+                    type="submit" 
+                    className="w-full py-4 rounded-xl font-semibold text-white bg-amber-600 hover:bg-amber-700 focus:ring-2 focus:ring-amber-500 focus:ring-offset-2 transition-all duration-200 shadow-md hover:shadow-lg"
+                  >
                     Send Message
                   </button>
                 </form>
@@ -134,35 +153,39 @@ const ContactPage = () => {
 
             {/* Contact Information */}
             <div className="flex-1 min-w-[260px] flex flex-col gap-4">
-              <div className="bg-white rounded-2xl shadow-lg p-6 md:p-8 border border-[var(--card-bg)]">
-                <h2 className="text-xl font-semibold mb-4" style={{ color: 'var(--primary)' }}>Get in Touch</h2>
-                <div className="mb-3">
-                  <h3 className="font-semibold text-[var(--secondary)]">Email</h3>
-                  <p><a href="mailto:info@mtelgonwomen.com" className="hover:underline transition-colors" style={{ color: 'var(--secondary)' }}>info@mtelgonwomen.com</a></p>
+              <div className="bg-white rounded-2xl shadow-lg p-6 md:p-8 border border-gray-200">
+                <h2 className="text-xl font-semibold mb-4 text-amber-800">Get in Touch</h2>
+                <div className="mb-4">
+                  <h3 className="font-semibold text-gray-700 mb-1">Email</h3>
+                  <p><a href="mailto:info@mtelgonwomen.com" className="text-amber-600 hover:text-amber-700 hover:underline transition-colors">info@mtelgonwomen.com</a></p>
                 </div>
-                <div className="mb-3">
-                  <h3 className="font-semibold text-[var(--secondary)]">Phone</h3>
-                  <p><a href="tel:+256700123456" className="hover:underline transition-colors" style={{ color: 'var(--secondary)' }}>+256 700 123 456</a></p>
+                <div className="mb-4">
+                  <h3 className="font-semibold text-gray-700 mb-1">Phone</h3>
+                  <p><a href="tel:+256700123456" className="text-amber-600 hover:text-amber-700 hover:underline transition-colors">+256 700 123 456</a></p>
                 </div>
-                <div className="mb-3">
-                  <h3 className="font-semibold text-[var(--secondary)]">Address</h3>
-                  <p>Mt. Elgon Women in Specialty Coffee Ltd<br />Mbale, Uganda<br />East Africa</p>
+                <div className="mb-4">
+                  <h3 className="font-semibold text-gray-700 mb-1">Address</h3>
+                  <p className="text-gray-600">Mt. Elgon Women in Specialty Coffee Ltd<br />Mbale, Uganda<br />East Africa</p>
                 </div>
               </div>
-              <div className="bg-white rounded-2xl shadow-lg p-6 md:p-8 border border-[var(--card-bg)]">
-                <h2 className="text-xl font-semibold mb-4" style={{ color: 'var(--primary)' }}>Follow Us</h2>
-                <div className="flex gap-3 flex-wrap justify-start items-center mt-1">
-                  <a href="#" className="flex items-center gap-2 text-[var(--secondary)] hover:text-[var(--primary)] text-lg transition-colors" aria-label="Instagram">
-                    <FaInstagram size={24} />Instagram
+              <div className="bg-white rounded-2xl shadow-lg p-6 md:p-8 border border-gray-200">
+                <h2 className="text-xl font-semibold mb-4 text-amber-800">Follow Us</h2>
+                <div className="flex gap-4 flex-wrap justify-start items-center">
+                  <a href="#" className="flex items-center gap-2 text-gray-600 hover:text-amber-600 text-base transition-colors" aria-label="Instagram">
+                    <FaInstagram size={20} />
+                    <span>Instagram</span>
                   </a>
-                  <a href="#" className="flex items-center gap-2 text-[var(--secondary)] hover:text-[var(--primary)] text-lg transition-colors" aria-label="Facebook">
-                    <MdFacebook size={24} />Facebook
+                  <a href="#" className="flex items-center gap-2 text-gray-600 hover:text-amber-600 text-base transition-colors" aria-label="Facebook">
+                    <MdFacebook size={20} />
+                    <span>Facebook</span>
                   </a>
-                  <a href="#" className="flex items-center gap-2 text-[var(--secondary)] hover:text-[var(--primary)] text-lg transition-colors" aria-label="Twitter">
-                    <FaTwitter size={24} />Twitter
+                  <a href="#" className="flex items-center gap-2 text-gray-600 hover:text-amber-600 text-base transition-colors" aria-label="Twitter">
+                    <FaTwitter size={20} />
+                    <span>Twitter</span>
                   </a>
-                  <a href="#" className="flex items-center gap-2 text-[var(--secondary)] hover:text-[var(--primary)] text-lg transition-colors" aria-label="LinkedIn">
-                    <FaLinkedin size={24} />LinkedIn
+                  <a href="#" className="flex items-center gap-2 text-gray-600 hover:text-amber-600 text-base transition-colors" aria-label="LinkedIn">
+                    <FaLinkedin size={20} />
+                    <span>LinkedIn</span>
                   </a>
                 </div>
               </div>
@@ -174,8 +197,8 @@ const ContactPage = () => {
       {/* Map Section */}
       <section style={{ maxWidth: "1100px", margin: "0 auto", padding: `0 ${sectionPadding}` }}>
         <div className="py-8 md:py-12">
-          <h2 className="text-xl font-semibold mb-2 text-center" style={{ color: 'var(--primary)' }}>Visit Our Coffee Processing Center</h2>
-          <div className="w-full h-64 md:h-80 rounded-2xl overflow-hidden shadow-lg flex items-center justify-center bg-gray-100 border border-[var(--card-bg)]">
+          <h2 className="text-xl font-semibold mb-4 text-center text-amber-800">Visit Our Coffee Processing Center</h2>
+          <div className="w-full h-64 md:h-80 rounded-2xl overflow-hidden shadow-lg flex items-center justify-center bg-gray-100 border border-gray-200">
             {/* Google Maps embed for Mt. Elgon, Uganda */}
             <iframe
               title="Mt. Elgon Map"

@@ -5,6 +5,7 @@ import { api } from '@/convex/_generated/api';
 import { useUser } from '@clerk/nextjs';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
+import { formatPrice } from '@/lib/utils';
 
 // Define types for the adminCards and their actions
 interface CardAction {
@@ -224,7 +225,7 @@ export default function AdminDashboard() {
           <div className="flex justify-between">
             <div>
               <p className="text-sm text-gray-500 mb-1">Total Revenue</p>
-              <p className="text-2xl font-bold">${isLoading ? '...' : totalRevenue.toFixed(2)}</p>
+              <p className="text-2xl font-bold">{isLoading ? '...' : formatPrice(totalRevenue)}</p>
             </div>
             <div className="bg-green-100 p-3 rounded-full">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6 text-green-600">

@@ -234,7 +234,7 @@ const AdminOrdersPage = () => {
               </div>
               <div className="ml-4">
                 <p className="text-sm font-medium text-gray-500">Revenue</p>
-                <p className="text-2xl font-bold text-gray-900">${orderStats.revenue.toFixed(2)}</p>
+                <p className="text-2xl font-bold text-gray-900">{formatPrice(orderStats.revenue)}</p>
               </div>
             </div>
           </div>
@@ -361,7 +361,7 @@ const AdminOrdersPage = () => {
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
                           <div className="text-sm font-medium text-gray-900">
-                            ${order.totalAmount.toFixed(2)}
+                            {formatPrice(order.totalAmount)}
                           </div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
@@ -453,7 +453,7 @@ const AdminOrdersPage = () => {
                         })}
                         <div className="flex justify-between items-center pt-4 border-t border-gray-200">
                           <div className="font-medium text-gray-900">Total</div>
-                          <div className="font-bold text-lg text-gray-900">${order.totalAmount.toFixed(2)}</div>
+                          <div className="font-bold text-lg text-gray-900">{formatPrice(order.totalAmount)}</div>
                         </div>
                       </div>
                     </div>
