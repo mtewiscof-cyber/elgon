@@ -10,6 +10,7 @@ import Image from "next/image";
 import { formatPrice, slugify } from "@/lib/utils";
 import { toast } from "sonner";
 import { FaHeart } from "react-icons/fa";
+import { SignInButton } from "@clerk/nextjs";
 
 // --- Modern, Compact Message Form ---
 interface MessageFormProps {
@@ -106,7 +107,7 @@ function MessageForm({ product, grower, onClose, onMessageSuccess }: MessageForm
 export default function ProductDetailPage() {
   const params = useParams();
   const router = useRouter();
-  const { user: clerkUser } = useUser();
+  const { user: clerkUser, isLoaded } = useUser();
   const productParam = params.id as string;
 
   const [isLoading, setIsLoading] = useState(true);
@@ -249,25 +250,36 @@ export default function ProductDetailPage() {
                 <p className="text-[var(--secondary)] text-base leading-relaxed mb-4">{product.description}</p>
               </div>
               <div className="flex items-center gap-2">
-                <button
-                  onClick={async () => {
-                    try {
-                      const res = await toggleWishlist({ productId: product._id });
-                      setWished((prev) => !prev);
-                      toast.success(res?.wished ? "Added to wishlist" : "Removed from wishlist");
-                    } catch (e) {
-                      toast.error("Failed to update wishlist");
-                    }
-                  }}
-                  className={`w-9 h-9 rounded-full border flex items-center justify-center transition-colors ${
-                    wished 
-                      ? 'bg-[var(--primary)] text-white border-[var(--primary)]' 
-                      : 'text-gray-600 border-gray-300 hover:text-[var(--primary)] hover:border-[var(--primary)]'
-                  }`}
-                  aria-label="Toggle wishlist"
-                >
-                  <FaHeart />
-                </button>
+                {!clerkUser || !isLoaded ? (
+                  <SignInButton mode="modal">
+                    <button
+                      className="w-9 h-9 rounded-full border flex items-center justify-center transition-colors text-gray-600 border-gray-300 hover:text-[var(--primary)] hover:border-[var(--primary)]"
+                      aria-label="Sign in to add to wishlist"
+                    >
+                      <FaHeart />
+                    </button>
+                  </SignInButton>
+                ) : (
+                  <button
+                    onClick={async () => {
+                      try {
+                        const res = await toggleWishlist({ productId: product._id });
+                        setWished((prev) => !prev);
+                        toast.success(res?.wished ? "Added to wishlist" : "Removed from wishlist");
+                      } catch (e) {
+                        toast.error("Failed to update wishlist");
+                      }
+                    }}
+                    className={`w-9 h-9 rounded-full border flex items-center justify-center transition-colors ${
+                      wished 
+                        ? 'bg-[var(--primary)] text-white border-[var(--primary)]' 
+                        : 'text-gray-600 border-gray-300 hover:text-[var(--primary)] hover:border-[var(--primary)]'
+                    }`}
+                    aria-label="Toggle wishlist"
+                  >
+                    <FaHeart />
+                  </button>
+                )}
               </div>
             </div>
 
@@ -304,20 +316,32 @@ export default function ProductDetailPage() {
                   +
                 </button>
               </div>
-              <button
-                onClick={async () => {
-                  try {
-                    await addToCart({ productId: product._id, quantity });
-                    toast.success("Added to cart");
-                  } catch (e) {
-                    toast.error("Failed to add to cart");
-                  }
-                }}
-                disabled={product.stock <= 0}
-                className="flex-1 h-11 rounded-full bg-[var(--primary)] text-white font-semibold hover:bg-[var(--primary)]/90 transition disabled:opacity-60 min-w-[200px]"
-              >
-                Add to cart
-              </button>
+              
+              {!clerkUser || !isLoaded ? (
+                <SignInButton mode="modal">
+                  <button
+                    disabled={product.stock <= 0}
+                    className="flex-1 h-11 rounded-full bg-[var(--primary)] text-white font-semibold hover:bg-[var(--primary)]/90 transition disabled:opacity-60 min-w-[200px]"
+                  >
+                    Sign in to add to cart
+                  </button>
+                </SignInButton>
+              ) : (
+                <button
+                  onClick={async () => {
+                    try {
+                      await addToCart({ productId: product._id, quantity });
+                      toast.success("Added to cart");
+                    } catch (e) {
+                      toast.error("Failed to add to cart");
+                    }
+                  }}
+                  disabled={product.stock <= 0}
+                  className="flex-1 h-11 rounded-full bg-[var(--primary)] text-white font-semibold hover:bg-[var(--primary)]/90 transition disabled:opacity-60 min-w-[200px]"
+                >
+                  Add to cart
+                </button>
+              )}
             </div>
 
             {/* Meta */}
