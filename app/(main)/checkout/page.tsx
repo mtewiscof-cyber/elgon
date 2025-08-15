@@ -101,7 +101,7 @@ export default function CheckoutPage() {
 
   return (
     <main className="min-h-screen container mx-auto px-4 pb-16 pt-24 md:pt-44">
-      <div className="mb-8">
+      <div className="mb-8 pt-20">
         <h1 className="text-3xl font-semibold">Checkout</h1>
         <p className="text-gray-600">Complete your order</p>
       </div>
