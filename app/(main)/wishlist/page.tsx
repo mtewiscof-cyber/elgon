@@ -5,6 +5,7 @@ import { useQuery, useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import Image from "next/image";
 import { slugify, formatPrice } from "@/lib/utils";
+import AuthGuard from "@/components/AuthGuard";
 
 export default function WishlistPage() {
 	const wishlist = useQuery(api.wishlist.getWishlist) || [];
@@ -16,20 +17,47 @@ export default function WishlistPage() {
 				<h1 className="text-3xl font-semibold text-gray-900">Your Wishlist</h1>
 				<p className="text-gray-600 mt-2">Items you saved for later.</p>
 			</div>
-            <div className="rounded-2xl border border-gray-200 bg-white shadow-sm">
-				{wishlist.length === 0 ? (
-					<div className="p-8 text-center text-gray-600">
-						<p className="mb-6 text-lg">Your wishlist is empty.</p>
-						<Link href="/products" className="inline-flex items-center px-6 py-3 bg-amber-100 text-amber-900 rounded-full font-medium text-sm hover:bg-amber-200 transition-colors duration-200">Browse products</Link>
-					</div>
-                ) : (
-                    <ul className="divide-y divide-gray-100">
-                        {wishlist.map((item: any) => (
-                            <WishlistRow key={item._id} item={item} />
-                        ))}
-                    </ul>
-                )}
-			</div>
+            
+            <AuthGuard
+                fallback={
+                    <div className="max-w-2xl mx-auto">
+                        <div className="rounded-2xl border border-gray-200 bg-white shadow-sm p-8 text-center">
+                            <div className="w-20 h-20 bg-amber-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                                <svg className="w-10 h-10 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                                </svg>
+                            </div>
+                            <h2 className="text-xl font-semibold text-gray-900 mb-3">Your wishlist is waiting for you</h2>
+                            <p className="text-gray-600 mb-6">
+                                Sign in to view your saved items, add them to cart, and manage your wishlist.
+                            </p>
+                            <div className="space-y-3">
+                                <Link 
+                                    href="/products" 
+                                    className="inline-flex items-center px-6 py-3 bg-gray-100 text-gray-700 rounded-full font-medium text-sm hover:bg-gray-200 transition-colors duration-200"
+                                >
+                                    Continue Shopping
+                                </Link>
+                            </div>
+                        </div>
+                    </div>
+                }
+            >
+                <div className="rounded-2xl border border-gray-200 bg-white shadow-sm">
+                    {wishlist.length === 0 ? (
+                        <div className="p-8 text-center text-gray-600">
+                            <p className="mb-6 text-lg">Your wishlist is empty.</p>
+                            <Link href="/products" className="inline-flex items-center px-6 py-3 bg-amber-100 text-amber-900 rounded-full font-medium text-sm hover:bg-amber-200 transition-colors duration-200">Browse products</Link>
+                        </div>
+                    ) : (
+                        <ul className="divide-y divide-gray-100">
+                            {wishlist.map((item: any) => (
+                                <WishlistRow key={item._id} item={item} />
+                            ))}
+                        </ul>
+                    )}
+                </div>
+            </AuthGuard>
 		</main>
 	);
 }
