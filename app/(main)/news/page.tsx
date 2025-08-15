@@ -213,24 +213,6 @@ const NewsPage = () => {
           )}
         </div>
       </section>
-
-      {/* Newsletter Section */}
-      <section style={{ maxWidth: "800px", margin: "0 auto", padding: `0 ${sectionPadding}` }}>
-        <div className="py-8 md:py-12">
-          <div className="bg-[var(--light-bg)] rounded-xl shadow-md p-6 flex flex-col items-center gap-4 hover:shadow-lg transition-shadow">
-            <h2 className="text-[#171312] text-2xl font-bold leading-tight mb-2">Stay Updated</h2>
-            <p className="text-[#171312] text-base font-normal leading-normal mb-2 text-center">Get the latest news and updates delivered to your inbox.</p>
-            <form className="w-full flex flex-col sm:flex-row gap-3 items-center justify-center">
-              <input 
-                type="email" 
-                placeholder="Your email address" 
-                className="flex-1 min-w-0 rounded-xl border border-[#f1d7cf] bg-white px-4 py-3 text-[#171312] placeholder:text-[#826e68] focus:outline-none focus:ring-2 focus:ring-[#f1d7cf]"
-              />
-              <button type="submit" className="flex min-w-[120px] max-w-[240px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-12 px-5 bg-[#f1d7cf] text-[#171312] text-base font-bold leading-normal tracking-[0.015em] hover:bg-[#e8d4cb] transition-colors">Subscribe</button>
-            </form>
-          </div>
-        </div>
-      </section>
     </div>
   );
 };
