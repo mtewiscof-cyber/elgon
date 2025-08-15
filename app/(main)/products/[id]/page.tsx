@@ -327,27 +327,6 @@ export default function ProductDetailPage() {
           </div>
         </div>
         
-        {/* Details */}
-        <div className="grid grid-cols-2 gap-4 bg-white rounded-xl p-6 shadow-sm text-sm mt-6">
-          <div>
-            <div className="text-[var(--secondary)] font-medium">Origin</div>
-            <div className="text-[var(--primary)]">{product.origin}</div>
-          </div>
-          <div>
-            <div className="text-[var(--secondary)] font-medium">Weight</div>
-            <div className="text-[var(--primary)]">{product.weight}</div>
-          </div>
-          <div>
-            <div className="text-[var(--secondary)] font-medium">Price</div>
-            <div className="text-[var(--primary)]">{formatPrice(product.price)}</div>
-          </div>
-          {product.tastingNotes && product.tastingNotes.length > 0 && (
-            <div className="col-span-2">
-              <div className="text-[var(--secondary)] font-medium">Tasting Notes</div>
-              <div className="text-[var(--primary)]">{product.tastingNotes.join(', ')}</div>
-            </div>
-          )}
-        </div>
       </div>
       
       {/* Modals */}

@@ -25,75 +25,6 @@ const Footer = () => {
           padding: `0 ${sectionPadding}`,
         }}
       >
-        {/* Newsletter Section */}
-        <div
-          style={{
-            padding: '3rem 0',
-            borderBottom: '1px solid rgba(92, 58, 33, 0.1)',
-            textAlign: 'center',
-          }}
-        >
-          <div style={{ maxWidth: '600px', margin: '0 auto' }}>
-            <h3 style={{ 
-              fontSize: '1.75rem', 
-              fontWeight: '700', 
-              color: 'var(--primary)', 
-              marginBottom: '1rem' 
-            }}>
-              Stay Connected with Our Coffee Community
-            </h3>
-            <p style={{ 
-              fontSize: '1.1rem', 
-              color: 'var(--foreground)', 
-              marginBottom: '2rem',
-              opacity: '0.8'
-            }}>
-              Get the latest stories, coffee insights, and updates from Mt. Elgon Women's Coffee delivered to your inbox.
-            </p>
-            <div style={{
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '1rem',
-              maxWidth: '400px',
-              margin: '0 auto',
-            }}>
-              <div style={{
-                display: 'flex',
-                gap: '0.5rem',
-                backgroundColor: 'white',
-                borderRadius: '0.75rem',
-                padding: '0.25rem',
-                boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
-              }}>
-                <input
-                  type="email"
-                  placeholder="Your email address"
-                  style={{
-                    flex: '1',
-                    border: 'none',
-                    padding: '0.75rem 1rem',
-                    borderRadius: '0.5rem',
-                    fontSize: '1rem',
-                    outline: 'none',
-                  }}
-                />
-                <button style={{
-                  backgroundColor: 'var(--primary)',
-                  color: 'white',
-                  border: 'none',
-                  padding: '0.75rem 1.5rem',
-                  borderRadius: '0.5rem',
-                  fontWeight: '600',
-                  cursor: 'pointer',
-                  transition: 'background-color 0.3s ease',
-                }}>
-                  Subscribe
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-
         {/* Main Footer Grid */}
         <div style={{
           display: 'grid',
@@ -300,112 +231,6 @@ const Footer = () => {
           </ul>
         </div>
 
-          {/* Products & Services */}
-          <div>
-            <h4 style={{
-              fontSize: '1.25rem',
-              fontWeight: '600',
-              color: 'var(--primary)',
-              marginBottom: '1.5rem',
-            }}>
-              Products & Services
-            </h4>
-            <ul style={{
-              listStyle: 'none',
-              padding: '0',
-              margin: '0',
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '0.75rem',
-            }}>
-              <li>
-                <Link
-                  href="/products"
-          style={{
-                    color: 'var(--foreground)',
-                    textDecoration: 'none',
-                    fontSize: '0.95rem',
-                    transition: 'color 0.3s ease',
-            display: 'flex',
-                    alignItems: 'center',
-                    gap: '0.5rem',
-                  }}
-                >
-                  <FaArrowRight style={{ fontSize: '0.75rem' }} />
-                  Specialty Coffee
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/products"
-                  style={{
-                    color: 'var(--foreground)',
-                    textDecoration: 'none',
-                    fontSize: '0.95rem',
-                    transition: 'color 0.3s ease',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '0.5rem',
-                  }}
-                >
-                  <FaArrowRight style={{ fontSize: '0.75rem' }} />
-                  Coffee Subscriptions
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/products"
-                  style={{
-                    color: 'var(--foreground)',
-                    textDecoration: 'none',
-                    fontSize: '0.95rem',
-                    transition: 'color 0.3s ease',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '0.5rem',
-                  }}
-                >
-                  <FaArrowRight style={{ fontSize: '0.75rem' }} />
-                  Wholesale Orders
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/blog"
-                  style={{
-                    color: 'var(--foreground)',
-                    textDecoration: 'none',
-                    fontSize: '0.95rem',
-                    transition: 'color 0.3s ease',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '0.5rem',
-                  }}
-                >
-                  <FaArrowRight style={{ fontSize: '0.75rem' }} />
-                  Brewing Guides
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/about"
-                  style={{
-                    color: 'var(--foreground)',
-                    textDecoration: 'none',
-                    fontSize: '0.95rem',
-                    transition: 'color 0.3s ease',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '0.5rem',
-                  }}
-                >
-                  <FaArrowRight style={{ fontSize: '0.75rem' }} />
-                  Our Impact
-                </Link>
-              </li>
-            </ul>
-        </div>
-
           {/* Contact Information */}
         <div>
             <h4 style={{
@@ -451,6 +276,67 @@ const Footer = () => {
                 <span style={{ fontSize: '0.95rem', color: 'var(--foreground)' }}>
                   mtewiscof@gmail.com
                 </span>
+              </div>
+            </div>
+          </div>
+
+          {/* Newsletter Section */}
+          <div>
+            <h4 style={{
+              fontSize: '1.25rem',
+              fontWeight: '600',
+              color: 'var(--primary)',
+              marginBottom: '1.5rem',
+            }}>
+              Stay Connected
+            </h4>
+            <p style={{ 
+              fontSize: '0.95rem',
+              color: 'var(--foreground)', 
+              marginBottom: '1.5rem',
+              opacity: '0.8',
+              lineHeight: '1.6'
+            }}>
+              Get the latest stories, coffee insights, and updates from Mt. Elgon Women's Coffee delivered to your inbox.
+            </p>
+            <div style={{
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '1rem',
+            }}>
+              <div style={{
+                display: 'flex',
+                gap: '0.5rem',
+                backgroundColor: 'white',
+                borderRadius: '0.75rem',
+                padding: '0.25rem',
+                boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
+              }}>
+                <input
+                  type="email"
+                  placeholder="Your email address"
+                  style={{
+                    flex: '1',
+                    border: 'none',
+                    padding: '0.75rem 1rem',
+                    borderRadius: '0.5rem',
+                    fontSize: '0.9rem',
+                    outline: 'none',
+                  }}
+                />
+                <button style={{
+                  backgroundColor: 'var(--primary)',
+                  color: 'white',
+                  border: 'none',
+                  padding: '0.75rem 1.5rem',
+                  borderRadius: '0.5rem',
+                  fontWeight: '600',
+                  cursor: 'pointer',
+                  transition: 'background-color 0.3s ease',
+                  fontSize: '0.9rem',
+                }}>
+                  Subscribe
+                </button>
               </div>
             </div>
           </div>
