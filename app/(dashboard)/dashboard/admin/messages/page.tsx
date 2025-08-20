@@ -6,6 +6,9 @@ import { useUser } from '@clerk/nextjs';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { Id } from '@/convex/_generated/dataModel';
+import MessageBubble from '@/components/MessageBubble';
+import ConversationHeader from '@/components/ConversationHeader';
+import ConversationListItem from '@/components/ConversationListItem';
 
 const AdminMessagesPage = () => {
   const { user: clerkUser, isLoaded: clerkLoaded } = useUser();
@@ -35,7 +38,7 @@ const AdminMessagesPage = () => {
   
   // Fetch conversation with selected user
   const conversation = useQuery(
-    api.messages.getConversationBetweenUsers,
+    api.messages.getEnhancedConversationBetweenUsers,
     selectedUserId ? { otherUserId: selectedUserId } : 'skip'
   );
 
@@ -97,7 +100,8 @@ const AdminMessagesPage = () => {
         otherUserId,
         lastMessage: msg,
         unreadCount: 0,
-        messages: []
+        messages: [],
+        lastMessageFromCurrentUser: msg.senderId === user._id
       });
     }
     
@@ -105,6 +109,7 @@ const AdminMessagesPage = () => {
     conv.messages.push(msg);
     if (msg.sentAt > conv.lastMessage.sentAt) {
       conv.lastMessage = msg;
+      conv.lastMessageFromCurrentUser = msg.senderId === user._id;
     }
     if (msg.recipientId === user._id && !msg.readAt) {
       conv.unreadCount++;
@@ -163,35 +168,14 @@ const AdminMessagesPage = () => {
               </div>
             ) : (
               conversations.map(conv => (
-                <div
+                <ConversationListItem
                   key={conv.otherUserId}
+                  conversation={conv}
+                  currentUserId={user._id}
+                  isSelected={selectedUserId === conv.otherUserId}
                   onClick={() => setSelectedUserId(conv.otherUserId)}
-                  className={`p-3 rounded-lg cursor-pointer transition-colors ${
-                    selectedUserId === conv.otherUserId ? 'bg-blue-50 border border-blue-200' : 'hover:bg-gray-50'
-                  }`}
-                >
-                  <div className="flex justify-between items-start">
-                    <div className="flex-1">
-                      <div className="font-medium">
-                        {conv.otherUser?.firstName ? 
-                          `${conv.otherUser.firstName} ${conv.otherUser.lastName || ''}` : 
-                          conv.otherUser?.email || 'Unknown User'
-                        }
-                      </div>
-                      <div className="text-sm text-gray-600 truncate">
-                        {conv.lastMessage.content}
-                      </div>
-                      <div className="text-xs text-gray-500">
-                        {new Date(conv.lastMessage.sentAt).toLocaleDateString()}
-                      </div>
-                    </div>
-                    {conv.unreadCount > 0 && (
-                      <span className="bg-red-500 text-white text-xs rounded-full px-2 py-1 ml-2">
-                        {conv.unreadCount}
-                      </span>
-                    )}
-                  </div>
-                </div>
+                  variant="compact"
+                />
               ))
             )}
           </div>
@@ -201,59 +185,29 @@ const AdminMessagesPage = () => {
         <div className="lg:col-span-2">
           {selectedUserId && conversation ? (
             <div className="card h-full flex flex-col">
-              <div className="border-b pb-4 mb-4">
-                <h3>
-                  Conversation with {conversation.otherUser?.firstName ? 
-                    `${conversation.otherUser.firstName} ${conversation.otherUser.lastName || ''}` : 
-                    conversation.otherUser?.email || 'Unknown User'
-                  }
-                </h3>
-                <p className="text-sm text-gray-600">
-                  Role: {conversation.otherUser?.role || 'Unknown'}
-                </p>
-              </div>
+              <ConversationHeader user={conversation.otherUser} variant="compact" />
 
               {/* Messages */}
-              <div className="flex-1 overflow-y-auto max-h-96 space-y-4 mb-4">
+              <div className="flex-1 overflow-y-auto max-h-96 space-y-4 mb-4 p-6">
                 {conversation.messages.length === 0 ? (
                   <div className="text-gray-500 text-center py-8">
                     No messages in this conversation yet
                   </div>
                 ) : (
                   conversation.messages.map(msg => (
-                    <div
+                    <MessageBubble
                       key={msg._id}
-                      className={`flex ${msg.senderId === user._id ? 'justify-end' : 'justify-start'}`}
-                    >
-                      <div
-                        className={`max-w-xs lg:max-w-md px-4 py-2 rounded-lg ${
-                          msg.senderId === user._id
-                            ? 'bg-blue-600 text-white'
-                            : 'bg-gray-100 text-gray-900'
-                        }`}
-                      >
-                        <div>{msg.content}</div>
-                        <div className={`text-xs mt-1 ${
-                          msg.senderId === user._id ? 'text-blue-200' : 'text-gray-500'
-                        }`}>
-                          {new Date(msg.sentAt).toLocaleString()}
-                          {msg.senderId !== user._id && !msg.readAt && (
-                            <button
-                              onClick={() => handleMarkAsRead(msg._id)}
-                              className="ml-2 text-blue-600 hover:underline"
-                            >
-                              Mark as read
-                            </button>
-                          )}
-                        </div>
-                      </div>
-                    </div>
+                      message={msg}
+                      currentUserId={user._id}
+                      onMarkAsRead={handleMarkAsRead}
+                      showSenderInfo={true}
+                    />
                   ))
                 )}
               </div>
 
               {/* Send Message Form */}
-              <form onSubmit={handleSendMessage} className="border-t pt-4">
+              <form onSubmit={handleSendMessage} className="border-t pt-4 p-6">
                 <div className="flex gap-2">
                   <input
                     type="text"
@@ -307,10 +261,28 @@ const AdminMessagesPage = () => {
                 {messagesWithDetails.slice(0, 20).map(m => (
                   <tr key={m._id.toString()} className="border-b border-gray-200">
                     <td className="px-6 py-4 whitespace-no-wrap text-sm leading-5 text-gray-900">
-                      {m.sender?.firstName ? `${m.sender.firstName} ${m.sender.lastName || ''}` : m.sender?.email || 'Unknown'}
+                      <div className="flex items-center gap-2">
+                        <span>
+                          {m.sender?.firstName ? `${m.sender.firstName} ${m.sender.lastName || ''}` : m.sender?.email || 'Unknown'}
+                        </span>
+                        {m.sender?.role && (
+                          <span className="text-xs px-2 py-1 rounded-full bg-gray-100 text-gray-600">
+                            {m.sender.role}
+                          </span>
+                        )}
+                      </div>
                     </td>
                     <td className="px-6 py-4 whitespace-no-wrap text-sm leading-5 text-gray-900">
-                      {m.recipient?.firstName ? `${m.recipient.firstName} ${m.recipient.lastName || ''}` : m.recipient?.email || 'Unknown'}
+                      <div className="flex items-center gap-2">
+                        <span>
+                          {m.recipient?.firstName ? `${m.recipient.firstName} ${m.recipient.lastName || ''}` : m.recipient?.email || 'Unknown'}
+                        </span>
+                        {m.recipient?.role && (
+                          <span className="text-xs px-2 py-1 rounded-full bg-gray-100 text-gray-600">
+                            {m.recipient.role}
+                          </span>
+                        )}
+                      </div>
                     </td>
                     <td className="px-6 py-4 text-sm leading-5 text-gray-900">
                       <div className="max-w-xs truncate">{m.content}</div>

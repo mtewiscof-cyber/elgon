@@ -46,6 +46,27 @@ export const createOrder = mutation({
       throw new Error("User not found");
     }
 
+    // Check inventory availability before creating order
+    for (const item of args.items) {
+      // Check inventory table
+      const inventoryItems = await ctx.db.query("inventory")
+        .withIndex("by_product", (q) => q.eq("productId", item.productId))
+        .collect();
+      
+      const totalInventory = inventoryItems.reduce((sum, inv) => sum + inv.quantityAvailable, 0);
+      
+      // Also check product stock
+      const product = await ctx.db.get(item.productId);
+      const productStock = product?.stock || 0;
+      
+      // Use the higher of the two values
+      const availableStock = Math.max(totalInventory, productStock);
+      
+      if (availableStock < item.quantity) {
+        throw new Error(`Insufficient stock for ${product?.name || 'product'}. Available: ${availableStock}, Requested: ${item.quantity}`);
+      }
+    }
+
     const orderId = await ctx.db.insert("orders", {
       userId: user._id,
       ...args,
@@ -112,6 +133,49 @@ export const updateOrderStatus = mutation({
     // Only allow admins to update order status
     if (user.role !== "admin") {
       throw new Error("Only administrators can update order status");
+    }
+
+    // Get the current order to check previous status
+    const order = await ctx.db.get(args.orderId);
+    if (!order) {
+      throw new Error("Order not found");
+    }
+
+    // If order is being approved/confirmed for the first time, reduce inventory
+    if ((args.status === "processing" || args.status === "confirmed" || args.status === "shipped") && 
+        (order.status === "pending" || order.status === "payment_pending")) {
+      
+      // Reduce inventory for each item in the order
+      for (const item of order.items) {
+        // First try to reduce from inventory table
+        const inventoryItems = await ctx.db.query("inventory")
+          .withIndex("by_product", (q) => q.eq("productId", item.productId))
+          .collect();
+        
+        let remainingQuantity = item.quantity;
+        
+        // Reduce from inventory items first
+        for (const invItem of inventoryItems) {
+          if (remainingQuantity <= 0) break;
+          
+          const reductionAmount = Math.min(remainingQuantity, invItem.quantityAvailable);
+          
+          if (reductionAmount > 0) {
+            await ctx.db.patch(invItem._id, {
+              quantityAvailable: invItem.quantityAvailable - reductionAmount
+            });
+            remainingQuantity -= reductionAmount;
+          }
+        }
+        
+        // Also reduce from product stock
+        const product = await ctx.db.get(item.productId);
+        if (product && product.stock >= item.quantity) {
+          await ctx.db.patch(item.productId, {
+            stock: product.stock - item.quantity
+          });
+        }
+      }
     }
 
     // Update the order status

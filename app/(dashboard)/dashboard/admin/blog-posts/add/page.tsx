@@ -5,6 +5,7 @@ import { api } from "@/convex/_generated/api";
 import { useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 import { UploadButton } from "@/utils/uploadthing";
+import TipTapEditorWrapper from "@/components/TipTapEditorWrapper";
 
 export default function AddBlogPostPage() {
   const { user: clerkUser, isLoaded: clerkLoaded } = useUser();
@@ -26,6 +27,10 @@ export default function AddBlogPostPage() {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  const handleContentChange = (content: string) => {
+    setForm({ ...form, content });
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -65,7 +70,12 @@ export default function AddBlogPostPage() {
           </div>
           <div>
             <label className="block text-sm font-medium mb-1">Content *</label>
-            <textarea name="content" value={form.content} onChange={handleChange} className="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 min-h-[120px]" required />
+            <TipTapEditorWrapper
+              content={form.content}
+              onChange={handleContentChange}
+              placeholder="Write your blog post content here..."
+              className="min-h-[400px]"
+            />
           </div>
           <div>
             <label className="block text-sm font-medium mb-1">Author *</label>

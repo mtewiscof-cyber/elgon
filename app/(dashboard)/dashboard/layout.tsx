@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { usePathname } from 'next/navigation';
-import DashboardHeader from '@/components/dashboard/header';
+import DashboardNavigation from '@/components/dashboard/navigation';
 
 export default function DashboardLayout({
   children,
@@ -21,7 +21,7 @@ export default function DashboardLayout({
   
   return (
     <div className="min-h-screen">
-      <DashboardHeader />
+      <DashboardNavigation userRole={currentRole as 'admin' | 'grower' | 'customer'} />
       {children}
     </div>
   );

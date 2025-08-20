@@ -5,7 +5,7 @@ import CustomUserButton from "../CustomUserButton";
 
 export default function DashboardHeader() {
   return (
-    <header className="sticky top-0 z-40 bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between">
+    <header className="fixed top-0 left-0 right-0 z-50 bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between shadow-sm">
       {/* Logo / Title - hidden on small screens */}
       <div className="hidden sm:flex items-center space-x-3">
         <Link href="/dashboard">

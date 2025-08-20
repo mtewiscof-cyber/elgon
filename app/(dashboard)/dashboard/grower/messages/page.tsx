@@ -6,6 +6,9 @@ import { useUser } from '@clerk/nextjs';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { Id } from '@/convex/_generated/dataModel';
+import MessageBubble from '@/components/MessageBubble';
+import ConversationHeader from '@/components/ConversationHeader';
+import ConversationListItem from '@/components/ConversationListItem';
 
 const GrowerMessagesPage = () => {
   const { user: clerkUser, isLoaded: clerkLoaded } = useUser();
@@ -36,7 +39,7 @@ const GrowerMessagesPage = () => {
   
   // Fetch specific conversation when user is selected
   const conversation = useQuery(
-    api.messages.getConversationBetweenUsers,
+    api.messages.getEnhancedConversationBetweenUsers,
     selectedUserId ? { otherUserId: selectedUserId } : 'skip'
   );
 
@@ -168,53 +171,14 @@ const GrowerMessagesPage = () => {
             ) : (
               <div className="space-y-3">
                 {conversations.map(conv => (
-                  <div
+                  <ConversationListItem
                     key={conv.otherUserId}
+                    conversation={conv}
+                    currentUserId={user._id}
+                    isSelected={selectedUserId === conv.otherUserId}
                     onClick={() => setSelectedUserId(conv.otherUserId)}
-                    className={`p-4 rounded-lg cursor-pointer transition-all duration-200 border ${
-                      selectedUserId === conv.otherUserId 
-                        ? 'bg-green-50 border-green-200 shadow-sm' 
-                        : 'hover:bg-gray-50 border-gray-200 hover:border-gray-300'
-                    }`}
-                  >
-                    <div className="flex justify-between items-start">
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2 mb-1">
-                          <div className="font-medium text-gray-900 truncate">
-                            {conv.otherUser?.firstName ? 
-                              `${conv.otherUser.firstName} ${conv.otherUser.lastName || ''}` : 
-                              conv.otherUser?.email || 'Unknown User'
-                            }
-                          </div>
-                          <span className="text-xs">
-                            {conv.otherUser?.role === 'admin' && '👑'}
-                            {conv.otherUser?.role === 'customer' && '☕'}
-                          </span>
-                        </div>
-                        <div className="text-xs text-gray-500 mb-2">
-                          {conv.otherUser?.role === 'admin' && 'Administrator'}
-                          {conv.otherUser?.role === 'customer' && 'Customer'}
-                          {!conv.otherUser?.role && 'User'}
-                        </div>
-                        <div className="text-sm text-gray-600 truncate mb-1">
-                          {conv.lastMessage.content}
-                        </div>
-                        <div className="text-xs text-gray-400">
-                          {new Date(conv.lastMessage.sentAt).toLocaleDateString('en-US', {
-                            month: 'short',
-                            day: 'numeric',
-                            hour: 'numeric',
-                            minute: '2-digit'
-                          })}
-                        </div>
-                      </div>
-                      {conv.unreadCount > 0 && (
-                        <span className="bg-red-500 text-white text-xs rounded-full px-2 py-1 ml-3 min-w-[1.5rem] text-center">
-                          {conv.unreadCount}
-                        </span>
-                      )}
-                    </div>
-                  </div>
+                    variant="default"
+                  />
                 ))}
               </div>
             )}
@@ -225,24 +189,7 @@ const GrowerMessagesPage = () => {
         <div className="lg:col-span-2">
           {selectedUserId && conversation ? (
             <div className="bg-white rounded-lg shadow-sm h-full flex flex-col">
-              <div className="p-6 border-b border-gray-200">
-                <div className="flex items-center gap-3">
-                  <div className="flex-1">
-                    <h3 className="text-lg font-semibold text-gray-900">
-                      {conversation.otherUser?.firstName ? 
-                        `${conversation.otherUser.firstName} ${conversation.otherUser.lastName || ''}` : 
-                        conversation.otherUser?.email || 'Unknown User'
-                      }
-                    </h3>
-                    <p className="text-sm text-gray-500">
-                      {conversation.otherUser?.role === 'admin' && '👑 Administrator - Platform support and guidance'}
-                      {conversation.otherUser?.role === 'customer' && '☕ Customer - Interested in your coffee'}
-                      {conversation.otherUser?.role === 'grower' && '🌱 Fellow Coffee Grower'}
-                      {!conversation.otherUser?.role && 'User'}
-                    </p>
-                  </div>
-                </div>
-              </div>
+              <ConversationHeader user={conversation.otherUser} />
 
               {/* Messages */}
               <div className="flex-1 overflow-y-auto p-6 space-y-4" style={{ maxHeight: '60vh' }}>
@@ -254,43 +201,13 @@ const GrowerMessagesPage = () => {
                   </div>
                 ) : (
                   conversation.messages.map(msg => (
-                    <div
+                    <MessageBubble
                       key={msg._id}
-                      className={`flex ${msg.senderId === user._id ? 'justify-end' : 'justify-start'}`}
-                    >
-                      <div
-                        className={`max-w-xs lg:max-w-md px-4 py-3 rounded-2xl shadow-sm ${
-                          msg.senderId === user._id
-                            ? 'bg-green-600 text-white'
-                            : 'bg-gray-100 text-gray-900 border border-gray-200'
-                        }`}
-                      >
-                        <div className="break-words">{msg.content}</div>
-                        <div className={`text-xs mt-2 flex items-center justify-between ${
-                          msg.senderId === user._id ? 'text-green-200' : 'text-gray-500'
-                        }`}>
-                          <span>
-                            {new Date(msg.sentAt).toLocaleString('en-US', {
-                              month: 'short',
-                              day: 'numeric',
-                              hour: 'numeric',
-                              minute: '2-digit'
-                            })}
-                          </span>
-                          {msg.senderId !== user._id && !msg.readAt && (
-                            <button
-                              onClick={() => handleMarkAsRead(msg._id)}
-                              className="ml-2 text-green-600 hover:text-green-700 font-medium"
-                            >
-                              Mark read
-                            </button>
-                          )}
-                          {msg.senderId === user._id && msg.readAt && (
-                            <span className="ml-2 text-green-300">✓ Read</span>
-                          )}
-                        </div>
-                      </div>
-                    </div>
+                      message={msg}
+                      currentUserId={user._id}
+                      onMarkAsRead={handleMarkAsRead}
+                      showSenderInfo={false}
+                    />
                   ))
                 )}
               </div>

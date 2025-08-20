@@ -217,6 +217,7 @@ export const getUserConversations = query({
           messages: [],
           lastMessage: message,
           unreadCount: 0,
+          lastMessageSenderId: message.senderId,
         });
       }
       
@@ -226,6 +227,7 @@ export const getUserConversations = query({
       // Update last message if this message is newer
       if (message.sentAt > conversation.lastMessage.sentAt) {
         conversation.lastMessage = message;
+        conversation.lastMessageSenderId = message.senderId;
       }
       
       // Count unread messages (messages sent to the current user that haven't been read)
@@ -241,6 +243,8 @@ export const getUserConversations = query({
         return {
           ...conv,
           otherUser,
+          // Add context about who sent the last message
+          lastMessageFromCurrentUser: conv.lastMessageSenderId === user._id,
         };
       })
     );
@@ -249,6 +253,71 @@ export const getUserConversations = query({
     conversations.sort((a, b) => b.lastMessage.sentAt - a.lastMessage.sentAt);
 
     return conversations;
+  },
+});
+
+// New function to get enhanced conversation details with better sender/recipient context
+export const getEnhancedConversationBetweenUsers = query({
+  args: {
+    otherUserId: v.id("users"),
+  },
+  handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error("Not authenticated");
+    }
+    
+    const user = await ctx.db
+      .query("users")
+      .withIndex("by_clerkId", (q) =>
+        q.eq("clerkId", identity.subject)
+      )
+      .unique();
+    if (!user) {
+      throw new Error("User not found");
+    }
+
+    // Get messages between the current user and the other user
+    const messages = await ctx.db.query("messages")
+      .filter((q) =>
+        q.or(
+          q.and(
+            q.eq(q.field("senderId"), user._id),
+            q.eq(q.field("recipientId"), args.otherUserId)
+          ),
+          q.and(
+            q.eq(q.field("senderId"), args.otherUserId),
+            q.eq(q.field("recipientId"), user._id)
+          )
+        )
+      )
+      .collect();
+
+    // Sort messages by sentAt in ascending order (oldest first for conversation view)
+    messages.sort((a, b) => a.sentAt - b.sentAt);
+
+    // Get the other user's details
+    const otherUser = await ctx.db.get(args.otherUserId);
+    
+    // Enhance messages with sender/recipient context
+    const enhancedMessages = messages.map(msg => ({
+      ...msg,
+      isFromCurrentUser: msg.senderId === user._id,
+      senderName: msg.senderId === user._id 
+        ? (user.firstName ? `${user.firstName} ${user.lastName || ''}` : user.email)
+        : (otherUser?.firstName ? `${otherUser.firstName} ${otherUser.lastName || ''}` : otherUser?.email || 'Unknown User'),
+      senderRole: msg.senderId === user._id ? user.role : otherUser?.role,
+      recipientName: msg.recipientId === user._id
+        ? (user.firstName ? `${user.firstName} ${user.lastName || ''}` : user.email)
+        : (otherUser?.firstName ? `${otherUser.firstName} ${otherUser.lastName || ''}` : otherUser?.email || 'Unknown User'),
+      recipientRole: msg.recipientId === user._id ? user.role : otherUser?.role,
+    }));
+    
+    return {
+      messages: enhancedMessages,
+      otherUser,
+      currentUser: user,
+    };
   },
 });
 

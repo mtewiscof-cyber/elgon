@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
 import { UserButton } from '@clerk/nextjs';
+import DashboardHeader from './header';
 
 interface NavItem {
   name: string;
@@ -228,11 +229,14 @@ export default function DashboardNavigation({
 
   return (
     <>
+      {/* Sticky Header */}
+      <DashboardHeader />
+      
       {/* Mobile menu button */}
-      <div className="lg:hidden fixed top-4 left-4 z-50">
+      <div className="lg:hidden fixed top-20 left-4 z-50">
         <button
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-          className="p-2 rounded-md text-gray-700 hover:bg-gray-100 focus:outline-none"
+          className="p-2 rounded-md text-gray-700 hover:bg-gray-100 focus:outline-none bg-white shadow-md"
         >
           {isMobileMenuOpen ? (
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="w-6 h-6">
@@ -247,7 +251,7 @@ export default function DashboardNavigation({
       </div>
 
       {/* Desktop sidebar */}
-      <aside className="hidden lg:flex lg:fixed h-screen flex-col w-64 bg-white border-r border-gray-200 z-30">
+      <aside className="hidden lg:flex lg:fixed h-screen flex-col w-64 bg-white border-r border-gray-200 z-30" style={{ top: '64px' }}>
         <nav className="flex-1 overflow-y-auto">
           <ul className="py-4">
             {navItems.map((item) => {
@@ -284,6 +288,7 @@ export default function DashboardNavigation({
         className={`fixed inset-0 z-40 lg:hidden ${
           isMobileMenuOpen ? 'block' : 'hidden'
         }`}
+        style={{ top: '64px' }}
       >
         <div className="fixed inset-0 bg-gray-600 bg-opacity-75" onClick={() => setIsMobileMenuOpen(false)}></div>
         <div className="fixed inset-y-0 left-0 flex flex-col w-64 max-w-xs bg-white">

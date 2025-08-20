@@ -66,12 +66,12 @@ export default function AdminDashboardLayout({
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Navigation sidebar */}
+      {/* Navigation sidebar with sticky header */}
       <DashboardNavigation userRole="admin" />
       
       {/* Main content */}
       <div className="lg:ml-64 flex flex-col min-h-screen">
-        <main className="flex-1 p-4 md:p-6 lg:p-8 pt-16 lg:pt-4 md:pt-6">
+        <main className="flex-1 p-4 md:p-6 lg:p-8 pt-20 lg:pt-20 md:pt-20">
           {children}
         </main>
         <DashboardFooter />

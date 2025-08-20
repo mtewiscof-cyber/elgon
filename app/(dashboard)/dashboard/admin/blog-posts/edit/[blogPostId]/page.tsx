@@ -9,6 +9,7 @@ import { toast, Toaster } from 'sonner';
 import { useUploadThing } from '@/utils/uploadthing';
 import { MdCloudUpload, MdImage, MdDelete } from 'react-icons/md';
 import { Id } from '@/convex/_generated/dataModel';
+import TipTapEditorWrapper from '@/components/TipTapEditorWrapper';
 
 
 interface EditBlogPostPageProps {
@@ -330,16 +331,11 @@ const EditBlogPostPage = async ({ params }: EditBlogPostPageProps) => {
                 <label htmlFor="content" className="block text-sm font-medium text-gray-700 mb-2">
                   Content *
                 </label>
-                <textarea
-                  id="content"
-                  name="content"
-                  value={formData.content}
-                  onChange={handleInputChange}
-                  required
-                  rows={12}
-                  className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                <TipTapEditorWrapper
+                  content={formData.content}
+                  onChange={(content) => setFormData(prev => ({ ...prev, content }))}
                   placeholder="Write your blog post content here..."
-                  disabled={isSubmitting}
+                  className="min-h-[400px]"
                 />
               </div>
             </div>

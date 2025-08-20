@@ -19,31 +19,312 @@
 @tailwind utilities;
 
 :root {
-  --primary: #5c3a21;
-  --secondary: #c46336;
-  --accent: #f4f1ed;
-  
-  /* Additional theme variables */
-  --light-bg: #faf9f6;
-  --card-bg: #FFFFFF;
-  --border-radius: 8px;
-  --spacing-sm: 0.5rem;
-  --spacing-md: 1rem;
-  --spacing-lg: 2rem;
-  --spacing-xl: 4rem;
-  --shadow-sm: 0 1px 3px rgba(0,0,0,0.1);
-  --shadow-md: 0 4px 6px rgba(0,0,0,0.1);
-  --shadow-lg: 0 10px 15px rgba(0,0,0,0.1);
-  --transition: all 0.3s ease;
+  --primary: #8B4513;
+  --secondary: #D2691E;
+  --accent: #FF8C00;
+  --background: #FAFAFA;
+  --foreground: #1A1A1A;
+  --muted: #F5F5F5;
+  --muted-foreground: #737373;
+  --border: #E5E5E5;
+  --input: #FFFFFF;
+  --ring: #8B4513;
+  --radius: 0.5rem;
+}
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+html,
+body {
+  max-width: 100vw;
+  overflow-x: hidden;
+  font-family: 'Lato', sans-serif;
 }
 
 body {
-  font-family: 'Lato', sans-serif;
-  line-height: 1.6;
-  margin: 0;
-  padding: 0;
+  color: var(--foreground);
+  background: var(--background);
 }
 
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* TipTap Editor Styles */
+.tiptap-editor {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.tiptap-menu-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  padding: 0.75rem;
+  background: var(--muted);
+  border-bottom: 1px solid var(--border);
+  border-radius: var(--radius) var(--radius) 0 0;
+}
+
+.tiptap-menu-group {
+  display: flex;
+  gap: 0.25rem;
+  padding: 0.25rem;
+  border-right: 1px solid var(--border);
+}
+
+.tiptap-menu-group:last-child {
+  border-right: none;
+}
+
+.tiptap-menu-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  padding: 0.25rem;
+  border: 1px solid transparent;
+  border-radius: 0.25rem;
+  background: transparent;
+  color: var(--muted-foreground);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.tiptap-menu-button:hover {
+  background: var(--input);
+  border-color: var(--border);
+  color: var(--foreground);
+}
+
+.tiptap-menu-button.is-active {
+  background: var(--primary);
+  color: white;
+  border-color: var(--primary);
+}
+
+.tiptap-menu-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.tiptap-content {
+  min-height: 300px;
+  padding: 1rem;
+  background: var(--input);
+  border-radius: 0 0 var(--radius) var(--radius);
+}
+
+.tiptap-content:focus {
+  outline: none;
+}
+
+/* Loading state styles */
+.tiptap-editor .tiptap-content .p-4 {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+  font-style: italic;
+  color: var(--muted-foreground);
+}
+
+/* Dashboard Header Styles */
+.dashboard-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 50;
+  background: white;
+  border-bottom: 1px solid #e5e7eb;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+}
+
+.dashboard-sidebar {
+  position: fixed;
+  top: 64px; /* Height of header */
+  left: 0;
+  height: calc(100vh - 64px);
+  z-index: 30;
+}
+
+.dashboard-content {
+  margin-top: 64px; /* Height of header */
+}
+
+@media (min-width: 1024px) {
+  .dashboard-content {
+    margin-left: 16rem; /* 256px - width of sidebar */
+  }
+}
+
+/* TipTap Content Styles */
+.tiptap {
+  outline: none;
+}
+
+.tiptap :first-child {
+  margin-top: 0;
+}
+
+.tiptap p {
+  margin: 0.75rem 0;
+  line-height: 1.6;
+}
+
+.tiptap h1,
+.tiptap h2,
+.tiptap h3,
+.tiptap h4,
+.tiptap h5,
+.tiptap h6 {
+  line-height: 1.2;
+  margin: 1.5rem 0 0.75rem 0;
+  font-weight: 600;
+  color: var(--foreground);
+}
+
+.tiptap h1 {
+  font-size: 1.875rem;
+}
+
+.tiptap h2 {
+  font-size: 1.5rem;
+}
+
+.tiptap h3 {
+  font-size: 1.25rem;
+}
+
+.tiptap h4,
+.tiptap h5,
+.tiptap h6 {
+  font-size: 1.125rem;
+}
+
+.tiptap ul,
+.tiptap ol {
+  padding: 0 1rem;
+  margin: 0.75rem 0;
+}
+
+.tiptap li {
+  margin: 0.25rem 0;
+}
+
+.tiptap blockquote {
+  border-left: 3px solid var(--primary);
+  margin: 1rem 0;
+  padding-left: 1rem;
+  font-style: italic;
+  color: var(--muted-foreground);
+}
+
+.tiptap code {
+  background: var(--muted);
+  padding: 0.125rem 0.25rem;
+  border-radius: 0.25rem;
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+  font-size: 0.875rem;
+}
+
+.tiptap pre {
+  background: var(--foreground);
+  color: var(--input);
+  padding: 1rem;
+  border-radius: var(--radius);
+  overflow-x: auto;
+  margin: 1rem 0;
+}
+
+.tiptap pre code {
+  background: none;
+  padding: 0;
+  color: inherit;
+}
+
+.tiptap table {
+  border-collapse: collapse;
+  margin: 1rem 0;
+  width: 100%;
+}
+
+.tiptap th,
+.tiptap td {
+  border: 1px solid var(--border);
+  padding: 0.5rem;
+  text-align: left;
+}
+
+.tiptap th {
+  background: var(--muted);
+  font-weight: 600;
+}
+
+.tiptap img {
+  max-width: 100%;
+  height: auto;
+  border-radius: var(--radius);
+  margin: 1rem 0;
+}
+
+.tiptap a {
+  color: var(--primary);
+  text-decoration: underline;
+}
+
+.tiptap a:hover {
+  color: var(--secondary);
+}
+
+.tiptap hr {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 1.5rem 0;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .tiptap-menu-bar {
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+  
+  .tiptap-menu-group {
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 0.5rem;
+  }
+  
+  .tiptap-menu-group:last-child {
+    border-bottom: none;
+  }
+  
+  .tiptap-content {
+    min-height: 250px;
+    padding: 0.75rem;
+  }
+  
+  .tiptap h1 {
+    font-size: 1.5rem;
+  }
+  
+  .tiptap h2 {
+    font-size: 1.25rem;
+  }
+  
+  .tiptap h3 {
+    font-size: 1.125rem;
+  }
+}
 
 /* Typography */
 h1, h2, h3, h4, h5, h6 {
