@@ -14,8 +14,7 @@ export default function AddProductPage() {
   const user = useQuery(api.users.getUserByUserId);
   const isUserLoaded = user !== undefined;
   
-  // Fetch growers for the dropdown
-  const growers = useQuery(api.growers.listGrowers) || [];
+
 
   // Mutation to create a product
   const createProduct = useMutation(api.products.createProduct);
@@ -43,7 +42,6 @@ export default function AddProductPage() {
     weight: "",
     stock: 0,
     imageUrl: [] as string[],
-    growerId: "",
     featured: false,
   };
   // Handle form submission
@@ -56,7 +54,6 @@ export default function AddProductPage() {
       setIsSubmitting(true);
       const result = await createProduct({
         ...data,
-        growerId: data.growerId ? data.growerId as any : undefined,
       });
       if (result) {
         toast.success("Product created successfully!");
@@ -89,7 +86,6 @@ export default function AddProductPage() {
       <h1 className="text-3xl font-bold text-gray-900">Add New Coffee Product</h1>
       <ProductForm
         initialValues={initialValues}
-        growers={growers}
         onSubmit={handleSubmit}
         isSubmitting={isSubmitting}
         mode="add"

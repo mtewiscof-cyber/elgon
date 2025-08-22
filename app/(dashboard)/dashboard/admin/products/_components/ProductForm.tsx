@@ -13,16 +13,14 @@ export interface ProductFormProps {
     weight: string;
     stock: number;
     imageUrl: string[];
-    growerId: string;
     featured: boolean;
   };
-  growers: Array<{ _id: string; name: string }>;
   onSubmit: (data: any) => Promise<void>;
   isSubmitting: boolean;
   mode: "add" | "edit";
 }
 
-export default function ProductForm({ initialValues, growers, onSubmit, isSubmitting, mode }: ProductFormProps) {
+export default function ProductForm({ initialValues, onSubmit, isSubmitting, mode }: ProductFormProps) {
   const [productData, setProductData] = useState(initialValues);
   const [tempTastingNote, setTempTastingNote] = useState("");
   const [tempCertification, setTempCertification] = useState("");
@@ -127,15 +125,7 @@ export default function ProductForm({ initialValues, growers, onSubmit, isSubmit
             <input type="number" name="stock" min="0" step="1" value={productData.stock || ""} onChange={handleInputChange} className="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" required />
           </div>
         </div>
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Grower</label>
-          <select name="growerId" value={productData.growerId} onChange={handleInputChange} className="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
-            <option value="">Select a grower (optional)</option>
-            {growers.map(grower => (
-              <option key={grower._id} value={grower._id}>{grower.name}</option>
-            ))}
-          </select>
-        </div>
+
         <div className="flex items-center mt-2">
           <input type="checkbox" name="featured" checked={productData.featured} onChange={handleInputChange} id="featured" className="mr-2" />
           <label htmlFor="featured" className="text-sm font-medium text-gray-700">Featured Product</label>

@@ -13,7 +13,6 @@ export const createProduct = mutation({
     weight: v.string(),
     imageUrl: v.array(v.string()),
     stock: v.number(),
-    growerId: v.optional(v.id("growers")),
     featured: v.optional(v.boolean()),
   },
   handler: async (ctx, args) => {
@@ -34,7 +33,6 @@ export const updateProduct = mutation({
     weight: v.optional(v.string()),
     imageUrl: v.optional(v.array(v.string())),
     stock: v.optional(v.number()),
-    growerId: v.optional(v.id("growers")),
     featured: v.optional(v.boolean()),
     },
   handler: async (ctx, args) => {

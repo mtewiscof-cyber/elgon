@@ -233,3 +233,51 @@ export const listGrowersAndAdmins = query({
     ).collect();
   },
 }); 
+
+// New function: Get user statistics for admin dashboard
+export const getUserStats = query({
+  args: {},
+  handler: async (ctx) => {
+    // Check if the current user is an admin
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error("Not authenticated");
+    }
+
+    const currentUser = await ctx.db
+      .query("users")
+      .withIndex("by_clerkId", (q) => q.eq("clerkId", identity.subject))
+      .unique();
+
+    if (!currentUser || currentUser.role !== 'admin') {
+      throw new Error("Not authorized - Admin access required");
+    }
+
+    // Get all users
+    const users = await ctx.db.query("users").collect();
+    
+    // Calculate statistics
+    const totalUsers = users.length;
+    const adminUsers = users.filter(u => u.role === 'admin').length;
+    const growerUsers = users.filter(u => u.role === 'grower').length;
+    const customerUsers = users.filter(u => u.role === 'customer').length;
+    const basicUsers = users.filter(u => !u.role || u.role === 'user').length;
+    
+    // Count users with profile information
+    const usersWithNames = users.filter(u => u.firstName || u.lastName).length;
+    const usersWithPhone = users.filter(u => u.phoneNumber).length;
+    const usersWithAddress = users.filter(u => u.address).length;
+
+    return {
+      totalUsers,
+      adminUsers,
+      growerUsers,
+      customerUsers,
+      basicUsers,
+      usersWithNames,
+      usersWithPhone,
+      usersWithAddress,
+      usersWithoutProfile: totalUsers - usersWithNames,
+    };
+  },
+}); 

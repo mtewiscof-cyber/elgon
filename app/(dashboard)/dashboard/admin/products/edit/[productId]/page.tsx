@@ -15,7 +15,7 @@ export default function EditProductPage() {
   const { productId } = useParams() as { productId: string };
   const user = useQuery(api.users.getUserByUserId);
   const isUserLoaded = user !== undefined;
-  const growers = useConvexQuery(convexApi.growers.listGrowers) || [];
+
   const updateProduct = useMutation(api.products.updateProduct);
   const product = useQuery(
     api.products.getProductById,
@@ -31,7 +31,7 @@ export default function EditProductPage() {
     }
   }, [isUserLoaded, user, router]);
 
-  if (!isUserLoaded || !product || !growers) {
+  if (!isUserLoaded || !product) {
     return <div className="container section">Loading...</div>;
   }
 
@@ -45,7 +45,6 @@ export default function EditProductPage() {
     weight: product.weight || '',
     stock: product.stock || 0,
     imageUrl: Array.isArray(product.imageUrl) ? product.imageUrl : (product.imageUrl ? [product.imageUrl] : []),
-    growerId: product.growerId ? product.growerId.toString() : '',
     featured: product.featured || false,
   };
 
@@ -55,7 +54,6 @@ export default function EditProductPage() {
       await updateProduct({
         productId: productId as Id<'products'>,
         ...data,
-        growerId: data.growerId ? data.growerId as any : undefined,
       });
       toast.success('Product updated successfully!');
       setTimeout(() => {
@@ -73,7 +71,6 @@ export default function EditProductPage() {
       <h1 className="text-3xl font-bold text-gray-900">Edit Product</h1>
       <ProductForm
         initialValues={initialValues}
-        growers={growers}
         onSubmit={handleSubmit}
         isSubmitting={isSubmitting}
         mode="edit"

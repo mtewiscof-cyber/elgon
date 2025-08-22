@@ -30,9 +30,7 @@ export default defineSchema({
     weight: v.string(), // e.g., "12 oz", "250g"
     imageUrl: v.optional(v.array(v.string())),
     stock: v.number(), // Add stock field
-    growerId: v.optional(v.id("growers")), // Add optional link to grower
     featured: v.optional(v.boolean()), // Indicates if the product is featured
-    // Link to growers/lots? Could be added later if we track specific lots
   }),
 
   // Items added to a user cart (one row per product in cart)

@@ -87,7 +87,7 @@ const AdminProductsPage = () => {
                   <th className="px-6 py-3 border-b-2 border-gray-300 text-left text-sm leading-4 text-gray-600 uppercase tracking-wider">Name</th>
                   <th className="px-6 py-3 border-b-2 border-gray-300 text-left text-sm leading-4 text-gray-600 uppercase tracking-wider">Price</th>
                   <th className="px-6 py-3 border-b-2 border-gray-300 text-left text-sm leading-4 text-gray-600 uppercase tracking-wider">Stock</th>
-                  <th className="px-6 py-3 border-b-2 border-gray-300 text-left text-sm leading-4 text-gray-600 uppercase tracking-wider">Grower ID</th>
+
                   <th className="px-6 py-3 border-b-2 border-gray-300 text-left text-sm leading-4 text-gray-600 uppercase tracking-wider">Actions</th>
                 </tr>
               </thead>
@@ -106,7 +106,7 @@ const AdminProductsPage = () => {
                     <td className="px-6 py-4 whitespace-no-wrap text-sm leading-5 text-gray-900">{p.name}</td>
                     <td className="px-6 py-4 whitespace-no-wrap text-sm leading-5 text-gray-900">{formatPrice(p.price)}</td>
                     <td className="px-6 py-4 whitespace-no-wrap text-sm leading-5 text-gray-900">{p.stock}</td>
-                    <td className="px-6 py-4 whitespace-no-wrap text-sm leading-5 text-gray-900">{p.growerId ? p.growerId.toString() : 'N/A'}</td>
+
                     <td className="px-6 py-4 whitespace-no-wrap text-sm leading-5">
                       <Link href={`/dashboard/admin/products/edit/${p._id}`} className="text-blue-600 hover:text-blue-800 mr-2">Edit</Link>
                       <button
@@ -138,7 +138,7 @@ const AdminProductsPage = () => {
                   <div className="grid grid-cols-2 gap-1 text-sm mb-3">
                     <div><span className="font-semibold">Price:</span> {formatPrice(p.price)}</div>
                     <div><span className="font-semibold">Stock:</span> {p.stock}</div>
-                    <div><span className="font-semibold">Grower ID:</span> {p.growerId ? p.growerId.toString() : 'N/A'}</div>
+
                   </div>
                   <div className="flex justify-end space-x-2">
                     <Link href={`/dashboard/admin/products/edit/${p._id}`} className="px-3 py-1 text-xs bg-blue-100 text-blue-600 rounded hover:bg-blue-200">Edit</Link>
