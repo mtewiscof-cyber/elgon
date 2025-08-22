@@ -17,12 +17,9 @@ export default function GrowerDashboardPage() {
     convexUser?._id ? { userId: convexUser._id } : "skip"
   );
   
-  // Fetch all products and inventory for this grower
+  // Fetch all products and inventory
   const products = useQuery(api.products.listProducts);
-  const inventory = useQuery(
-    api.inventory.getInventoryByGrower,
-    growerProfile?._id ? { growerId: growerProfile._id } : "skip"
-  );
+  const inventory = useQuery(api.inventory.listInventory);
   
   // Fetch all orders
   const orders = useQuery(api.orders.listOrders);
@@ -57,10 +54,9 @@ export default function GrowerDashboardPage() {
     );
   }
   
-  // Filter products that belong to this grower
-  const growerProducts = products.filter(
-    product => product.growerId && product.growerId.toString() === growerProfile._id.toString()
-  );
+  // Since products no longer have growerId, we'll show all products
+  // In a real application, you might want to implement a different way to associate products with growers
+  const growerProducts = products;
   
   // Filter orders that contain any of this grower's products
   const growerProductIds = growerProducts.map(product => product._id.toString());

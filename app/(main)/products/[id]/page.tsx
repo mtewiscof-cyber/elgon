@@ -138,10 +138,9 @@ export default function ProductDetailPage() {
   const addToCart = useMutation(api.cart.addToCart);
   const toggleWishlist = useMutation(api.wishlist.toggleWishlist);
 
-  const grower = useQuery(
-    api.growers.getGrower,
-    product?.growerId ? { growerId: product.growerId } : 'skip'
-  );
+  // Since products no longer have growerId, we'll skip grower queries for now
+  // In a real application, you might want to implement a different way to associate products with growers
+  const grower = null;
 
   // Consistent horizontal padding for all sections
   const sectionPadding = "clamp(1rem, 5vw, 2.5rem)";

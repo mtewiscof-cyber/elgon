@@ -25,11 +25,8 @@ export default function GrowerInventoryPage() {
     api.products.listProducts
   );
 
-  // Fetch inventory for this grower
-  const inventory = useQuery(
-    api.inventory.getInventoryByGrower,
-    growerProfile?._id ? { growerId: growerProfile._id } : "skip"
-  );
+  // Fetch all inventory since products no longer have growerId
+  const inventory = useQuery(api.inventory.listInventory);
 
   // Mutation to update inventory
   const updateInventory = useMutation(api.inventory.updateInventory);
@@ -38,10 +35,9 @@ export default function GrowerInventoryPage() {
     return <div className="p-4">Loading inventory data...</div>;
   }
 
-  // Filter products that belong to this grower
-  const growerProducts = products.filter(
-    product => product.growerId && product.growerId.toString() === growerProfile._id.toString()
-  );
+  // Since products no longer have growerId, we'll show all products
+  // In a real application, you might want to implement a different way to associate products with growers
+  const growerProducts = products;
 
   // Get inventory items with product details
   const inventoryWithProducts = inventory.map(item => {

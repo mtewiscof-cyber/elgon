@@ -27,10 +27,9 @@ export default function GrowerOrdersPage() {
     return <div className="p-4">Loading orders data...</div>;
   }
   
-  // Filter products that belong to this grower
-  const growerProductIds = products
-    .filter(product => product.growerId && product.growerId.toString() === growerProfile._id.toString())
-    .map(product => product._id.toString());
+  // Since products no longer have growerId, we'll show all products
+  // In a real application, you might want to implement a different way to associate products with growers
+  const growerProductIds = products.map(product => product._id.toString());
   
   // Filter orders that contain any of this grower's products
   const relevantOrders = orders.filter(order => {

@@ -223,7 +223,7 @@ export default function DashboardNavigation({
       <DashboardHeader />
       
       {/* Mobile menu button */}
-      <div className="lg:hidden fixed top-20 left-4 z-50">
+      <div className="lg:hidden fixed top-16 left-4 z-50">
         <button
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
           className="p-2 rounded-md text-gray-700 hover:bg-gray-100 focus:outline-none bg-white shadow-md"
@@ -281,7 +281,7 @@ export default function DashboardNavigation({
         style={{ top: '64px' }}
       >
         <div className="fixed inset-0 bg-gray-600 bg-opacity-75" onClick={() => setIsMobileMenuOpen(false)}></div>
-        <div className="fixed inset-y-0 left-0 flex flex-col w-64 max-w-xs bg-white">
+        <div className="fixed inset-y-0 left-0 flex flex-col w-64 max-w-xs bg-white" style={{ top: '64px' }}>
           <div className="flex items-center justify-between h-16 px-4 border-b border-gray-200">
             <span className="text-xl font-semibold">Elgon Coffee</span>
             <UserButton afterSignOutUrl="/" />
