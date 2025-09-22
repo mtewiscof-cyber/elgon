@@ -27,9 +27,9 @@ export const createOrGetUser = mutation({
     const userId = await ctx.db.insert("users", {
       clerkId: identity.subject,
       email: identity.email!,
-      firstName: identity.givenName ?? undefined,
-      lastName: identity.familyName ?? undefined,
-      imageUrl: typeof identity.pictureUrl === "string" ? identity.pictureUrl : undefined,      
+      firstName: typeof identity.firstName === "string" ? identity.firstName : undefined,
+      lastName: typeof identity.lastName === "string" ? identity.lastName : undefined,
+      imageUrl: typeof identity.imageUrl === "string" ? identity.imageUrl : undefined,      
       role: 'customer',
     });
 
