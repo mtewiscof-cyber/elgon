@@ -15,6 +15,7 @@ export default function CheckoutPage() {
   const router = useRouter();
   const cart = useQuery(api.cart.getCart) || [];
   const products = useQuery(api.products.listProducts) || [];
+  const dbUser = useQuery(api.users.getUserByUserId) || null;
   const createOrder = useMutation(api.orders.createOrder);
   const clearCart = useMutation(api.cart.clearCart);
   
@@ -58,7 +59,7 @@ export default function CheckoutPage() {
       }));
 
       // The createOrder mutation will handle getting the user ID from auth context
-      await createOrder({
+      const createdOrderId = await createOrder({
         items: orderItems,
         totalAmount: subtotal,
         shippingAddress: {
@@ -77,7 +78,38 @@ export default function CheckoutPage() {
         updatedAt: Date.now(),
       });
 
-      await clearCart();
+      // Fire-and-forget email confirmation (doesn't block checkout)
+      const emailItems = cartItems.map(item => ({
+        name: item.product?.name || "Product",
+        quantity: item.quantity,
+        price: item.product?.price || 0,
+      }));
+
+      // Send emails and clear cart in parallel; ignore email errors for UX
+      const recipientEmail = dbUser?.email || user?.emailAddresses?.[0]?.emailAddress || shippingInfo.email;
+
+      await Promise.all([
+        clearCart(),
+        fetch('/api/email/order', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            orderId: createdOrderId,
+            toEmail: recipientEmail,
+            name: shippingInfo.name,
+            items: emailItems,
+            totalAmount: subtotal,
+            shipping: {
+              address: shippingInfo.address,
+              city: shippingInfo.city,
+              state: shippingInfo.state,
+              country: shippingInfo.country,
+              phone: shippingInfo.phone,
+            },
+          })
+        }).catch(() => undefined),
+      ]);
+
       router.push("/dashboard/customer/orders");
     } catch (error) {
       console.error("Order creation failed:", error);
