@@ -72,19 +72,55 @@ export function getTransporter(): Transporter {
 export async function loadElgonLogoAttachment() {
   const logoPath = process.env.EMAIL_LOGO_PATH || "public/Main Logo.png";
   const absolutePath = path.join(process.cwd(), logoPath);
+
+  // 1) Prefer explicit public URL if provided
+  const logoUrl = process.env.EMAIL_LOGO_URL;
+  if (logoUrl) {
+    try {
+      const res = await fetch(logoUrl);
+      if (res.ok) {
+        const arrayBuf = await res.arrayBuffer();
+        const content = Buffer.from(arrayBuf);
+        const filenameFromUrl = path.basename(new URL(logoUrl).pathname) || "logo.png";
+        return [
+          { filename: filenameFromUrl, content, cid: "elgonlogo" },
+        ];
+      }
+    } catch {}
+  }
+
+  // 2) Try reading from filesystem (works locally, may not work on serverless)
   try {
     const content = await fs.readFile(absolutePath);
     return [
       {
         filename: path.basename(logoPath),
         content,
-        cid: "elgonlogo", // same CID must be referenced in HTML
+        cid: "elgonlogo",
       },
     ];
-  } catch (err) {
-    // If logo not found, skip attachment silently
-    return [] as SendMailOptions["attachments"];
-  }
+  } catch {}
+
+  // 3) Fallback: construct a public URL from site URL and fetch
+  try {
+    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : undefined);
+    if (baseUrl) {
+      const relative = (logoPath.startsWith("public/")) ? logoPath.slice("public/".length) : logoPath;
+      const encoded = relative.split("/").map(encodeURIComponent).join("/");
+      const finalUrl = `${baseUrl}/${encoded}`;
+      const res = await fetch(finalUrl);
+      if (res.ok) {
+        const arrayBuf = await res.arrayBuffer();
+        const content = Buffer.from(arrayBuf);
+        return [
+          { filename: path.basename(relative) || "logo.png", content, cid: "elgonlogo" },
+        ];
+      }
+    }
+  } catch {}
+
+  // 4) As last resort, return no attachment (image may not render)
+  return [] as SendMailOptions["attachments"];
 }
 
 export function renderBaseEmail(params: { title: string; bodyHtml: string }) {
